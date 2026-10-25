@@ -365,6 +365,40 @@
   .camp .die-result b{color:var(--teal)}
   @media (prefers-reduced-motion: reduce){.die{transition:none}}
 
+  /* ---------- Fade Logic Engine & Hard Skill Level ---------- */
+  .hard-panel{margin-top:16px;border:2px solid var(--amber);background:#1d180b;border-radius:10px;padding:14px 16px}
+  .hard-panel .hp-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+  .hard-panel h4{font-family:"Anton",sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.04em;font-size:1.05rem;color:#ffd34d;margin:0}
+  .hard-toggle{border:2px solid #000;background:var(--panel2);color:#10181d;font-weight:800;padding:10px 14px;border-radius:8px;box-shadow:3px 3px 0 #000}
+  .hard-toggle[aria-pressed="true"]{background:var(--amber);color:#10181d}
+  .hard-toggle[disabled]{opacity:.55;cursor:not-allowed;box-shadow:none}
+  .hard-panel p{margin:8px 0 0;font-size:.9rem;color:var(--stage-ink)}
+  .hard-panel p b{color:#ffd34d}
+  .logic-panel{margin-top:14px;background:#121a1f;border:1px solid #3a4a52;border-radius:10px;padding:14px 16px}
+  .logic-panel h4{font-family:"Anton",sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.04em;font-size:1rem;color:#fff;margin:0 0 6px}
+  .logic-panel p,.logic-panel li{font-size:.9rem;color:var(--stage-ink)}
+  .logic-panel ul{margin:6px 0 0;padding-left:18px}
+  .logic-panel li{margin:6px 0}
+  .logic-panel b{color:var(--amber)}
+  .logic-panel .src{color:var(--stage-muted);font-size:.82rem}
+  .fact-check{margin:10px 16px 0;background:#fff7e0;color:#10181d;border:2px dashed #d9a514;border-radius:10px;padding:12px 14px;font-size:.92rem;display:none}
+  .fact-check.show{display:block}
+  .fact-check b{color:#7a4a00}
+  .fact-check .fc-tag{font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7a4a00;display:block;margin-bottom:4px}
+  .boss-name{cursor:pointer}
+  .boss-name .tap-hint{display:block;font-style:normal;font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-top:4px}
+  .gambit-card{margin-top:14px;border:2px solid #ff6b5e;background:#2a1214;border-radius:10px;padding:14px 16px}
+  .gambit-card .g-tag{font-family:"JetBrains Mono",monospace;font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ff9d94}
+  .gambit-card .g-claim{margin:8px 0;font-size:1rem;font-weight:800;color:#fff}
+  .gambit-card p{margin:6px 0;font-size:.9rem;color:var(--stage-ink)}
+  .gambit-card .g-fact{border-top:1px dashed #5a2327;padding-top:9px;margin-top:10px}
+  .gambit-card .g-fact b{color:#ffd34d}
+  .g-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .g-btn{border:2px solid #000;font-weight:800;padding:10px 14px;border-radius:8px;background:var(--amber);color:#10181d}
+  .g-btn.alt{background:var(--stage2);color:#fff;border-color:#3a4a52}
+  .g-btn.ghost{background:transparent;color:var(--stage-ink);border-color:#3a4a52}
+  .choice[disabled]{opacity:.55}
+
   footer{margin-top:40px;border-top:2px solid var(--line);padding-top:16px;font-size:.82rem;color:var(--muted)}
   footer a{color:var(--teal);font-weight:700}
 
@@ -421,7 +455,7 @@
         <button class="btn btn-primary" id="startBtn" type="button">Enter the battle ↓</button>
         <a class="btn btn-ghost" href="https://vote.gov" target="_blank" rel="noopener">Check your registration</a>
       </div>
-      <p class="howto">How it works: pick a fighter from the character sheets, then answer each battle with the most <em>informed</em> move. Right calls strike The Fade. Wrong calls teach you why — and cost you Hope. <strong>After every battle, you choose again:</strong> the band's character sheets come back up, and you send in whoever fits the next fight. Finish with The Fade at 40 HP or below to win. <strong>Death Blow:</strong> if The Fade drops under 15 HP, the fighter in the arena may get a golden one-shot Death Blow opening — land it and The Fade falls on the spot; miss it and that hero's Death Blow is spent for the game. <strong>The dice:</strong> a right answer earns an attack — swipe or tap the 3D d20, add your fighter's sheet bonuses and situational +2s, and beat The Fade's Defense or the blow only glances. A wrong answer lets The Fade counterattack your fighter's own hit points. Between battles you get <strong>one camp action</strong>: Priya's Healing Hands and the band's spells roll the three-sided die, and a landed Death Blow rolls the d6 for overkill.</p>
+      <p class="howto">How it works: pick a fighter from the character sheets, then answer each battle with the most <em>informed</em> move. Right calls strike The Fade. Wrong calls teach you why — and cost you Hope. <strong>After every battle, you choose again:</strong> the band's character sheets come back up, and you send in whoever fits the next fight. Finish with The Fade at 40 HP or below to win. <strong>Death Blow:</strong> if The Fade drops under 15 HP, the fighter in the arena may get a golden one-shot Death Blow opening — land it and The Fade falls on the spot; miss it and that hero's Death Blow is spent for the game. <strong>The dice:</strong> a right answer earns an attack — swipe or tap the 3D d20, add your fighter's sheet bonuses and situational +2s, and beat The Fade's Defense or the blow only glances. A wrong answer lets The Fade counterattack your fighter's own hit points. Between battles you get <strong>one camp action</strong>: Priya's Healing Hands and the band's spells roll the three-sided die, and a landed Death Blow rolls the d6 for overkill. <strong>Fade Logic Engine:</strong> his taunts, excuses and label flips are drawn only from documented, non-partisan fact and history — tap his line in the arena for the correction and source. <strong>Hard Skill Level</strong> (on his sheet) raises his machine to 9–12, adds +2 Defense, unlocks his Fake News Gambit, and makes a Death Blow need a d6 roll of 3+ to finish him.</p>
     </div>
   </header>
 
@@ -548,8 +582,22 @@
           <p class="fade-threat" id="fadeThreat">Threat level · Standard — the machine at cruising speed</p>
         </div>
       </div>
+      <div class="hard-panel" id="hardPanel">
+        <div class="hp-head"><h4>Hard Skill Level Mode</h4><button type="button" class="hard-toggle" id="hardToggle" aria-pressed="false">Turn HARD mode ON</button></div>
+        <p id="hardDesc"><b>Off — Standard skill level.</b> Current sliders, Defense and dice rules apply exactly as before. Turn HARD on before the first battle to train against his worst antics: his sliders jump to 9–12, his Defense gains <b>+2</b>, he unlocks the <b>Fake News Gambit</b> about every other battle, and a Death Blow must also roll <b>3+ on the d6</b> to finish him (1–2 leaves him at 1 HP). The toggle locks when the first answer lands and is shown in the arena loadout.</p>
+      </div>
+      <div class="logic-panel" id="logicPanel">
+        <h4>The Fade Logic Engine — documented moves only</h4>
+        <p>Everything he says is built from <b>non-partisan, checkable fact and documented history</b> — never party framing. His trickery is the lesson: tap his line in the arena and the documented correction appears with its source.</p>
+        <ul>
+          <li><b>(a) Rationale Carousel:</b> his excuse rotates by hit points — threat → liberation → stability → “we're already there” — mirroring documented rationale rotation during the Iraq and Afghanistan occupations. <span class="src">Pattern documented in speeches, funding debates and occupation histories.</span></li>
+          <li><b>(b) Label Flips:</b> the same fighters are relabelled as the decade demands — “freedom fighters” ↔ “terrorists,” ally ↔ tyrant. <span class="src">Drawn from the record: mujahideen armed in the 1980s who became al-Qaeda / the Taliban; Saddam backed in the 1980s, fought in 1991 and 2003; the Shah installed in 1953, whose fall produced the Iran of 1979 onward.</span></li>
+          <li><b>(c) Sound Bites:</b> polished one-liners that say a checkable number wrong, loudly. <span class="src">Each distortion in this game is a distortion of a figure already in the brief — Hormuz volumes (EIA), tariff incidence (NY Fed / NBER), breakout and weaponization (IAEA) — and the correction is always shown.</span></li>
+          <li><b>(d) The War Chest:</b> his jobs pitch — war sold as employment. The history underneath it is real (see The War Economy panel below), which is exactly why it works: contracts mean local jobs, so the spending defends itself politically. <span class="src">WWII mobilisation figures; F-35 supply chain across 45+ states; Eisenhower's 1961 farewell warning.</span></li>
+        </ul>
+      </div>
       <div class="fstats">
-        <span class="stats-head">The war machine — slide to tune · 0–12 each · default 6</span>
+        <span class="stats-head">The war machine — slide to tune · 0–12 each · default 6 (9–12 in Hard)</span>
         <div class="fstat">
           <div class="fstat-head"><label for="fs-drum">War Drum Volume</label><output id="fs-drum-out" for="fs-drum">6</output></div>
           <input type="range" id="fs-drum" min="0" max="12" value="6" />
@@ -581,6 +629,12 @@
         <p>The pattern, in plain sight. In the 1980s the United States armed and praised Afghanistan's mujahideen as <b>“freedom fighters”</b> against the Soviets — the networks that legacy fed became al-Qaeda and the Taliban, who later turned those weapons and skills on the U.S. itself. In the same decade Washington backed <b>Saddam Hussein's Iraq</b> with intelligence and dual-use support during the Iran–Iraq war — then fought Saddam in 1991, and again in 2003. And in 1953 a U.S.-backed coup installed the <b>Shah of Iran</b>; the revolution that eventually threw him out made Iran the adversary of 2026.</p>
         <p>The labels change with the decade — ally, freedom fighter, partner, tyrant, threat. <b>The weapons remain.</b> The Fade's whole game is hoping nobody keeps the receipts long enough to notice.</p>
       </div>
+      <div class="lesson">
+        <h4>The War Economy</h4>
+        <p>The jobs pitch is built on real history — which is why it is his strongest card. Wartime mobilisation has repeatedly bolstered U.S. employment and industrial output through government contracts: in World War II, U.S. unemployment fell from <b>14.7% in 1940 to 1.2% in 1944</b>, and roughly <b>17 million civilian jobs</b> were created on federal war contracts. That is precisely why the military-industrial machine has a constituency: <b>contracts mean local jobs</b>, and major programs deliberately distribute them — the F-35 supply chain spans <b>45+ states</b> — so the spending defends itself politically, district by district.</p>
+        <p>The honest other half, always shown with it: that peak came with <b>rationing and price controls</b>; the national debt rose <b>roughly five-fold from 1941 to 1945</b>; and activity is not the same as welfare — building things to be destroyed is the classic broken-window point, output counted while wealth is spent. And the warning came from the top: <b>Dwight Eisenhower</b> — the general who won that war — used his <b>1961 farewell address</b> to warn against the <b>“military-industrial complex”</b> and its <b>“unwarranted influence.”</b> The jobs were real. So was his warning.</p>
+        <p><span style="color:var(--stage-muted);font-size:.85rem">Sources: U.S. WWII employment record (unemployment 1940–44; federal war-contract jobs); F-35 program supply-chain distribution (45+ states); U.S. federal debt 1941–45; Eisenhower farewell address, Jan 17, 1961.</span></p>
+      </div>
     </div>
   </section>
 
@@ -603,12 +657,14 @@
       <div class="boss-stage" id="bossStage">
         <img id="bossImg" data-img="boss" alt="Illustration of The Fade — a towering figure wrapped in red tape and chains, hung with tariff tags and oil barrels, ballot boxes chained at its waist, looming over cargo ships in a narrow strait" />
         <div class="dmg" id="dmgPop">−13</div>
-        <div class="boss-name">
+        <div class="boss-name" id="bossNameCard" role="button" tabindex="0" aria-label="Tap The Fade's line for the documented fact check">
           <span class="display">The Fade</span>
           <p id="bossTaunt">“Stay home, kids. Nothing ever changes.”</p>
           <p class="excuse" id="bossExcuse"></p>
+          <span class="tap-hint">Tap his line · Fact-check the trick</span>
         </div>
       </div>
+      <div class="fact-check" id="factCheck" role="status"></div>
 
       <div class="quest" id="questBox"><!-- filled by JS --></div>
       <div class="log" id="battleLog">Battle log: The Fade is waiting. Choose your first strike.</div>
@@ -1196,7 +1252,8 @@
     fade:{ drum:6, spin:6, creep:6, blowback:6 }, runStarted:false,
     hp:{ maya:100, dre:100, priya:100 }, prevFighter:null,
     pendingBuffs:{ insp:0, sharpen:false }, activeBuffs:{ insp:0, sharpen:false },
-    battleMods:null, dbBonus:0, allDown:false };
+    battleMods:null, dbBonus:0, allDown:false,
+    hardMode:false, gambitResolved:true, gambitCollapsed:false, gambitClaim:null, gambitTauntOverride:null };
 
   var questBox = document.getElementById("questBox");
   var chooseSection = document.getElementById("chooseSection");
@@ -1262,7 +1319,7 @@
      Blowback — after a battle, Blowback x 6.25% chance he fires the band's
              own gifted weapons back for 4 + round(Blowback/2) Hope damage. */
   function drumHope(){ return 6 + state.fade.drum; }
-  function fadeDefense(){ return 10 + Math.round(state.fade.spin / 4); }
+  function fadeDefense(){ return 10 + Math.round(state.fade.spin / 4) + hardDefenseBonus(); }
   function creepHeal(){ return Math.round(state.fade.creep / 2); }
   function blowChance(){ return state.fade.blowback * 6.25; }
   function blowDmg(){ return 4 + Math.round(state.fade.blowback / 2); }
@@ -1285,6 +1342,9 @@
     "\u201CWe are winning so much, you will get tired of winning.\u201D"
   ];
   function currentTaunt(q){
+    if (state.gambitTauntOverride) return state.gambitTauntOverride;
+    if (state.idx % 5 === 4) return WAR_CHEST[(state.idx / 5 | 0) % WAR_CHEST.length].line;
+    if (state.idx % 3 === 2) return LABEL_FLIPS[(state.idx / 3 | 0) % LABEL_FLIPS.length].line;
     return state.fade.spin >= 9 ? SLICK_TAUNTS[state.idx % SLICK_TAUNTS.length] : q.taunt;
   }
   var BLOWBACK_LINES = [
@@ -1293,6 +1353,97 @@
     "the legacy arsenal of a client regime installed by a coup",
     "weapons handed to partners of the moment, serial numbers and all"
   ];
+
+  /* ============ FADE LOGIC ENGINE — documented moves only ============
+     Non-partisan rule: every line below is a documented move, not a party
+     slogan. (a) Rationale Carousel = excuseFor() by HP. (b) Label Flips =
+     the same people relabelled across decades. (c) Sound Bites = a checkable
+     figure said wrong, loudly. Tapping his line shows the correction. */
+  var LABEL_FLIPS = [
+    { line:"\u201CFreedom fighters when I need them. Terrorists when I don't. Same rifles.\u201D",
+      correction:"In the 1980s the U.S. armed Afghanistan's mujahideen as \u201Cfreedom fighters\u201D against the Soviets. Networks fed by that war became al-Qaeda and the Taliban, fought by the U.S. from 2001 to 2021.",
+      source:"Historical record — Operation Cyclone; 9/11 Commission Report" },
+    { line:"\u201CPartner in the eighties. Tyrant by ninety-one. Threat again by oh-three. I keep the receipts flexible.\u201D",
+      correction:"Washington backed Saddam Hussein's Iraq with intelligence and dual-use support during the Iran–Iraq war, then fought Saddam in 1991 and again in 2003. The man did not change labels — the decade did.",
+      source:"Documented U.S. policy record, 1980s–2003 (see Lesson of The Fade)" },
+    { line:"\u201CInstall a friendly Shah in '53, call the revolution a surprise in '79. Works every time.\u201D",
+      correction:"A U.S.-backed coup installed the Shah of Iran in 1953. The 1979 revolution that removed him produced the Iranian adversary the U.S. faces in 2026 — blowback across 26 years.",
+      source:"Declassified record of the 1953 Iran coup; 1979 revolution history" }
+  ];
+  var WAR_CHEST = [
+    { line:"\u201CFull employment, kid — check the history. War is a jobs program.\u201D",
+      correction:"Half of it is history: WWII mobilisation cut U.S. unemployment from 14.7% (1940) to 1.2% (1944) and created ~17 million civilian jobs on federal war contracts. The other half: rationing and price controls at the peak, national debt up roughly five-fold 1941–45, and activity is not welfare — the broken-window point. Eisenhower, who won that war, warned in 1961 against the \u201Cmilitary-industrial complex\u201D and its \u201Cunwarranted influence.\u201D",
+      source:"U.S. WWII employment record; federal debt 1941–45; Eisenhower farewell address, 1961" },
+    { line:"\u201CEvery district gets a contract — who's voting against jobs?\u201D",
+      correction:"That is the mechanism, stated plainly: contracts mean local jobs, and major programs distribute them widely — the F-35 supply chain spans 45+ states — so the spending defends itself politically, whatever the mission. A constituency for a program is not the same as a case for a war.",
+      source:"F-35 supply-chain distribution (45+ states); see The War Economy panel on The Fade's sheet" }
+  ];
+  var CAROUSEL_NOTE = {
+    correction:"Watch the reason rotate as HP falls — threat, then liberation, then stability, then \u201Cwe're already there.\u201D That rotation is documented across the Iraq and Afghanistan occupations: the stated mission changed while the deployment stayed.",
+    source:"Documented rationale rotation, Iraq / Afghanistan occupations"
+  };
+  var SOUND_BITE_NOTE = {
+    correction:"A slogan is not a figure. Check the number underneath it: Hormuz carries ~20M barrels/day (EIA), tariffs are largely paid by U.S. importers/consumers (NY Fed / NBER), and breakout is not a finished weapon (IAEA).",
+    source:"EIA chokepoint data; NY Fed / NBER tariff research; IAEA statements"
+  };
+  function factCheckForCurrentLine(){
+    if (state.gambitTauntOverride) {
+      var g = gambitForIndex(state.idx);
+      if (g) return { correction:g.fact, source:g.source };
+    }
+    for (var i = 0; i < LABEL_FLIPS.length; i++) {
+      if (tauntEl.textContent === LABEL_FLIPS[i].line) return LABEL_FLIPS[i];
+    }
+    for (var w = 0; w < WAR_CHEST.length; w++) {
+      if (tauntEl.textContent === WAR_CHEST[w].line) return WAR_CHEST[w];
+    }
+    if (state.fade.spin >= 9) return SOUND_BITE_NOTE;
+    if (state.boss <= 70) return CAROUSEL_NOTE;
+    var q = QUESTS[state.idx];
+    return { correction:q ? q.brief.replace(/^Source line:\s*/,"") : SOUND_BITE_NOTE.correction,
+             source:q ? ("Battle " + (state.idx+1) + " brief — " + q.title) : "Game brief" };
+  }
+  function showFactCheck(){
+    var fc = document.getElementById("factCheck");
+    if (!fc) return;
+    var info = factCheckForCurrentLine();
+    fc.innerHTML = '<span class="fc-tag">Fade Logic Engine · Fact check</span><b>Documented correction:</b> ' + info.correction + '<br><span style="color:#506068">Source: ' + info.source + "</span>";
+    fc.classList.add("show");
+    log("Fact check shown: " + info.correction);
+  }
+
+  /* ============ FAKE NEWS GAMBIT (Hard Skill Level only) ============
+     Each card is ONLY a distortion of a fact already in the brief above.
+     The correction is shown after every ruling — win or lose. */
+  var FAKE_NEWS_GAMBITS = [
+    null,
+    { claim:"The Strait of Hormuz carries barely 2% of world oil — this is all overblown.",
+      fact:"Hormuz carries ~20–21 million barrels a day — about a fifth of global petroleum liquids, roughly a quarter of seaborne oil trade, and ~20% of global LNG, with only ~2.6M barrels/day of bypass pipeline.",
+      source:"EIA — World Oil Transit Chokepoints" },
+    null,
+    { claim:"Foreign exporters pay the tariffs, not Americans.",
+      fact:"The importer pays at the border. NY Fed and NBER research found most tariff cost passed to U.S. importers and consumers — about +2.9 points of goods inflation by Feb 2026 in this brief.",
+      source:"Federal Reserve Bank of New York; NBER tariff-incidence studies" },
+    null,
+    { claim:"Inspectors confirmed a finished nuclear weapon in February.",
+      fact:"The IAEA's director said in March 2026 he saw no structured program to manufacture nuclear weapons. The ~441 kg at 60% is capability; weaponization, miniaturisation and delivery add roughly 1–2+ years.",
+      source:"IAEA, Mar 2026; Arms Control Association, Feb–Mar 2026" },
+    null,
+    { claim:"JCPOA inspectors were thrown out for catching cheating before 2018.",
+      fact:"Under the 2015 JCPOA, breakout stood at ~12 months with inspectors inside and compliance certified. The U.S. withdrew in May 2018; only then did Iran escalate in announced steps and inspectors lose access.",
+      source:"JCPOA terms; IAEA compliance certifications pre-2018" },
+    null,
+    { claim:"Oil inventories are at record highs — there is a huge cushion left.",
+      fact:"World oil inventories sit ~509 million barrels below pre-war levels and spare capacity is drawn down — the cushion that absorbed the first shock is spent.",
+      source:"IEA / OPEC inventory estimates, fall 2026 brief" },
+    null,
+    { claim:"War spending is pure economic gain — everybody wins.",
+      warChest:true,
+      fact:"Both halves, as documented: the jobs and output are real — WWII mobilisation cut unemployment from 14.7% (1940) to 1.2% (1944) and created ~17 million civilian jobs on war contracts, and programs like the F-35 (supply chain in 45+ states) build a constituency that defends the spending itself. And: the peak came with rationing and price controls, the debt rose roughly five-fold 1941–45, activity is not the same as welfare (the broken-window point), and Eisenhower — the general who won that war — warned in his 1961 farewell against the \u201Cmilitary-industrial complex\u201D and its \u201Cunwarranted influence.\u201D Real jobs; not pure gain.",
+      source:"U.S. WWII employment record; federal debt 1941–45; Eisenhower farewell address, Jan 17, 1961" }
+  ];
+  function gambitForIndex(i){ return FAKE_NEWS_GAMBITS[i] || null; }
+  function hardDefenseBonus(){ return (state.hardMode && !state.gambitCollapsed) ? 2 : 0; }
 
   /* ============ Character sheets become combat numbers ============
      Modifier = round((stat − 8) / 2), clamped −2..+4. Attack and damage ride
@@ -1593,7 +1744,7 @@
              : "Nightmare — maximum drumbeat";
     var th = document.getElementById("fadeThreat"); if (th) th.textContent = "Threat level · " + tier;
     var lo = document.getElementById("fadeLoadout");
-    if (lo) lo.innerHTML = "The Fade's machine · War Drum <b>" + f.drum + "</b> · Sound Bite Spin <b>" + f.spin + "</b> · Mission Creep <b>" + f.creep + "</b> · Blowback Arsenal <b>" + f.blowback + "</b> · Defense <b>" + fadeDefense() + "</b>" + (state.runStarted ? " · Locked for this run" : " · Tune it on his sheet above");
+    if (lo) lo.innerHTML = "The Fade's machine · War Drum <b>" + f.drum + "</b> · Sound Bite Spin <b>" + f.spin + "</b> · Mission Creep <b>" + f.creep + "</b> · Blowback Arsenal <b>" + f.blowback + "</b> · Defense <b>" + fadeDefense() + "</b>" + (state.hardMode ? " · <b>HARD SKILL LEVEL</b>" + (state.gambitCollapsed ? " · Gambit collapsed — Hard Defense bonus lost this battle" : " · Hard Defense +2 included") : " · Standard skill level") + (state.runStarted ? " · Locked for this run" : " · Tune it on his sheet above");
     refreshFadeFlavor();
   }
 
@@ -1602,6 +1753,7 @@
     ["drum","spin","creep","blowback"].forEach(function(k){
       var r = document.getElementById("fs-" + k); if (r) r.disabled = true;
     });
+    var ht = document.getElementById("hardToggle"); if (ht) ht.disabled = true;
     var note = document.getElementById("fadeLockNote");
     if (note) note.innerHTML = "<b>Locked for this run.</b> The machine is set — the band fights the war machine you dialed in. The sliders unlock again when you replay.";
     updateFadeUI();
@@ -1621,9 +1773,42 @@
     });
   });
 
+  /* Hard Skill Level toggle — before the run only; locks with the sliders */
+  var hardToggleBtn = document.getElementById("hardToggle");
+  if (hardToggleBtn) hardToggleBtn.addEventListener("click", function(){
+    if (state.runStarted) return;
+    state.hardMode = !state.hardMode;
+    var defaults = state.hardMode ? { drum:10, spin:11, creep:9, blowback:10 } : { drum:6, spin:6, creep:6, blowback:6 };
+    ["drum","spin","creep","blowback"].forEach(function(k){
+      state.fade[k] = defaults[k];
+      var r = document.getElementById("fs-" + k); if (r) r.value = defaults[k];
+    });
+    hardToggleBtn.setAttribute("aria-pressed", state.hardMode ? "true" : "false");
+    hardToggleBtn.textContent = state.hardMode ? "HARD mode is ON — tap to turn off" : "Turn HARD mode ON";
+    var hd = document.getElementById("hardDesc");
+    if (hd) hd.innerHTML = state.hardMode
+      ? "<b>ON — Hard Skill Level.</b> His machine is set to 9–12, his Defense includes <b>+2</b>, the <b>Fake News Gambit</b> will appear about every other battle (rule TRUE or FAKE before you answer — the documented correction shows either way), and a Death Blow needs a <b>d6 roll of 3+</b> to finish him. You can still tune the sliders before the first battle."
+      : "<b>Off — Standard skill level.</b> Current sliders, Defense and dice rules apply exactly as before. Turn HARD on before the first battle to train against his worst antics.";
+    updateFadeUI();
+    tauntEl.textContent = currentTaunt(QUESTS[state.idx]);
+    log(state.hardMode ? "HARD SKILL LEVEL engaged. The Fade's machine is at 9–12, Defense +2, Fake News Gambit armed." : "Hard Skill Level off — standard rules.");
+  });
+
+  /* Tap The Fade's line (or press Enter on it) for the Logic Engine fact check */
+  var bossNameCard = document.getElementById("bossNameCard");
+  if (bossNameCard) {
+    bossNameCard.addEventListener("click", showFactCheck);
+    bossNameCard.addEventListener("keydown", function(e){ if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showFactCheck(); } });
+  }
+
   function renderQuest(){
     var q = QUESTS[state.idx];
     state.answered = false;
+    state.gambitCollapsed = false;
+    state.gambitTauntOverride = null;
+    var gambit = state.hardMode ? gambitForIndex(state.idx) : null;
+    state.gambitResolved = !gambit;
+    state.gambitClaim = gambit ? gambit.claim : null;
     if (state.renderedFor !== state.idx) { state.renderedFor = state.idx; state.battleStarts++; }
     tauntEl.textContent = currentTaunt(q);
     var wclass = q.weapon === "axe" ? "w-axe" : (q.weapon === "sword" ? "w-sword" : "w-arrow");
@@ -1638,10 +1823,17 @@
       (matched ? ' — ' + FIGHTERS[state.fighter].wname + ' counter it: <b>+2 to hit</b>' : '') +
       ' · ' + FIGHTERS[state.fighter].name + '\'s attack: <b>' + fmtMod(state.battleMods.atk) + '</b> (' + state.battleMods.parts + ') vs The Fade\'s Defense <b>' + fadeDefense() + '</b> · ' + FIGHTERS[state.fighter].name + '\'s Defense <b>' + state.battleMods.def + '</b></p>';
     renderHeroHp();
+    if (gambit) {
+      html += '<div class="gambit-card" id="gambitCard"><span class="g-tag">Hard Mode · Fake News Gambit — rule before you answer</span>' +
+        '<p class="g-claim">“' + gambit.claim + '”</p>' +
+        '<p>The Fade slides this “fact” into the fight, loud and confident. Rule on it first: is the claim TRUE or FAKE? The documented correction appears either way.</p>' +
+        '<div class="g-actions"><button type="button" class="g-btn" data-gambit="fake">Rule: FAKE</button><button type="button" class="g-btn alt" data-gambit="true">Rule: TRUE</button><button type="button" class="g-btn ghost" data-gambit="skip">Skip the ruling</button></div>' +
+        '<div id="gambitResult"></div></div>';
+    }
     html += '<p class="q">' + q.q + "</p>";
     html += '<div class="choices">';
     q.choices.forEach(function(c, i){
-      html += '<button class="choice" type="button" data-choice="' + i + '"><span class="wtag ' + wclass + '">' + q.wlabel + '</span><span>' + c + "</span></button>";
+      html += '<button class="choice" type="button" data-choice="' + i + '"' + (gambit ? " disabled" : "") + '><span class="wtag ' + wclass + '">' + q.wlabel + '</span><span>' + c + "</span></button>";
     });
     html += "</div>";
     if (deathBlowEligible()) {
@@ -1658,8 +1850,45 @@
     questBox.querySelectorAll(".choice").forEach(function(btn){
       btn.addEventListener("click", function(){ answer(parseInt(btn.getAttribute("data-choice"),10), btn); });
     });
+    if (gambit) {
+      log("FAKE NEWS GAMBIT — The Fade injects a false \u201Cfact\u201D into Battle " + (state.idx+1) + ". Rule TRUE or FAKE before answering.");
+      questBox.querySelectorAll("[data-gambit]").forEach(function(gb){
+        gb.addEventListener("click", function(){ resolveGambit(gb.getAttribute("data-gambit"), gambit); });
+      });
+    }
     var dbBtn = document.getElementById("dbBtn");
-    if (dbBtn) dbBtn.addEventListener("click", renderDeathBlow);
+    if (dbBtn) { dbBtn.addEventListener("click", renderDeathBlow); if (gambit) dbBtn.disabled = true; }
+  }
+
+  function resolveGambit(ruling, gambit){
+    if (state.gambitResolved) return;
+    state.gambitResolved = true;
+    var res = document.getElementById("gambitResult");
+    var correctFake = ruling === "fake";
+    questBox.querySelectorAll("[data-gambit]").forEach(function(b){ b.disabled = true; });
+    questBox.querySelectorAll(".choice").forEach(function(b){ b.disabled = false; });
+    var db2 = document.getElementById("dbBtn"); if (db2) db2.disabled = false;
+    if (correctFake) {
+      state.gambitCollapsed = true;
+      if (res) res.innerHTML = '<p class="g-fact"><b>Gambit collapsed — correct ruling: FAKE.</b> He loses his Hard Defense bonus for this battle, and your next hit deals <b>+2 damage</b>.<br><b>Documented fact:</b> ' + gambit.fact + '<br><span style="color:var(--stage-muted)">Source: ' + gambit.source + "</span></p>";
+      log("Fake News Gambit called FAKE — correct. His Defense bonus collapses this battle and the next hit deals +2. Documented fact: " + gambit.fact + " (" + gambit.source + ")");
+    } else {
+      var heal = creepHeal();
+      if (heal > 0) state.boss = Math.min(100, state.boss + heal);
+      state.gambitTauntOverride = "\u201C" + gambit.claim + " See? Even the facts agree with me.\u201D";
+      tauntEl.textContent = state.gambitTauntOverride;
+      if (res) res.innerHTML = '<p class="g-fact"><b>The trick lands — that claim was FAKE.</b> ' + (ruling === "skip" ? "Skipping the ruling lets it stand as if true. " : "Calling it TRUE lets it stand. ") + (gambit.warChest ? "He invokes <b>The War Chest</b> — \u201Cwar is jobs, kid\u201D — and the factories lobby to stay open: The Fade regains <b>+" + heal + " HP</b> at once" : "Mission Creep fires at once: The Fade regains <b>+" + heal + " HP</b>") + ", and he will quote the false claim as established for the rest of this battle.<br><b>Documented fact:</b> " + gambit.fact + '<br><span style="color:var(--stage-muted)">Source: ' + gambit.source + "</span></p>";
+      log("Fake News Gambit lands (" + ruling + "). The Fade heals +" + heal + " HP via Mission Creep. Documented fact: " + gambit.fact + " (" + gambit.source + ")");
+    }
+    updateFadeUI();
+    renderBars();
+    /* Re-print the attack line with the (possibly collapsed) Defense */
+    var bn = questBox.querySelector(".buff-note");
+    if (bn && state.battleMods) {
+      var aspect2 = ASPECTS[state.idx];
+      var matched2 = MATCHUP[FIGHTERS[state.fighter].weapon] === aspect2;
+      bn.innerHTML = "The Fade's aspect this battle: <b>" + ASPECT_NAMES[aspect2] + "</b>" + (matched2 ? " — " + FIGHTERS[state.fighter].wname + " counter it: <b>+2 to hit</b>" : "") + " · " + FIGHTERS[state.fighter].name + "'s attack: <b>" + fmtMod(state.battleMods.atk) + "</b> (" + state.battleMods.parts + ") vs The Fade's Defense <b>" + fadeDefense() + "</b>" + (state.gambitCollapsed ? " · <b>Gambit collapsed: +2 damage on the next hit</b>" : "") + " · " + FIGHTERS[state.fighter].name + "'s Defense <b>" + state.battleMods.def + "</b>";
+    }
   }
 
   function renderDeathBlow(){
@@ -1702,13 +1931,30 @@
       state.hits++;
       fb.className = "feedback show good";
       fb.innerHTML = '<span class="verdict">The Death Blow lands — roll the d6</span><p>' + db.good + '</p>';
-      var tray = makeTray("d6", "Death Blow overkill · d6");
+      var tray = makeTray("d6", state.hardMode ? "Death Blow · d6 — Hard mode: roll 3+ to finish him" : "Death Blow overkill · d6");
       insertTray(tray);
       log(FIGHTERS[state.fighter].name + " lands " + db.name + "! Swipe or tap the d6 to roll the overkill.");
       fb.scrollIntoView({ behavior:"smooth", block:"nearest" });
       tray.arm(function(roll){
         var remaining = state.boss;
         var total = remaining + roll;
+        if (state.hardMode && roll < 3) {
+          /* Hard Skill Level: the question landed, the die decides the finish.
+             A 1–2 leaves The Fade clinging on at 1 HP instead of dead. */
+          state.boss = 1;
+          state.prevFighter = state.fighter;
+          fb.innerHTML = '<span class="verdict">The blow lands — but he clings on at 1 HP</span><p>' + db.good + '</p><p class="brief-note">HARD MODE DEATH BLOW CHECK — d6 rolled <b>' + roll + "</b>, under the 3+ needed to finish him. " + FIGHTERS[state.fighter].name + "'s strike was true, so The Fade is driven down to <b>1 HP</b> — one more solid battle will end him, but this Death Blow did not.</p>";
+          log("Hard mode Death Blow: d6 rolled " + roll + " (needed 3+). The Fade survives at 1 HP.");
+          dmgPop.textContent = "−" + (remaining - 1);
+          dmgPop.classList.remove("show"); void dmgPop.offsetWidth; dmgPop.classList.add("show");
+          bossStage.classList.remove("hurt"); void bossStage.offsetWidth; bossStage.classList.add("hurt");
+          renderBars();
+          if (state.idx === QUESTS.length - 1) nextBtn.textContent = "See how history remembers this →";
+          document.getElementById("nextRow").classList.add("show");
+          nextBtn.addEventListener("click", next);
+          fb.scrollIntoView({ behavior:"smooth", block:"nearest" });
+          return;
+        }
         state.boss = 0;
         state.deathBlowWon = true;
         state.wonByDeathBlow = state.fighter;
@@ -1794,15 +2040,17 @@
     var def = fadeDefense();
     var wd = 1 + Math.floor(Math.random() * F.die);
     var finalStand = state.idx === QUESTS.length - 1 ? 3 : 0;
-    var base = wd + dmgBonus(f) + finalStand;
+    var gambitBonus = state.gambitCollapsed ? 2 : 0;
+    var base = wd + dmgBonus(f) + finalStand + gambitBonus;
+    var bonusTxt = (finalStand ? " + 3 final stand" : "") + (gambitBonus ? " + 2 gambit collapse" : "");
     var dmg, math;
     if (roll === 20) {
       dmg = base * 2;
-      math = "rolls <b>20</b> — NATURAL TWENTY, critical hit! (" + mods.parts + ") · 1d" + F.die + " rolled " + wd + " + " + dmgBonus(f) + (finalStand ? " + 3 final stand" : "") + ", doubled = <b>" + dmg + " damage</b>.";
+      math = "rolls <b>20</b> — NATURAL TWENTY, critical hit! (" + mods.parts + ") · 1d" + F.die + " rolled " + wd + " + " + dmgBonus(f) + bonusTxt + ", doubled = <b>" + dmg + " damage</b>.";
       fb.querySelector(".verdict").textContent = "Natural 20 · Critical hit! · −" + dmg + " boss HP";
     } else if (total >= def) {
       dmg = base;
-      math = "rolls <b>" + roll + " " + fmtMod(mods.atk) + "</b> (" + mods.parts + ") = " + total + " vs Defense " + def + " — HIT! 1d" + F.die + " rolled " + wd + " + " + dmgBonus(f) + (finalStand ? " + 3 final stand" : "") + " = <b>" + dmg + " damage</b>.";
+      math = "rolls <b>" + roll + " " + fmtMod(mods.atk) + "</b> (" + mods.parts + ") = " + total + " vs Defense " + def + " — HIT! 1d" + F.die + " rolled " + wd + " + " + dmgBonus(f) + bonusTxt + " = <b>" + dmg + " damage</b>.";
       fb.querySelector(".verdict").textContent = "Direct hit · −" + dmg + " boss HP";
     } else {
       dmg = Math.max(1, Math.floor(base / 2));
@@ -1859,7 +2107,11 @@
     /* Mission Creep: a Fade that survives the battle digs in — the exit moves again */
     if (state.boss > 0 && creepHeal() > 0) {
       state.boss = Math.min(100, state.boss + creepHeal());
-      fb.innerHTML += '<p class="brief-note">Mission Creep: The Fade digs in and regains +' + creepHeal() + " HP — stay long enough, and the occupation forgets why it came.</p>";
+      if (state.idx % 2 === 1) {
+        fb.innerHTML += '<p class="brief-note">Mission Creep — The War Chest: the factories lobby to stay open — The Fade regains +' + creepHeal() + " HP. Contracts mean local jobs (the F-35 chain spans 45+ states), so the spending defends itself — the jobs are real, and so are the rationing, the five-fold debt rise of 1941–45, and Eisenhower's 1961 warning. Both halves, always.</p>";
+      } else {
+        fb.innerHTML += '<p class="brief-note">Mission Creep: The Fade digs in and regains +' + creepHeal() + " HP — stay long enough, and the occupation forgets why it came.</p>";
+      }
     }
     /* Blowback: yesterday's gifted weapons, fired back at the band */
     if (state.boss > 0 && state.fade.blowback > 0 && Math.random() * 100 < blowChance()) {
@@ -1882,6 +2134,7 @@
   /* Between battles: route the player back to the character sheets to re-pick a fighter */
   function goToPick(){
     state.awaitingPick = true;
+    state.gambitTauntOverride = null; state.gambitCollapsed = false;
     var q = QUESTS[state.idx];
     chooseHeading.textContent = "Choose who fights battle " + (state.idx + 1) + " of " + QUESTS.length;
     pickBanner.textContent = "Next battle: \u201C" + q.title + "\u201D \u2014 tune a sheet if you like, then tap its \u201CSend into battle\u201D button to put that band member in the fight.";
@@ -1958,6 +2211,12 @@
     state.pendingBuffs = { insp:0, sharpen:false };
     state.activeBuffs = { insp:0, sharpen:false };
     state.battleMods = null; state.dbBonus = 0; state.allDown = false;
+    state.hardMode = false; state.gambitResolved = true; state.gambitCollapsed = false; state.gambitClaim = null; state.gambitTauntOverride = null;
+    var ht2 = document.getElementById("hardToggle");
+    if (ht2) { ht2.disabled = false; ht2.setAttribute("aria-pressed","false"); ht2.textContent = "Turn HARD mode ON"; }
+    var hd2 = document.getElementById("hardDesc");
+    if (hd2) hd2.innerHTML = "<b>Off — Standard skill level.</b> Current sliders, Defense and dice rules apply exactly as before. Turn HARD on before the first battle to train against his worst antics: his sliders jump to 9–12, his Defense gains <b>+2</b>, he unlocks the <b>Fake News Gambit</b> about every other battle, and a Death Blow must also roll <b>3+ on the d6</b> to finish him (1–2 leaves him at 1 HP). The toggle locks when the first answer lands and is shown in the arena loadout.";
+    var fc2 = document.getElementById("factCheck"); if (fc2) { fc2.classList.remove("show"); fc2.innerHTML = ""; }
     campUsed = false;
     var campPanel = document.getElementById("campPanel"); if (campPanel) campPanel.hidden = true;
     var campNote = document.getElementById("campNote"); if (campNote) campNote.innerHTML = "";
