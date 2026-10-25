@@ -594,6 +594,7 @@
           <li><b>(b) Label Flips:</b> the same fighters are relabelled as the decade demands — “freedom fighters” ↔ “terrorists,” ally ↔ tyrant. <span class="src">Drawn from the record: mujahideen armed in the 1980s who became al-Qaeda / the Taliban; Saddam backed in the 1980s, fought in 1991 and 2003; the Shah installed in 1953, whose fall produced the Iran of 1979 onward.</span></li>
           <li><b>(c) Sound Bites:</b> polished one-liners that say a checkable number wrong, loudly. <span class="src">Each distortion in this game is a distortion of a figure already in the brief — Hormuz volumes (EIA), tariff incidence (NY Fed / NBER), breakout and weaponization (IAEA) — and the correction is always shown.</span></li>
           <li><b>(d) The War Chest:</b> his jobs pitch — war sold as employment. The history underneath it is real (see The War Economy panel below), which is exactly why it works: contracts mean local jobs, so the spending defends itself politically. <span class="src">WWII mobilisation figures; F-35 supply chain across 45+ states; Eisenhower's 1961 farewell warning.</span></li>
+          <li><b>(e) The Debt Mountain:</b> his complacency pitch — “Forty trillion and the sky hasn't fallen — relax,” “We owe it to ourselves, kid.” The documented correction: the federal debt is never actually paid down, only refinanced forever at whatever rate the market demands; net interest is now one of the largest single federal outlays, larger than the defense budget; and households carry the servicing bill through higher taxes and fees, inflation, and higher-for-longer rates (see The Debt Mountain panel below). <span class="src">U.S. Treasury Fiscal Data; CBO budget outlook; post-WWII debt-to-GDP record.</span></li>
         </ul>
       </div>
       <div class="fstats">
@@ -634,6 +635,12 @@
         <p>The jobs pitch is built on real history — which is why it is his strongest card. Wartime mobilisation has repeatedly bolstered U.S. employment and industrial output through government contracts: in World War II, U.S. unemployment fell from <b>14.7% in 1940 to 1.2% in 1944</b>, and roughly <b>17 million civilian jobs</b> were created on federal war contracts. That is precisely why the military-industrial machine has a constituency: <b>contracts mean local jobs</b>, and major programs deliberately distribute them — the F-35 supply chain spans <b>45+ states</b> — so the spending defends itself politically, district by district.</p>
         <p>The honest other half, always shown with it: that peak came with <b>rationing and price controls</b>; the national debt rose <b>roughly five-fold from 1941 to 1945</b>; and activity is not the same as welfare — building things to be destroyed is the classic broken-window point, output counted while wealth is spent. And the warning came from the top: <b>Dwight Eisenhower</b> — the general who won that war — used his <b>1961 farewell address</b> to warn against the <b>“military-industrial complex”</b> and its <b>“unwarranted influence.”</b> The jobs were real. So was his warning.</p>
         <p><span style="color:var(--stage-muted);font-size:.85rem">Sources: U.S. WWII employment record (unemployment 1940–44; federal war-contract jobs); F-35 program supply-chain distribution (45+ states); U.S. federal debt 1941–45; Eisenhower farewell address, Jan 17, 1961.</span></p>
+      </div>
+      <div class="lesson">
+        <h4>The Debt Mountain</h4>
+        <p>The stock itself: U.S. federal debt has ballooned past <b>$40 trillion</b> — and in the modern era it is <b>never actually paid down</b>. Maturing bonds are not retired; they are <b>refinanced — rolled over, forever —</b> at whatever interest rate the market demands that week. That is why the mountain connects directly to the cost-of-capital lesson: a growing supply of debt helps hold the <b>term premium near ~1.07 points</b>, the 10-year Treasury <b>above 5%</b>, and mortgages near <b>~7.4%</b>. And <b>net interest is now one of the largest single federal outlays — larger than the defense budget</b> — and it buys nothing: no ships, no schools, just rent on past borrowing.</p>
+        <p>The servicing bill is ultimately carried by households, through three pressure valves: <b>(1) higher taxes and fees over time</b>, as interest claims a growing share of every budget; <b>(2) inflation</b>, which quietly taxes savings and wages whenever the bill is eased with cheaper dollars; and <b>(3) higher-for-longer interest rates</b>, as the debt supply itself keeps borrowing costs up for every family financing a home or a car. The one historical exception proves the mechanism: after World War II the debt was never repaid either — it was <b>outgrown and inflated down as a share of GDP</b> across decades of growth. The burden shrank because the economy grew — which required the growth.</p>
+        <p><span style="color:var(--stage-muted);font-size:.85rem">Sources: U.S. Treasury Fiscal Data (total federal debt, $40T+); CBO Budget &amp; Economic Outlook (net interest vs. defense outlays; debt held by the public); post-WWII debt-to-GDP record.</span></p>
       </div>
     </div>
   </section>
@@ -1219,8 +1226,8 @@
         "Nothing breaks — what the government pays to borrow never reaches families"
       ],
       correct:1,
-      good:"Dre reads the ledger to the last line: the war's bill arrives monthly, as mortgage rates and frozen hiring. The final swing is a sum no spin can carry — The Fade falls.",
-      bad:"Ships aren't the flank — the financing is. Five percent on the 10-year and ~7.4% mortgages tax every working family, every month, headline or no headline. The opening has closed."
+      good:"Dre reads the ledger to the last line: the war's bill arrives monthly, as mortgage rates and frozen hiring. And behind the rate sits the stock itself — $40 trillion-plus of federal debt, never paid down, refinanced forever at whatever rate the market demands — which is exactly why the term premium is rent nobody voted on. The final swing is a sum no spin can carry — The Fade falls.",
+      bad:"Ships aren't the flank — the financing is. Five percent on the 10-year and ~7.4% mortgages tax every working family, every month, headline or no headline — and the $40 trillion-plus debt stock behind it, refinanced forever and never repaid, is why that premium never sleeps. The opening has closed."
     },
     priya: {
       name:"The Healer's Verdict",
@@ -1253,7 +1260,7 @@
     hp:{ maya:100, dre:100, priya:100 }, prevFighter:null,
     pendingBuffs:{ insp:0, sharpen:false }, activeBuffs:{ insp:0, sharpen:false },
     battleMods:null, dbBonus:0, allDown:false,
-    hardMode:false, gambitResolved:true, gambitCollapsed:false, gambitClaim:null, gambitTauntOverride:null };
+    hardMode:false, gambitResolved:true, gambitCollapsed:false, gambitClaim:null, gambitTauntOverride:null, debtInterest:0 };
 
   var questBox = document.getElementById("questBox");
   var chooseSection = document.getElementById("chooseSection");
@@ -1345,6 +1352,7 @@
     if (state.gambitTauntOverride) return state.gambitTauntOverride;
     if (state.idx % 5 === 4) return WAR_CHEST[(state.idx / 5 | 0) % WAR_CHEST.length].line;
     if (state.idx % 3 === 2) return LABEL_FLIPS[(state.idx / 3 | 0) % LABEL_FLIPS.length].line;
+    if (state.idx % 4 === 3) return DEBT_MOUNTAIN[(state.idx / 4 | 0) % DEBT_MOUNTAIN.length].line;
     return state.fade.spin >= 9 ? SLICK_TAUNTS[state.idx % SLICK_TAUNTS.length] : q.taunt;
   }
   var BLOWBACK_LINES = [
@@ -1358,7 +1366,9 @@
      Non-partisan rule: every line below is a documented move, not a party
      slogan. (a) Rationale Carousel = excuseFor() by HP. (b) Label Flips =
      the same people relabelled across decades. (c) Sound Bites = a checkable
-     figure said wrong, loudly. Tapping his line shows the correction. */
+     figure said wrong, loudly. (d) The War Chest = war sold as jobs.
+     (e) The Debt Mountain = complacency about a $40T+ debt that is never
+     paid down, only refinanced. Tapping his line shows the correction. */
   var LABEL_FLIPS = [
     { line:"\u201CFreedom fighters when I need them. Terrorists when I don't. Same rifles.\u201D",
       correction:"In the 1980s the U.S. armed Afghanistan's mujahideen as \u201Cfreedom fighters\u201D against the Soviets. Networks fed by that war became al-Qaeda and the Taliban, fought by the U.S. from 2001 to 2021.",
@@ -1378,6 +1388,14 @@
       correction:"That is the mechanism, stated plainly: contracts mean local jobs, and major programs distribute them widely — the F-35 supply chain spans 45+ states — so the spending defends itself politically, whatever the mission. A constituency for a program is not the same as a case for a war.",
       source:"F-35 supply-chain distribution (45+ states); see The War Economy panel on The Fade's sheet" }
   ];
+  var DEBT_MOUNTAIN = [
+    { line:"\u201CForty trillion and the sky hasn't fallen, kid. Relax.\u201D",
+      correction:"The sky is not the bill — the interest is. U.S. federal debt has passed $40 trillion and, in the modern era, is never actually paid down: maturing debt is refinanced — rolled over — at whatever rate the market demands that week. That is why the stock connects straight to the cost of capital: the debt supply helps hold the term premium near ~1.07 points, the 10-year Treasury above 5%, and mortgages near ~7.4%. Net interest is now one of the largest single federal outlays — larger than the defense budget — and it buys nothing: no ships, no schools, just rent on past borrowing.",
+      source:"U.S. Treasury Fiscal Data (total federal debt); CBO budget outlook — net interest vs. defense outlays" },
+    { line:"\u201CWe owe it to ourselves, kid. It's just bookkeeping.\u201D",
+      correction:"The holders are mostly the public — pension funds, banks, households, foreign buyers — but the servicing bill is real cash, paid every year out of taxes, and it is ultimately carried by households through three pressure valves: higher taxes and fees over time, inflation that quietly taxes savings and wages, and higher-for-longer interest rates on every mortgage and loan. The one historical exception proves the mechanism: after WWII the debt was never repaid either — it was outgrown and inflated down as a share of GDP across decades of growth. Shrinking the burden took the growth, not a payoff.",
+      source:"CBO — federal debt and net interest; post-WWII debt-to-GDP record" }
+  ];
   var CAROUSEL_NOTE = {
     correction:"Watch the reason rotate as HP falls — threat, then liberation, then stability, then \u201Cwe're already there.\u201D That rotation is documented across the Iraq and Afghanistan occupations: the stated mission changed while the deployment stayed.",
     source:"Documented rationale rotation, Iraq / Afghanistan occupations"
@@ -1396,6 +1414,9 @@
     }
     for (var w = 0; w < WAR_CHEST.length; w++) {
       if (tauntEl.textContent === WAR_CHEST[w].line) return WAR_CHEST[w];
+    }
+    for (var d = 0; d < DEBT_MOUNTAIN.length; d++) {
+      if (tauntEl.textContent === DEBT_MOUNTAIN[d].line) return DEBT_MOUNTAIN[d];
     }
     if (state.fade.spin >= 9) return SOUND_BITE_NOTE;
     if (state.boss <= 70) return CAROUSEL_NOTE;
@@ -1436,7 +1457,10 @@
     { claim:"Oil inventories are at record highs — there is a huge cushion left.",
       fact:"World oil inventories sit ~509 million barrels below pre-war levels and spare capacity is drawn down — the cushion that absorbed the first shock is spent.",
       source:"IEA / OPEC inventory estimates, fall 2026 brief" },
-    null,
+    { claim:"The national debt costs ordinary families nothing.",
+      debt:true,
+      fact:"The debt is never paid down — it is refinanced forever at whatever rate the market demands, and net interest is now one of the largest single federal outlays, larger than the defense budget, paid out of taxes every year. Refinancing a $40 trillion-plus stock at 5%+ rates reprices the whole mountain over time, and households pay through three pressure valves: higher taxes and fees over time, inflation that quietly taxes savings and wages, and higher-for-longer mortgage rates. After WWII the debt was not repaid either — it was outgrown and inflated down as a share of GDP, which required decades of growth.",
+      source:"U.S. Treasury Fiscal Data (total federal debt, $40T+); CBO budget outlook — net interest vs. defense outlays" },
     { claim:"War spending is pure economic gain — everybody wins.",
       warChest:true,
       fact:"Both halves, as documented: the jobs and output are real — WWII mobilisation cut unemployment from 14.7% (1940) to 1.2% (1944) and created ~17 million civilian jobs on war contracts, and programs like the F-35 (supply chain in 45+ states) build a constituency that defends the spending itself. And: the peak came with rationing and price controls, the debt rose roughly five-fold 1941–45, activity is not the same as welfare (the broken-window point), and Eisenhower — the general who won that war — warned in his 1961 farewell against the \u201Cmilitary-industrial complex\u201D and its \u201Cunwarranted influence.\u201D Real jobs; not pure gain.",
@@ -1873,12 +1897,24 @@
       if (res) res.innerHTML = '<p class="g-fact"><b>Gambit collapsed — correct ruling: FAKE.</b> He loses his Hard Defense bonus for this battle, and your next hit deals <b>+2 damage</b>.<br><b>Documented fact:</b> ' + gambit.fact + '<br><span style="color:var(--stage-muted)">Source: ' + gambit.source + "</span></p>";
       log("Fake News Gambit called FAKE — correct. His Defense bonus collapses this battle and the next hit deals +2. Documented fact: " + gambit.fact + " (" + gambit.source + ")");
     } else {
-      var heal = creepHeal();
-      if (heal > 0) state.boss = Math.min(100, state.boss + heal);
+      var heal = 0;
+      var landText, landLog;
+      if (gambit.debt) {
+        /* The Debt Mountain card: no instant heal — the unpaid interest is
+           banked and added to his next Mission Creep heal in finalizeBattle. */
+        state.debtInterest = creepHeal();
+        landText = "He lets the unpaid interest ride: <b>+" + state.debtInterest + " HP</b> of interest will be added to his next Mission Creep heal — the interest compounds, so does he";
+        landLog = "Fake News Gambit lands (" + ruling + "). The unpaid interest (+" + state.debtInterest + " HP) is banked onto The Fade's next Mission Creep heal — the interest compounds, so does he. Documented fact: " + gambit.fact + " (" + gambit.source + ")";
+      } else {
+        heal = creepHeal();
+        if (heal > 0) state.boss = Math.min(100, state.boss + heal);
+        landText = gambit.warChest ? "He invokes <b>The War Chest</b> — \u201Cwar is jobs, kid\u201D — and the factories lobby to stay open: The Fade regains <b>+" + heal + " HP</b> at once" : "Mission Creep fires at once: The Fade regains <b>+" + heal + " HP</b>";
+        landLog = "Fake News Gambit lands (" + ruling + "). The Fade heals +" + heal + " HP via Mission Creep. Documented fact: " + gambit.fact + " (" + gambit.source + ")";
+      }
       state.gambitTauntOverride = "\u201C" + gambit.claim + " See? Even the facts agree with me.\u201D";
       tauntEl.textContent = state.gambitTauntOverride;
-      if (res) res.innerHTML = '<p class="g-fact"><b>The trick lands — that claim was FAKE.</b> ' + (ruling === "skip" ? "Skipping the ruling lets it stand as if true. " : "Calling it TRUE lets it stand. ") + (gambit.warChest ? "He invokes <b>The War Chest</b> — \u201Cwar is jobs, kid\u201D — and the factories lobby to stay open: The Fade regains <b>+" + heal + " HP</b> at once" : "Mission Creep fires at once: The Fade regains <b>+" + heal + " HP</b>") + ", and he will quote the false claim as established for the rest of this battle.<br><b>Documented fact:</b> " + gambit.fact + '<br><span style="color:var(--stage-muted)">Source: ' + gambit.source + "</span></p>";
-      log("Fake News Gambit lands (" + ruling + "). The Fade heals +" + heal + " HP via Mission Creep. Documented fact: " + gambit.fact + " (" + gambit.source + ")");
+      if (res) res.innerHTML = '<p class="g-fact"><b>The trick lands — that claim was FAKE.</b> ' + (ruling === "skip" ? "Skipping the ruling lets it stand as if true. " : "Calling it TRUE lets it stand. ") + landText + ", and he will quote the false claim as established for the rest of this battle.<br><b>Documented fact:</b> " + gambit.fact + '<br><span style="color:var(--stage-muted)">Source: ' + gambit.source + "</span></p>";
+      log(landLog);
     }
     updateFadeUI();
     renderBars();
@@ -2104,13 +2140,20 @@
   /* Post-battle bookkeeping shared by both roll outcomes: Mission Creep,
      the standing Blowback roll, rotation memory, and the all-DOWN check. */
   function finalizeBattle(fb){
-    /* Mission Creep: a Fade that survives the battle digs in — the exit moves again */
-    if (state.boss > 0 && creepHeal() > 0) {
-      state.boss = Math.min(100, state.boss + creepHeal());
+    /* Mission Creep: a Fade that survives the battle digs in — the exit moves
+       again. Interest banked by a fallen-for Debt Mountain gambit rides on
+       top of the heal, once, then is spent. */
+    var creepTotal = creepHeal() + (state.debtInterest || 0);
+    if (state.boss > 0 && creepTotal > 0) {
+      state.boss = Math.min(100, state.boss + creepTotal);
       if (state.idx % 2 === 1) {
-        fb.innerHTML += '<p class="brief-note">Mission Creep — The War Chest: the factories lobby to stay open — The Fade regains +' + creepHeal() + " HP. Contracts mean local jobs (the F-35 chain spans 45+ states), so the spending defends itself — the jobs are real, and so are the rationing, the five-fold debt rise of 1941–45, and Eisenhower's 1961 warning. Both halves, always.</p>";
+        fb.innerHTML += '<p class="brief-note">Mission Creep — The War Chest: the factories lobby to stay open — The Fade regains +' + creepTotal + " HP. Contracts mean local jobs (the F-35 chain spans 45+ states), so the spending defends itself — the jobs are real, and so are the rationing, the five-fold debt rise of 1941–45, and Eisenhower's 1961 warning. Both halves, always.</p>";
       } else {
-        fb.innerHTML += '<p class="brief-note">Mission Creep: The Fade digs in and regains +' + creepHeal() + " HP — stay long enough, and the occupation forgets why it came.</p>";
+        fb.innerHTML += '<p class="brief-note">Mission Creep: The Fade digs in and regains +' + creepTotal + " HP — stay long enough, and the occupation forgets why it came.</p>";
+      }
+      if (state.debtInterest > 0) {
+        fb.innerHTML += '<p class="brief-note">The Debt Mountain: the interest on the gambit you let stand comes due inside that heal — <b>+' + state.debtInterest + ' HP</b> of it is pure interest on a $40 trillion-plus debt that is refinanced, never repaid. The interest compounds — so does he.</p>';
+        state.debtInterest = 0;
       }
     }
     /* Blowback: yesterday's gifted weapons, fired back at the band */
@@ -2211,7 +2254,7 @@
     state.pendingBuffs = { insp:0, sharpen:false };
     state.activeBuffs = { insp:0, sharpen:false };
     state.battleMods = null; state.dbBonus = 0; state.allDown = false;
-    state.hardMode = false; state.gambitResolved = true; state.gambitCollapsed = false; state.gambitClaim = null; state.gambitTauntOverride = null;
+    state.hardMode = false; state.gambitResolved = true; state.gambitCollapsed = false; state.gambitClaim = null; state.gambitTauntOverride = null; state.debtInterest = 0;
     var ht2 = document.getElementById("hardToggle");
     if (ht2) { ht2.disabled = false; ht2.setAttribute("aria-pressed","false"); ht2.textContent = "Turn HARD mode ON"; }
     var hd2 = document.getElementById("hardDesc");
