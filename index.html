@@ -650,7 +650,7 @@
           <div class="fade-hp">
             <div class="fh-row"><span>Hit points</span><b id="fadeHpVal">100 / 100</b></div>
             <div class="bar boss"><i id="fadeHpBar" style="width:100%"></i></div>
-            <p class="note">Starting hit points: 100 — the same as every band member's sheet. Finish the twelfth battle with him at 40 HP or below to break him.</p>
+            <p class="note">Starting hit points: 100 — the same as every band member's sheet. Finish the sixteenth and final battle with him at 40 HP or below to break him.</p>
           </div>
           <p class="fade-excuse" id="fadeExcuse"><b>Current excuse:</b> “An existential threat — we had no choice but to act.”</p>
           <p class="fade-threat" id="fadeThreat">Threat level · Standard — the machine at cruising speed</p>
@@ -817,7 +817,7 @@
   <!-- WIN ENDING -->
   <div class="ending win" id="winEnding" role="status">
     <h2>The Fade is broken. <span class="gold">You did that.</span></h2>
-    <div class="score-line"><span id="winScore">Hits: 0/12</span><span id="winHope">Hope left: 100</span><span id="winTurnout">Friends rallied: 0</span></div>
+    <div class="score-line"><span id="winScore">Hits: 0</span><span id="winHope">Hope left: 100</span><span id="winTurnout">Friends rallied: 0</span></div>
     <p>One day you'll look back on this — the <b>Age of Reckoning</b> — and remember the day your generation stopped fading and started voting like the future was theirs. Because it is.</p>
     <div class="sunrise" aria-label="Sunrise finale scene">
       <div class="sunrise-inner">
@@ -847,7 +847,7 @@
   <!-- LOSE ENDING -->
   <div class="ending lose" id="loseEnding" role="status">
     <h2>The Fade survives — this time.</h2>
-    <div class="score-line"><span id="loseScore">Hits: 0/12</span><span id="loseHope">Hope left: 0</span></div>
+    <div class="score-line"><span id="loseScore">Hits: 0</span><span id="loseHope">Hope left: 0</span></div>
     <p>The Fade doesn't need you to agree with it. It only needs you <b>uninformed, discouraged, and home on Election Day</b>. But notice what happened in every battle you missed: the explanation was right there, and now you know it. Knowledge doesn't fade. Hope doesn't either — it waits for the next sunrise. <b>Run it back</b> — and this time, bring friends, bring family, bring everyone who needs a home and a fair shot.</p>
     <p class="lose-power-line" id="losePowerCardLine" style="display:none"></p>
     <div class="cta-row">
@@ -2952,6 +2952,11 @@
   if (finaleBtn) finaleBtn.addEventListener("click", openFinale);
   document.getElementById("creditsClose").addEventListener("click", closeFinale);
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && overlay.classList.contains("show")) closeFinale(); });
+
+  ["winScore", "loseScore"].forEach(function(id){
+    var scoreEl = document.getElementById(id);
+    if (scoreEl) scoreEl.textContent = "Hits: 0/" + QUESTS.length;
+  });
 
   ["maya", "dre", "priya"].forEach(updateDerived);
   wireCamp();
