@@ -86,6 +86,11 @@
   .stat output{font-family:"JetBrains Mono",monospace;font-size:.8rem;font-weight:700;text-align:right;color:var(--teal)}
   .stat input[type="range"]{width:100%;accent-color:var(--teal);margin:0;height:22px}
   .cap-note{margin:10px 0 0;font-size:.78rem;color:var(--muted);font-style:italic}
+  .stats .pool-line{grid-column:1/-1;font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:700;letter-spacing:.05em;color:var(--ink)}
+  .stats .pool-line b{color:var(--teal)}
+  .stats .pool-note{grid-column:1/-1;font-size:.76rem;font-weight:700;color:#a86e00;line-height:1.45}
+  .stats .pool-note:empty{display:none}
+  @media (prefers-color-scheme: dark){.stats .pool-note{color:var(--amber)}}
   .deathblow-status{margin:10px 0 0;font-family:"JetBrains Mono",monospace;font-size:.68rem;font-weight:700;letter-spacing:.04em;color:#a86e00;background:#fff7e0;border:1px dashed #d9a514;border-radius:8px;padding:7px 9px}
   @media (prefers-color-scheme: dark){.deathblow-status{background:#2a2410;color:var(--amber)}}
   .deathblow-status.spent{color:var(--muted);background:var(--panel2);border-color:var(--line)}
@@ -501,7 +506,7 @@
   <!-- CHOOSE FIGHTER -->
   <section class="block" id="chooseSection">
     <h2 id="chooseHeading">Choose your fighter</h2>
-    <p class="lede">Three young players, three uncertain futures — the band's character sheets. <b>Your fighter changes the story lines, not the facts</b> — every battle below is drawn from the real brief: the 2026 U.S.–Iran war, the Strait of Hormuz, sweeping tariffs, and what the midterms actually control. <b>And you choose again before every battle:</b> hit “Next battle” after a fight and you'll land back here to send in the band member who fits the fight ahead. <b>Tune each sheet, too:</b> every ability score sits on a slider, but the caps are true to class — a warrior's strength tops out where a healer's never could, and the healer's magic and healing run higher than anyone's. The sliders are real, too: each sheet derives its combat numbers live — <b>modifier = (stat − 8) ÷ 2, rounded, −2 to +4</b> — so tuning a stat moves the Attack, Damage and Defense numbers the dice use in the arena. <b>The Power Card lives on every sheet:</b> facts charge it, courage plays it, and playing it is the strongest move the band owns besides a Death Blow.</p>
+    <p class="lede">Three young players, three uncertain futures — the band's character sheets. <b>Your fighter changes the story lines, not the facts</b> — every battle below is drawn from the real brief: the 2026 U.S.–Iran war, the Strait of Hormuz, sweeping tariffs, and what the midterms actually control. <b>And you choose again before every battle:</b> hit “Next battle” after a fight and you'll land back here to send in the band member who fits the fight ahead. <b>Tune each sheet, too:</b> every ability score sits on a slider, but the caps are true to class — a warrior's strength tops out where a healer's never could, and the healer's magic and healing run higher than anyone's. The sliders are real, too: each sheet derives its combat numbers live — <b>modifier = (stat − 8) ÷ 2, rounded, −2 to +4</b> — so tuning a stat moves the Attack, Damage and Defense numbers the dice use in the arena. <b>And every sheet holds a fixed pool of build points:</b> raise one score and the points come out of points you've banked by lowering others first — then straight out of that hero's highest other score. A sheet can change shape, but its total never grows. <b>The Power Card lives on every sheet:</b> facts charge it, courage plays it, and playing it is the strongest move the band owns besides a Death Blow.</p>
     <div class="pick-banner" id="pickBanner" role="status"></div>
     <div class="camp" id="campPanel" hidden>
       <span class="camp-tag">Between battles · One camp action</span>
@@ -540,6 +545,8 @@
         <p class="deathblow-status" id="dbStatus-maya">Death Blow · The Archer's Eye — ready · one-shot · opens under 15 boss HP</p>
         <div class="stats">
           <span class="stats-head">Ability scores — slide to tune</span>
+          <span class="pool-line" id="pool-maya"></span>
+          <span class="pool-note" id="poolNote-maya" role="status"></span>
           <div class="stat"><label for="st-maya-str">STR</label><input type="range" id="st-maya-str" min="4" max="12" value="9" /><output for="st-maya-str">9</output></div>
           <div class="stat"><label for="st-maya-dex">DEX</label><input type="range" id="st-maya-dex" min="8" max="16" value="14" /><output for="st-maya-dex">14</output></div>
           <div class="stat"><label for="st-maya-con">CON</label><input type="range" id="st-maya-con" min="5" max="12" value="10" /><output for="st-maya-con">10</output></div>
@@ -571,6 +578,8 @@
         <p class="deathblow-status" id="dbStatus-dre">Death Blow · The Axeman's Ledger — ready · one-shot · opens under 10 boss HP (he must close the distance)</p>
         <div class="stats">
           <span class="stats-head">Ability scores — slide to tune</span>
+          <span class="pool-line" id="pool-dre"></span>
+          <span class="pool-note" id="poolNote-dre" role="status"></span>
           <div class="stat"><label for="st-dre-str">STR</label><input type="range" id="st-dre-str" min="8" max="12" value="12" /><output for="st-dre-str">12</output></div>
           <div class="stat"><label for="st-dre-dex">DEX</label><input type="range" id="st-dre-dex" min="4" max="11" value="8" /><output for="st-dre-dex">8</output></div>
           <div class="stat"><label for="st-dre-con">CON</label><input type="range" id="st-dre-con" min="8" max="15" value="13" /><output for="st-dre-con">13</output></div>
@@ -602,6 +611,8 @@
         <p class="deathblow-status" id="dbStatus-priya">Death Blow · The Healer's Verdict — ready · one-shot · opens under 15 boss HP, on alternate battles</p>
         <div class="stats">
           <span class="stats-head">Ability scores — slide to tune</span>
+          <span class="pool-line" id="pool-priya"></span>
+          <span class="pool-note" id="poolNote-priya" role="status"></span>
           <div class="stat"><label for="st-priya-str">STR</label><input type="range" id="st-priya-str" min="3" max="8" value="7" /><output for="st-priya-str">7</output></div>
           <div class="stat"><label for="st-priya-dex">DEX</label><input type="range" id="st-priya-dex" min="4" max="11" value="9" /><output for="st-priya-dex">9</output></div>
           <div class="stat"><label for="st-priya-con">CON</label><input type="range" id="st-priya-con" min="5" max="11" value="9" /><output for="st-priya-con">9</output></div>
@@ -2602,6 +2613,7 @@
     });
     var lockNote = document.getElementById("fadeLockNote");
     if (lockNote) lockNote.innerHTML = LOCK_NOTE_HTML;
+    restoreHeroSheets();
     updateFadeUI();
     updateDeathBlowStatus();
     var oldDbFig = document.getElementById("dbVignette");
@@ -2634,16 +2646,137 @@
     });
   });
 
-  /* Ability sliders — live value readout plus live derived combat numbers */
-  document.querySelectorAll(".stat input[type='range']").forEach(function(r){
-    var out = r.parentElement.querySelector("output");
+  /* Ability sliders — a fixed point-buy pool on each hero sheet.
+     The budget is the sum of that sheet's default slider values, captured at
+     load; the eight scores can be re-shaped freely but their total can never
+     exceed it. Raising a score spends banked points first (points banked by
+     lowering other scores), then auto-lowers other scores on the same sheet —
+     the highest current value above its floor gives first, ties broken by
+     headroom above floor, then sheet order — until the raise is paid for. If
+     the pool can't pay, the raise is capped at what it can afford. Floors
+     (min) and class caps (max) always bind. Lowering is always free and only
+     banks points. The Fade's war-machine sliders are a separate system and
+     are not pooled. The re-entry guard keeps one drag to one transaction. */
+  var STAT_KEYS = ["str", "dex", "con", "int", "wis", "cha", "mag", "heal"];
+  var STAT_NAMES = { str:"STR", dex:"DEX", con:"CON", int:"INT", wis:"WIS", cha:"CHA", mag:"MAGIC", heal:"HEAL" };
+  var sheetPools = {};
+  var poolReentry = false;
+
+  function syncSliderOut(el){
+    var o = el.parentElement.querySelector("output");
+    if (o) o.textContent = el.value;
+  }
+  function poolTotal(pool){
+    return pool.els.reduce(function(s, el){ return s + parseInt(el.value, 10); }, 0);
+  }
+  function renderPoolLine(hero){
+    var pool = sheetPools[hero]; if (!pool) return;
+    var line = document.getElementById("pool-" + hero); if (!line) return;
+    var used = poolTotal(pool);
+    line.innerHTML = "Build points: <b>" + used + " / " + pool.budget + "</b> · Bank: <b>" + (pool.budget - used) + "</b>";
+  }
+  function setPoolNote(hero, msg){
+    var n = document.getElementById("poolNote-" + hero);
+    if (n) n.textContent = msg || "";
+  }
+
+  function handlePoolSlider(r){
+    if (poolReentry) return;
     var hero = r.id.split("-")[1];
-    r.addEventListener("input", function(){
-      out.textContent = r.value;
-      updateDerived(hero);
-      renderHeroHp();
+    var key = r.id.split("-")[2];
+    var pool = sheetPools[hero];
+    if (!pool) { syncSliderOut(r); updateDerived(hero); renderHeroHp(); return; }
+    var prev = pool.values[r.id];
+    var want = parseInt(r.value, 10);
+    if (want === prev) { syncSliderOut(r); return; }
+    poolReentry = true;
+    try {
+      if (want < prev) {
+        /* Lowering is always allowed down to the floor; the points bank. */
+        pool.values[r.id] = want;
+        syncSliderOut(r);
+        setPoolNote(hero, "");
+      } else {
+        var delta = want - prev;
+        var bank = pool.budget - (poolTotal(pool) - delta);
+        var donors = [];
+        pool.els.forEach(function(el, idx){
+          if (el === r) return;
+          var v = parseInt(el.value, 10);
+          var room = v - parseInt(el.min, 10);
+          if (room > 0) donors.push({ el: el, idx: idx, val: v, room: room });
+        });
+        donors.sort(function(a, b){
+          if (b.val !== a.val) return b.val - a.val;
+          if (b.room !== a.room) return b.room - a.room;
+          return a.idx - b.idx;
+        });
+        var donatable = donors.reduce(function(s, d){ return s + d.room; }, 0);
+        var granted = Math.min(delta, bank + donatable);
+        if (granted <= 0) {
+          r.value = prev;
+          syncSliderOut(r);
+          setPoolNote(hero, "No points to trade — " + STAT_NAMES[key] + " can't rise until another score gives some back.");
+        } else {
+          var need = granted - Math.min(bank, granted);
+          var took = [];
+          for (var i = 0; i < donors.length && need > 0; i++) {
+            var take = Math.min(need, donors[i].room);
+            if (take > 0) {
+              donors[i].el.value = donors[i].val - take;
+              pool.values[donors[i].el.id] = donors[i].val - take;
+              syncSliderOut(donors[i].el);
+              took.push(STAT_NAMES[donors[i].el.id.split("-")[2]] + " −" + take);
+              need -= take;
+            }
+          }
+          r.value = prev + granted;
+          pool.values[r.id] = prev + granted;
+          syncSliderOut(r);
+          if (took.length) {
+            setPoolNote(hero, "Auto-balanced: " + STAT_NAMES[key] + " +" + granted + " took " + took.join(", ") + " (build total unchanged).");
+          } else {
+            setPoolNote(hero, "");
+          }
+        }
+      }
+    } finally { poolReentry = false; }
+    renderPoolLine(hero);
+    updateDerived(hero);
+    renderHeroHp();
+  }
+
+  ["maya", "dre", "priya"].forEach(function(hero){
+    var els = STAT_KEYS.map(function(k){ return document.getElementById("st-" + hero + "-" + k); })
+      .filter(function(el){ return !!el; });
+    var pool = { els: els, budget: 0, values: {}, defaults: {} };
+    els.forEach(function(el){
+      var v = parseInt(el.value, 10);
+      pool.budget += v;
+      pool.values[el.id] = v;
+      pool.defaults[el.id] = v;
+      el.addEventListener("input", function(){ handlePoolSlider(el); });
     });
+    sheetPools[hero] = pool;
+    renderPoolLine(hero);
   });
+
+  /* Replay: hero sheets return to their default builds (and their budgets). */
+  function restoreHeroSheets(){
+    ["maya", "dre", "priya"].forEach(function(hero){
+      var pool = sheetPools[hero]; if (!pool) return;
+      poolReentry = true;
+      pool.els.forEach(function(el){
+        el.value = pool.defaults[el.id];
+        pool.values[el.id] = pool.defaults[el.id];
+        syncSliderOut(el);
+      });
+      poolReentry = false;
+      setPoolNote(hero, "");
+      renderPoolLine(hero);
+      updateDerived(hero);
+    });
+  }
 
   document.querySelectorAll("[data-replay]").forEach(function(b){
     b.addEventListener("click", function(){
