@@ -35,11 +35,16 @@
   :focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 
   /* ---------- Top strip ---------- */
-  .topstrip{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(14px + env(safe-area-inset-top, 0px)) 0 10px}
+  .topstrip{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:calc(14px + env(safe-area-inset-top, 0px)) 0 10px}
   @media (display-mode: standalone){.install-btn{display:none}}
-  .topstrip .tag{font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .topstrip .tag{font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;margin-right:-.14em}
   .install-btn{border:2px solid var(--ink);background:var(--amber);color:#10181d;font-weight:800;font-size:.85rem;padding:9px 14px;border-radius:6px;box-shadow:3px 3px 0 var(--ink)}
   .install-btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  @media (min-width:641px){
+    .topstrip{flex-direction:row;justify-content:center}
+    .topstrip .install-btn{position:absolute;right:0;top:50%;transform:translateY(-50%)}
+    .topstrip .install-btn:active{transform:translate(2px,calc(-50% + 2px));box-shadow:1px 1px 0 var(--ink)}
+  }
 
   /* ---------- Hero ---------- */
   .hero{background:var(--stage);color:var(--stage-ink);border-radius:14px;overflow:hidden;border:2px solid #000}
