@@ -54,10 +54,44 @@ Strait transit volumes and war-risk premiums; Brent; the 10-year yield and term 
 
 ## From brief to battle
 
-- The brief's eight load-bearing topics became the game's **8 battles**: the Strait slams shut; who pays tariffs; the JCPOA "who built the corner" timeline; the landed-cost pincer; fertilizer and helium aftershocks; the rate freeze; the spiral watch list; and the finale — record over label, what the midterms actually control.
+- The brief's eight load-bearing topics became the game's **8 battles**: the Strait slams shut; who pays tariffs; the JCPOA "who built the corner" timeline; the landed-cost pincer; fertilizer and helium aftershocks; the rate freeze; the spiral watch list; and the finale — record over label, what the midterms actually control. (The game later grew to 12 battles — see "The second harvest" below.)
 - The heroes — **Maya** (Voting Arrows), **Dre** (Axe of Freedom), **Priya** (Sword of Youth) — are early-20s composites of the generation inheriting this economy: gig work and gas prices, warehouse shifts, 200 unanswered job applications.
 - The boss, **The Fade**, is built from the brief's villains in literal form: red tape, tariff price tags, oil barrels, and a chained ballot box. In the D&D module, its minions are the Tariff Wraith, the Spiral Specter, the Rate-Freeze Golem, and the Disinfo Imp.
 - The module's core mechanic, **Informed Strike** (+1 to hit, +1 damage for stating a real fact before you swing), is the session's thesis made playable: information is the weapon; the vote is how you swing it.
 - Every run of the game ends where the session ended: a four-step real-world plan, and vote.gov. **Election Day: Tuesday, November 3, 2026.**
 
-*Assembled with Kendo (Muse) as research partner and project manager, at the direction of Mike Ford — who asked the questions, caught the errors (including one of Kendo's own sentences), and made the call.*
+---
+
+## The second harvest — key points behind Battles 9–12 and the Death Blows
+
+The session held more verified material than eight battles could carry. When the game expanded, these are the key points that were extracted from it — stated as they were established that night, from the record.
+
+1. **The forecast record → Battle 9, "Receipts: The Forecasts."** During the June 2025 strikes — eight months before the 2026 decision — JPMorgan published that a Hormuz closure could take oil to $120–$130, and Lipow Oil Associates projected roughly $4.50 national-average gasoline, ~$6 in California. The 2026 outcome tracked the published range: gasoline $2.98 on February 28 to a $4.55 peak in May. *Key point: the consequences were forecast in writing, with numbers, in advance.*
+2. **The transmission channel → Battle 10, "The Invisible Tax."** The United States is a net energy exporter; the shock reached households through finance, not fuel supply. The 10-year Treasury closed at 5.31% on October 5, 2026 (highest close since 2002), the term premium reached ~1.07 points (highest since 2010), and 30-year mortgages held ~7.3–7.4%. *Key point: in a modern economy, a distant blockade is paid at the mortgage closing table.*
+3. **The anatomy of a claim → Battle 11, "Two Weeks Away?"** A figure can be true while the conclusion built on it is not. Iran's ~441 kg of uranium enriched to 60% is real material, but enrichment is step one of three: weaponization, miniaturization, and a deliverable warhead add an estimated 1–2+ years. The IAEA's Director General stated on March 2, 2026 that the agency saw no structured program to manufacture nuclear weapons. *Key point: capability, imminence, and intent are separate assertions, with separate evidence — weigh them separately.*
+4. **Buffers are finite → Battle 12, "The Empty Cushion."** By fall 2026, global oil inventories stood roughly 509 million barrels below pre-war levels, spare production capacity was drawn down, and insurance markets had already repriced war risk from ~0.05% to over 5% of vessel value. *Key point: a system that has spent its cushion answers the next shock at full force.*
+
+**The Death Blow questions** were designed as logic tests rather than recall questions, one per hero, and gated: each appears only when The Fade is already below 15 hit points — the finishing argument has to be earned. **Maya's "Archer's Eye" is a timeline test** — compare breakout time under the nuclear agreement (~12 months, inspectors present, compliance certified) with the trajectory after its abandonment (weeks, ~441 kg at 60%, inspectors out), and judge which produced the emergency. **Dre's "Axeman's Ledger" is an arithmetic test** — sum an open-ended war, open-ended tariffs, and a $1.5 trillion defense topline, price the borrowing at the observed term premium, and find what breaks first for working families. **Priya's "Healer's Verdict" is a burden-of-proof test** — a government asking its people to bear a war's costs must evidence capability *and* imminence *and* intent; the record, examined piece by piece, is where that test is passed or failed.
+
+## The Fade, enhanced — the flipping-sides file
+
+When The Fade was given a full character sheet of his own, his abilities were drawn from a documented pattern in American foreign policy: a partner armed and praised in one decade becomes the adversary of a later one — sometimes holding American-supplied weapons. The episodes below are matters of historical record.
+
+- **Afghanistan: the 1980s → 2001–2021.** Under Operation Cyclone, the United States — with Saudi funding and Pakistan's ISI — supplied the Afghan mujahideen with money, training, and weapons, including Stinger anti-aircraft missiles, to fight the Soviet occupation. They were publicly celebrated as "freedom fighters." Networks and commanders formed in that war became al-Qaeda and the Taliban; after 2001, the United States fought a twenty-year war against them. The weapons and expertise outlived the alignment that delivered them.
+- **Iraq: the 1980s → 1991 and 2003.** During the Iran–Iraq war, the United States tilted toward Saddam Hussein's Iraq with satellite intelligence, dual-use exports, and diplomatic support. In 1991, a US-led coalition fought Iraq over Kuwait; in 2003, the United States invaded and overthrew him. The partner of one decade was the enemy of the next two.
+- **Iran: 1953 → 1979 → 2026.** The 1953 coup, backed by the US and UK, removed Prime Minister Mossadegh and consolidated the Shah's rule. The 1979 revolution that overthrew the Shah defined itself against that intervention — and the Islamic Republic it created is the adversary of the 2026 war. The longest arc in the file runs three generations.
+- **The occupation drift.** In Afghanistan (2001) and Iraq (2003), missions announced for a single stated purpose became occupations of a decade or more, and the stated reasons rotated as the years passed — security, stability, training, conditions for withdrawal — long after the original casus belli had been answered or had collapsed. The war stays; the reason rotates.
+
+How the file became game mechanics:
+
+- **War Drum Volume** — the fear-first drumbeat that precedes each episode in the file. It scales the Hope a wrong answer costs.
+- **Sound Bite Spin** — the selling language. "Freedom fighters" is the file's central artifact: a label applied to the same kind of fighter in one decade and withdrawn in the next. In game, Spin raises The Fade's Defense and sharpens his taunts.
+- **Mission Creep** — the occupation drift, mechanized: a Fade who survives a battle regains hit points, because staying is what he does.
+- **Blowback Arsenal** — the pattern itself: periodically he fires the band's own gifted weapons back at it, and the battle log names the history the shot came from.
+- **The rotating excuse** on his sheet — threat → liberation → stability → "we're already there" — mirrors the documented rotation of stated rationales across the long occupations.
+
+*The labels change with the decade. The weapons remain.*
+
+---
+
+*Assembled with Kendo (Muse) as research partner and project manager, at the direction of Mike Ford — who asked the questions, caught the errors (including one of Kendo's own sentences), and made the call. The sections above were added October 25, 2026, as the game grew: the second-harvest battles, the Death Blow questions, and The Fade's character sheet.*
