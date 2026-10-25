@@ -8,13 +8,13 @@
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="Vote or Fade" />
+<meta name="apple-mobile-web-app-title" content="Power Card" />
 <meta name="description" content="A playable boss battle for first-time midterm voters: learn how war, tariffs and inflation connect — then defeat The Fade with Voting Arrows, the Axe of Freedom and the Sword of Youth before Nov 3, 2026." />
 <link rel="icon" href="data:," />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Public+Sans:ital,wght@0,400;0,600;0,800;1,400&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
-<title>Vote or Fade Away — The Battle</title>
+<title>Power Card — Vote or Fade Away</title>
 <style>
   :root{
     --bg:#e9efee; --panel:#ffffff; --panel2:#f4f7f6; --ink:#10181d; --muted:#506068;
@@ -50,9 +50,11 @@
   .hero{background:var(--stage);color:var(--stage-ink);border-radius:14px;overflow:hidden;border:2px solid #000}
   .hero img{width:100%;height:auto;display:block;aspect-ratio:3/2;object-fit:cover}
   .hero-body{padding:22px 20px 24px}
-  .hero h1{font-size:clamp(2.6rem,9vw,4.6rem)}
-  .hero h1 .fade-word{color:var(--red)}
-  .hero h1 .vote-word{color:var(--amber)}
+  .hero h1{font-size:clamp(2.9rem,10.5vw,5.2rem)}
+  .hero h1 .card-word{color:var(--amber)}
+  .hero .game-subtitle{font-family:"Anton",sans-serif;font-weight:400;letter-spacing:.01em;text-transform:uppercase;line-height:1.05;font-size:clamp(1.45rem,5vw,2.3rem);margin-top:8px;color:var(--stage-ink)}
+  .hero .game-subtitle .fade-word{color:var(--red)}
+  .hero .game-subtitle .vote-word{color:var(--amber)}
   .hero .sub{font-size:1.06rem;color:var(--stage-ink);max-width:56ch;margin:12px 0 0}
   .hero .sub b{color:var(--amber)}
   .dateline{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
@@ -272,6 +274,7 @@
   .credits-overlay.show{display:flex}
   .credits-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:calc(12px + env(safe-area-inset-top, 0px)) calc(16px + env(safe-area-inset-right, 0px)) 12px calc(16px + env(safe-area-inset-left, 0px));color:#edf2f0}
   .credits-top .display{font-size:1rem}
+  .credits-top .credits-subtitle{display:block;font-size:.68rem;letter-spacing:.08em;color:#9db3ad;margin-top:2px}
   .credits-close{background:var(--amber);border:none;border-radius:8px;padding:10px 14px;font-weight:800;color:#10181d}
   .video-wrap{width:min(920px,100%);margin:0 auto;padding:0 12px}
   .video-box{position:relative;padding-top:56.25%;background:#000;border:1px solid #33413a;border-radius:10px;overflow:hidden}
@@ -478,7 +481,8 @@
   <header class="hero">
     <img data-img="heroes" alt="Illustration of three young heroes — one drawing a bow with ballot-tipped arrows, one raising a flaming axe, one holding a glowing sword — with rising price tags over a city skyline" />
     <div class="hero-body">
-      <h1><span class="vote-word">Vote</span> or <span class="fade-word">Fade Away</span></h1>
+      <h1>Power <span class="card-word">Card</span></h1>
+      <div class="game-subtitle"><span class="vote-word">Vote</span> or <span class="fade-word">Fade Away</span></div>
       <p class="sub">You're in your early 20s. Rent is up, gas is up, the job board is a graveyard, and a war plus a tariff storm are squeezing everything at once. The boss feeding on all of it is called <b>The Fade</b> — and it wins every time young people decide their vote doesn't matter. Sixteen battles. Three weapons. One Election Day. <b>Play the brief. Beat the boss. Keep the future — and fight for a roof over your head you can actually afford.</b></p>
       <div class="hope-strip"><p><b>The sound of hope:</b> this isn't a doom game. It's a dawn game. Every informed strike is a step toward work that pays, a home within reach, and a generation that refuses to fade — together.</p></div>
       <div class="dateline">
@@ -849,7 +853,7 @@
 <!-- Finale: song + scrolling credits -->
 <div class="credits-overlay" id="creditsOverlay" role="dialog" aria-modal="true" aria-labelledby="creditsTitle">
   <div class="credits-top">
-    <span class="display" id="creditsTitle">Vote or Fade Away — The Road Home</span>
+    <span class="display" id="creditsTitle">Power Card — The Road Home<span class="credits-subtitle">Vote or Fade Away</span></span>
     <button class="credits-close" id="creditsClose" type="button">Close ✕</button>
   </div>
   <div class="video-wrap">
@@ -1062,7 +1066,7 @@
 <!-- Install sheet -->
 <div class="sheet" id="installSheet" role="dialog" aria-modal="true" aria-labelledby="installTitle">
   <div class="sheet-card">
-    <h3 id="installTitle">Add Vote or Fade Away to your Home Screen</h3>
+    <h3 id="installTitle">Add Power Card to your Home Screen</h3>
     <p style="margin:0;color:var(--muted);font-size:.94rem">Keep the battle one tap away until Election Day.</p>
     <ol id="installSteps">
       <li><b>iPhone (Safari):</b> tap the <b>Share</b> button, then <b>Add to Home Screen</b>, then <b>Add</b>.</li>
@@ -1080,8 +1084,8 @@
   /* ============ PWA: manifest (generated) + install sheet ============ */
   try {
     var manifest = {
-      name: "Vote or Fade Away",
-      short_name: "Vote or Fade",
+      name: "Power Card — Vote or Fade Away",
+      short_name: "Power Card",
       start_url: ".",
       scope: ".",
       display: "standalone",
