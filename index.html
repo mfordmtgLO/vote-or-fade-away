@@ -404,12 +404,16 @@
   .fact-check .fc-tag{font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7a4a00;display:block;margin-bottom:4px}
   .boss-name{cursor:pointer}
   .boss-name .tap-hint{display:block;font-style:normal;font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-top:4px}
-  .gambit-card{margin-top:14px;border:2px solid #ff6b5e;background:#2a1214;border-radius:10px;padding:14px 16px}
+  .gambit-card{margin-top:14px;border:2px solid #ff6b5e;background:#2a1214;border-radius:10px;padding:14px 16px;transition:border-color .3s ease,background .3s ease,box-shadow .3s ease}
   .gambit-card .g-tag{font-family:"JetBrains Mono",monospace;font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ff9d94}
   .gambit-card .g-claim{margin:8px 0;font-size:1rem;font-weight:800;color:#fff}
   .gambit-card p{margin:6px 0;font-size:.9rem;color:var(--stage-ink)}
   .gambit-card .g-fact{border-top:1px dashed #5a2327;padding-top:9px;margin-top:10px}
   .gambit-card .g-fact b{color:#ffd34d}
+  .gambit-card.gambit-correct{border-color:#22c55e;background:#122a1a;box-shadow:0 0 0 1px #22c55e,0 0 18px rgba(34,197,94,.35)}
+  .gambit-card.gambit-correct .g-tag{color:#4ade9e}
+  .gambit-card.gambit-correct .g-fact{border-top-color:#2f6b45}
+  .g-btn.gambit-correct-choice{border-color:#22c55e;outline:3px solid #4ade9e;outline-offset:2px;background:#14532d;color:#fff}
   .g-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
   .g-btn{border:2px solid #000;font-weight:800;padding:10px 14px;border-radius:8px;background:var(--amber);color:#10181d}
   .g-btn.alt{background:var(--stage2);color:#fff;border-color:#3a4a52}
@@ -2214,6 +2218,9 @@
     var db2 = document.getElementById("dbBtn"); if (db2) db2.disabled = false;
     if (correctFake) {
       state.gambitCollapsed = true;
+      var gambitCard = document.getElementById("gambitCard");
+      if (gambitCard) gambitCard.classList.add("gambit-correct");
+      questBox.querySelectorAll("[data-gambit]").forEach(function(b){ if (b.getAttribute("data-gambit") === ruling) b.classList.add("gambit-correct-choice"); });
       var gGain = chargePower(1);
       if (res) res.innerHTML = '<p class="g-fact"><b>Gambit collapsed — correct ruling: FAKE.</b> He loses his Hard Defense bonus for this battle, and your next hit deals <b>+2 damage</b>. Power Card ' + (gGain > 0 ? "+1 — facts charge it: <b>" + state.powerCharge + "/5</b>" : "stays <b>CHARGED at 5/5</b>") + '.<br><b>Documented fact:</b> ' + gambit.fact + '<br><span style="color:var(--stage-muted)">Source: ' + gambit.source + "</span></p>";
       log("Fake News Gambit called FAKE — correct. His Defense bonus collapses this battle and the next hit deals +2. Power Card charge: " + state.powerCharge + "/5. Documented fact: " + gambit.fact + " (" + gambit.source + ")");
