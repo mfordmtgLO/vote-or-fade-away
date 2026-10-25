@@ -450,6 +450,25 @@
   footer{margin-top:40px;border-top:2px solid var(--line);padding-top:16px;font-size:.82rem;color:var(--muted)}
   footer a{color:var(--teal);font-weight:700}
 
+  /* ---------- Novice help: "?" dots, shared popup, flow strip, coach hints ---------- */
+  .help-dot{display:inline-flex;align-items:center;justify-content:center;flex:none;width:19px;height:19px;border-radius:50%;border:2px solid #10181d;background:var(--amber);color:#10181d;font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:700;line-height:1;padding:0;margin-left:6px;vertical-align:middle;cursor:pointer}
+  .help-dot:hover{background:#ffd34d}
+  .help-pop{position:fixed;z-index:120;width:min(320px,calc(100vw - 16px));background:var(--panel);color:var(--ink);border:2px solid var(--ink);border-radius:10px;box-shadow:5px 5px 0 rgba(0,0,0,.4);padding:12px 36px 12px 14px}
+  .help-pop[hidden]{display:none}
+  .help-pop-title{display:block;font-family:"Anton",sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.02em;font-size:1rem;line-height:1.2}
+  .help-pop-body{margin:5px 0 0;font-size:.88rem;line-height:1.5}
+  .help-pop-close{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);background:var(--panel2);color:var(--ink);font-weight:800;font-size:.85rem;line-height:1;display:grid;place-items:center;padding:0}
+  .flow-strip{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:16px}
+  .flow-step{font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:700;letter-spacing:.03em;border:1px solid #3a4a52;color:var(--stage-ink);border-radius:999px;padding:6px 10px}
+  .flow-step b{color:var(--amber)}
+  .flow-arrow{color:var(--amber);font-weight:800;font-size:.85rem}
+  .flow-why{margin:9px 0 0;font-size:.88rem;color:var(--stage-muted)}
+  .coach-hint{margin:10px 0 0;font-size:.86rem;font-weight:700;line-height:1.45;color:#ffd34d;background:#2a2110;border:1px dashed var(--amber);border-radius:8px;padding:7px 10px}
+  .dice-tray .coach-hint{text-align:left}
+  .camp .coach-hint{color:#a86e00;background:#fff7e0;border-color:#d9a514}
+  @media (prefers-color-scheme: dark){.camp .coach-hint{color:var(--amber);background:#2a2410}}
+  .fstat-val{display:inline-flex;align-items:center}
+
   /* ---------- Install sheet ---------- */
   .sheet{position:fixed;inset:0;background:rgba(5,8,10,.66);display:none;align-items:flex-end;justify-content:center;z-index:50;padding:calc(16px + env(safe-area-inset-top, 0px)) calc(16px + env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) calc(16px + env(safe-area-inset-left, 0px))}
   .sheet.show{display:flex}
@@ -505,6 +524,16 @@
         <a class="btn btn-ghost" href="https://vote.gov" target="_blank" rel="noopener">Check your registration</a>
       </div>
       <p class="howto">How it works: pick a fighter from the character sheets, then answer each battle with the most <em>informed</em> move. Right calls strike The Fade. Wrong calls teach you why — and cost you Hope. <strong>After every battle, you choose again:</strong> the band's character sheets come back up, and you send in whoever fits the next fight. Finish with The Fade at 40 HP or below to win. <strong>Death Blow:</strong> if The Fade drops under 15 HP, the fighter in the arena may get a golden one-shot Death Blow opening — land it and The Fade falls on the spot; miss it and that hero's Death Blow is spent for the game. <strong>The dice:</strong> a right answer earns an attack — swipe or tap the 3D d20, add your fighter's sheet bonuses and situational +2s, and beat The Fade's Defense or the blow only glances. A wrong answer lets The Fade counterattack your fighter's own hit points. Between battles you get <strong>one camp action</strong>: Priya's Healing Hands and the band's spells roll the three-sided die, and a landed Death Blow rolls the d6 for overkill. <strong>Fade Logic Engine:</strong> his taunts, excuses and label flips are drawn only from documented, non-partisan fact and history — tap his line in the arena for the correction and source. <strong>Hard Skill Level</strong> (on his sheet) raises his machine to 9–12, adds +2 Defense, unlocks his Fake News Gambit, and makes a Death Blow need a d6 roll of 3+ to finish him. <strong>The Power Card:</strong> facts charge it, courage plays it, and playing it is the strongest move the band owns besides a Death Blow.</p>
+      <div class="flow-strip" aria-label="How a battle flows">
+        <span class="flow-step"><b>1 ·</b> Read the fact</span>
+        <span class="flow-arrow" aria-hidden="true">→</span>
+        <span class="flow-step"><b>2 ·</b> Answer from it</span>
+        <span class="flow-arrow" aria-hidden="true">→</span>
+        <span class="flow-step"><b>3 ·</b> Roll to strike him</span>
+        <span class="flow-arrow" aria-hidden="true">→</span>
+        <span class="flow-step"><b>4 ·</b> Break him to 40 HP by Battle 16 — or land a Death Blow</span>
+      </div>
+      <p class="flow-why">Why the facts? The fact is your weapon: a strike only happens because you got the fact right.</p>
     </div>
   </header>
 
@@ -514,17 +543,18 @@
     <p class="lede">Three young players, three uncertain futures — the band's character sheets. <b>Your fighter changes the story lines, not the facts</b> — every battle below is drawn from the real brief: the 2026 U.S.–Iran war, the Strait of Hormuz, sweeping tariffs, and what the midterms actually control. <b>And you choose again before every battle:</b> hit “Next battle” after a fight and you'll land back here to send in the band member who fits the fight ahead. <b>Tune each sheet, too:</b> every ability score sits on a slider, but the caps are true to class — a warrior's strength tops out where a healer's never could, and the healer's magic and healing run higher than anyone's. The sliders are real, too: each sheet derives its combat numbers live — <b>modifier = (stat − 8) ÷ 2, rounded, −2 to +4</b> — so tuning a stat moves the Attack, Damage and Defense numbers the dice use in the arena. <b>And every sheet holds a fixed pool of build points:</b> raise one score and the points come out of points you've banked by lowering others first — then straight out of that hero's highest other score. A sheet can change shape, but its total never grows. <b>The Power Card lives on every sheet:</b> facts charge it, courage plays it, and playing it is the strongest move the band owns besides a Death Blow.</p>
     <div class="pick-banner" id="pickBanner" role="status"></div>
     <div class="camp" id="campPanel" hidden>
-      <span class="camp-tag">Between battles · One camp action</span>
+      <span class="camp-tag">Between battles · One camp action <button type="button" class="help-dot" data-help="camp" aria-label="Help: Camp actions" aria-expanded="false">?</button></span>
+      <p class="coach-hint" id="campCoach" hidden>Coach: one camp action per stop — then choose your next fighter.</p>
       <p class="camp-lede">The band catches its breath before the next fight. Choose <b>one</b> camp action — heal the dying, bless the next fighter, sharpen up, canvass for the vote, or press on. Healing Hands and spells roll the <b>three-sided die</b>: swipe or tap it to spin the prism.</p>
       <div class="camp-actions">
-        <div class="camp-row"><span class="camp-name">Healing Hands</span><span class="camp-sub">Priya · d3 + 3 + her HEAL bonus · pick who she lays hands on</span></div>
+        <div class="camp-row"><span class="camp-name">Healing Hands</span><span class="camp-sub">Priya · d3 + 3 + her HEAL bonus · pick who she lays hands on</span><button type="button" class="help-dot" data-help="heal" aria-label="Help: Healing Hands" aria-expanded="false">?</button></div>
         <div class="camp-row">
           <button type="button" class="camp-btn" data-heal="maya">Maya</button>
           <button type="button" class="camp-btn" data-heal="dre">Dre</button>
           <button type="button" class="camp-btn" data-heal="priya">Priya</button>
         </div>
-        <div class="camp-row"><button type="button" class="camp-btn" id="campBless">Blessing of the Dawn <em>Priya's spell · d3 Inspiration for the next fighter</em></button></div>
-        <div class="camp-row"><button type="button" class="camp-btn" id="campOmen">Scout's Omen <em>Maya's minor magic · d3 Inspiration + reveals the next battle's aspect</em></button></div>
+        <div class="camp-row"><button type="button" class="camp-btn" id="campBless">Blessing of the Dawn <em>Priya's spell · d3 Inspiration for the next fighter</em></button><button type="button" class="help-dot" data-help="bless" aria-label="Help: Blessing of the Dawn (d3)" aria-expanded="false">?</button></div>
+        <div class="camp-row"><button type="button" class="camp-btn" id="campOmen">Scout's Omen <em>Maya's minor magic · d3 Inspiration + reveals the next battle's aspect</em></button><button type="button" class="help-dot" data-help="omen" aria-label="Help: Scout's Omen (d3)" aria-expanded="false">?</button></div>
         <div class="camp-row"><button type="button" class="camp-btn" id="campSharpen">Sharpen &amp; Brace <em>next fighter · +2 to hit, +2 Defense</em></button></div>
         <div class="camp-row"><span class="camp-name">Canvass</span><span class="camp-sub">Rally a friend instead · Friends Rallied +25 · Power Card +1 charge · pick who knocks</span></div>
         <div class="camp-row">
@@ -679,25 +709,25 @@
       <div class="fstats">
         <span class="stats-head">The war machine — slide to tune · 0–12 each · default 6 (9–12 in Hard)</span>
         <div class="fstat">
-          <div class="fstat-head"><label for="fs-drum">War Drum Volume</label><output id="fs-drum-out" for="fs-drum">6</output></div>
+          <div class="fstat-head"><label for="fs-drum">War Drum Volume</label><span class="fstat-val"><output id="fs-drum-out" for="fs-drum">6</output><button type="button" class="help-dot" data-help="drum" aria-label="Help: War Drum Volume" aria-expanded="false">?</button></span></div>
           <input type="range" id="fs-drum" min="0" max="12" value="6" />
           <p class="fx"><b>Effect:</b> a wrong answer costs the band <b>6 + Drum</b> Hope — currently <b id="fx-drum">12</b> — and his counterattack swings at your fighter with +Drum ÷ 2 to hit, dealing 1d8 + Drum ÷ 2 hit points of damage on a hit. The louder the drum, the more a miss hurts.</p>
           <p class="cap">The drumbeat is the oldest weapon: scare first, argue later.</p>
         </div>
         <div class="fstat">
-          <div class="fstat-head"><label for="fs-spin">Sound Bite Spin</label><output id="fs-spin-out" for="fs-spin">6</output></div>
+          <div class="fstat-head"><label for="fs-spin">Sound Bite Spin</label><span class="fstat-val"><output id="fs-spin-out" for="fs-spin">6</output><button type="button" class="help-dot" data-help="spin" aria-label="Help: Sound Bite Spin" aria-expanded="false">?</button></span></div>
           <input type="range" id="fs-spin" min="0" max="12" value="6" />
           <p class="fx"><b>Effect:</b> spin raises The Fade's <b>Defense</b> against your attack rolls — Defense = 10 + Spin ÷ 4, currently <b id="fx-spin">12</b>. Roll the d20 plus your bonuses and beat it, or your strike only glances for half damage. At 9+, his battle taunts get noticeably slicker.</p>
           <p class="cap">A slogan that fits on a bumper sticker beats a fact that needs a paragraph.</p>
         </div>
         <div class="fstat">
-          <div class="fstat-head"><label for="fs-creep">Mission Creep</label><output id="fs-creep-out" for="fs-creep">6</output></div>
+          <div class="fstat-head"><label for="fs-creep">Mission Creep</label><span class="fstat-val"><output id="fs-creep-out" for="fs-creep">6</output><button type="button" class="help-dot" data-help="creep" aria-label="Help: Mission Creep" aria-expanded="false">?</button></span></div>
           <input type="range" id="fs-creep" min="0" max="12" value="6" />
           <p class="fx"><b>Effect:</b> at the end of every battle The Fade survives, the occupation digs in and he regains <b id="fx-creep">+3</b> HP.</p>
           <p class="cap">Wars are easy to start and brutal to end; stay long enough and nobody remembers the original reason.</p>
         </div>
         <div class="fstat">
-          <div class="fstat-head"><label for="fs-blowback">Blowback Arsenal</label><output id="fs-blowback-out" for="fs-blowback">6</output></div>
+          <div class="fstat-head"><label for="fs-blowback">Blowback Arsenal</label><span class="fstat-val"><output id="fs-blowback-out" for="fs-blowback">6</output><button type="button" class="help-dot" data-help="blowback" aria-label="Help: Blowback Arsenal" aria-expanded="false">?</button></span></div>
           <input type="range" id="fs-blowback" min="0" max="12" value="6" />
           <p class="fx"><b>Effect:</b> after a battle, a <b id="fx-blow">38%</b> chance he fires the band's own gifted weapons back at it — <b id="fx-blowdmg">7</b> extra Hope damage, with the history attached.</p>
           <p class="cap">Arm them today, fight them tomorrow.</p>
@@ -735,7 +765,7 @@
         <div><label>The Fade · Boss HP</label><div class="bar boss"><i id="bossBar" style="width:100%"></i></div><span class="val" id="bossVal">100 / 100</span></div>
         <div><label>Your Hope</label><div class="bar hope"><i id="hopeBar" style="width:100%"></i></div><span class="val" id="hopeVal">100 / 100</span></div>
         <div class="hud-turnout"><label>Friends rallied</label><div class="bar turnout"><i id="turnoutBar" style="width:0%"></i></div><span class="val" id="turnoutVal">0 — every right call rallies more</span></div>
-        <div><label>Power Card · The Vote</label><div class="power-pips" data-power-pips aria-hidden="true"></div><span class="power-state" data-power-state>CHARGING · 0/5</span></div>
+        <div><label>Power Card · The Vote <button type="button" class="help-dot" data-help="power" aria-label="Help: The Power Card — your vote" aria-expanded="false">?</button></label><div class="power-pips" data-power-pips aria-hidden="true"></div><span class="power-state" data-power-state>CHARGING · 0/5</span></div>
       </div>
 
       <div class="power-play" id="powerPlayPanel" hidden>
@@ -1091,6 +1121,13 @@
     </ol>
     <button class="btn btn-primary" id="installClose" type="button" style="box-shadow:none">Got it</button>
   </div>
+</div>
+
+<!-- Shared novice-help popup: one card serves every "?" dot on the page -->
+<div class="help-pop" id="helpPop" role="dialog" aria-labelledby="helpPopTitle" hidden>
+  <button type="button" class="help-pop-close" id="helpPopClose" aria-label="Close help">×</button>
+  <span class="help-pop-title" id="helpPopTitle"></span>
+  <p class="help-pop-body" id="helpPopBody"></p>
 </div>
 
 <script>
@@ -1493,7 +1530,8 @@
     pendingBuffs:{ insp:0, sharpen:false }, activeBuffs:{ insp:0, sharpen:false },
     battleMods:null, dbBonus:0, allDown:false,
     hardMode:false, gambitResolved:true, gambitCollapsed:false, gambitClaim:null, gambitTauntOverride:null, debtInterest:0,
-    powerCharge:0, powerPlayed:false, powerSpinUntilIdx:-1, canvassRallied:0, runOver:false };
+    powerCharge:0, powerPlayed:false, powerSpinUntilIdx:-1, canvassRallied:0, runOver:false,
+    coach:{ answer:false, roll:false, camp:false } };
 
   var questBox = document.getElementById("questBox");
   var chooseSection = document.getElementById("chooseSection");
@@ -1506,6 +1544,128 @@
   var tauntEl = document.getElementById("bossTaunt");
 
   function log(msg){ logEl.textContent = "Battle log: " + msg; }
+
+  /* ============ Novice help: "?" dots + one shared popup ============
+     Comprehension layer only — no mechanics. Every dot is a real <button>
+     carrying a data-help key; one fixed popup card serves them all. Desktop:
+     hover opens, click pins; mobile: tap toggles. A capture-phase click
+     handler stops dot taps from ever reaching a clickable card underneath
+     (e.g. The Fade's fact-check card), and any other tap, a second tap on
+     the same dot, Escape, or the popup's own × closes it. The popup is
+     position:fixed and clamped to the viewport, so it is never clipped
+     and never causes horizontal overflow. */
+  var HELP = {
+    camp:     { t:"Camp actions", b:"Between battles the band camps and gets exactly ONE action: heal, sharpen up, scout ahead, or canvass. Then you choose the next fighter." },
+    omen:     { t:"Scout's Omen (d3)", b:"Maya's scout spell. It rolls the little 3-sided die (a d3 — it lands on 1, 2, or 3): the next fighter gets +that many on their attack rolls. Maya also scouts which of The Fade's tricks the next battle leans on, so you can send the fighter whose weapon counters it." },
+    bless:    { t:"Blessing of the Dawn (d3)", b:"Priya's blessing rolls the same 3-sided die: the next fighter gets +that many on attack rolls. Unlike Maya's Omen, it doesn't scout the next battle's trick." },
+    heal:     { t:"Healing Hands", b:"Priya rolls the 3-sided die and heals a fighter. This is the ONLY way to bring back a fighter who has fallen to 0 HP." },
+    pool:     { t:"Build points", b:"Each hero has a fixed pool of build points. Raise one slider and the points come out of the pool: banked points spend first, then the hero's highest other slider automatically drops to pay for it. The total never grows — you are choosing trade-offs, not power." },
+    drum:     { t:"War Drum Volume", b:"How loud his war drums beat. Wrong answers cost 6 + this number in Hope, and his counterattacks roll and hit with half this number added." },
+    spin:     { t:"Sound Bite Spin", b:"His spin raises his Defense (about +1 for every 4 points), so your fighters' strikes are harder to land." },
+    creep:    { t:"Mission Creep", b:"After every battle he survives, The Fade heals half this number of HP, rounded. Finish him and there is no heal." },
+    blowback: { t:"Blowback Arsenal", b:"A chance each battle (about 6% per point) that he fires the band's own side's old weapons back at you for extra Hope damage — yesterday's gifts, returned." },
+    threat:   { t:"Threat Level", b:"His four sliders added together: how nasty the machine is this run. Higher total, higher tier — Story, Standard, Hard, Nightmare." },
+    defense:  { t:"His Defense", b:"Your fighter rolls the 20-sided die and adds their Attack bonus. Meet or beat his Defense and the strike lands full; roll under it and the strike still grazes him for half damage. A natural 20 doubles the damage." },
+    matchup:  { t:"Weapon matchups", b:"Each battle leans on one of his four tricks. The right weapon counters it for +2 to hit: Maya's Arrows counter Spin, Dre's Axe counters the War Drum, Priya's Sword counters Mission Creep. Blowback has no counter — brace for it." },
+    creepnote:{ t:"Why did he just heal?", b:"That's Mission Creep: at the end of every battle he survives, he regains half his Mission Creep slider in HP. It's the tax for not finishing him — correct answers out-damage it." },
+    gambit:   { t:"Fake News Gambit", b:"In Hard Skill Level he sometimes flashes a made-up 'fact' before the question. You must rule it TRUE or FAKE first. It is always fake: rule FAKE and his gambit collapses — he loses his Hard defense bonus and your next hit lands +2 harder. Fall for it and he heals on the spot." },
+    deathblow:{ t:"Death Blow", b:"When The Fade is nearly finished (under 15 HP; under 10 for Dre), a fighter may be offered one golden hard question. Answer it right and he falls on the spot, whatever HP he has left. Miss and he regains 8 HP and that fighter's Death Blow is spent for the run. In Hard mode the follow-up d6 must also land 3 or higher." },
+    power:    { t:"The Power Card — your vote", b:"One card, shared by the whole band. It charges only through informed play: +1 for each battle question answered correctly, +1 for catching a Fake News gambit, +1 when a fighter Canvasses at camp; a landed Death Blow fills it. At 5 charges you can PLAY it: 12 damage, his Spin shield is stripped for 2 battles, and his current excuse is struck through with its documented correction. Then it can charge again." }
+  };
+  function helpDotHTML(key){
+    var h = HELP[key];
+    if (!h) return "";
+    return '<button type="button" class="help-dot" data-help="' + key + '" aria-label="Help: ' + h.t + '" aria-expanded="false">?</button>';
+  }
+  var helpPop = document.getElementById("helpPop");
+  var helpPopTitle = document.getElementById("helpPopTitle");
+  var helpPopBody = document.getElementById("helpPopBody");
+  var helpKey = null, helpDotEl = null, helpPinned = false, helpHoverTimer = null;
+  function positionHelpPop(){
+    if (!helpPop || helpPop.hidden || !helpKey) return;
+    if (!helpDotEl || !helpDotEl.isConnected) {
+      /* The strip that held the dot was re-rendered (loadout, pool line…) —
+         re-anchor to the fresh dot with the same key, or close. */
+      helpDotEl = document.querySelector('.help-dot[data-help="' + helpKey + '"]');
+      if (!helpDotEl) { closeHelp(); return; }
+    }
+    var r = helpDotEl.getBoundingClientRect();
+    var pw = helpPop.offsetWidth, ph = helpPop.offsetHeight;
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var left = Math.min(Math.max(8, r.left + r.width / 2 - pw / 2), Math.max(8, vw - pw - 8));
+    var top = r.bottom + 8;
+    if (top + ph > vh - 8) top = r.top - ph - 8;
+    if (top < 8) top = Math.max(8, Math.min(vh - ph - 8, r.bottom + 8));
+    helpPop.style.left = left + "px";
+    helpPop.style.top = top + "px";
+  }
+  function openHelp(dot, pinned){
+    var key = dot.getAttribute("data-help");
+    var h = HELP[key];
+    if (!h || !helpPop) return;
+    if (helpHoverTimer) { clearTimeout(helpHoverTimer); helpHoverTimer = null; }
+    helpKey = key; helpDotEl = dot; helpPinned = !!pinned;
+    helpPopTitle.textContent = h.t;
+    helpPopBody.textContent = h.b;
+    helpPop.hidden = false;
+    document.querySelectorAll(".help-dot").forEach(function(d){ d.setAttribute("aria-expanded", d === dot ? "true" : "false"); });
+    positionHelpPop();
+  }
+  function closeHelp(){
+    if (!helpPop || helpPop.hidden) return;
+    helpPop.hidden = true;
+    helpKey = null; helpDotEl = null; helpPinned = false;
+    document.querySelectorAll(".help-dot").forEach(function(d){ d.setAttribute("aria-expanded", "false"); });
+  }
+  /* Capture phase: a dot tap is consumed here, before any clickable card
+     underneath it can see the click — tapping a dot never toggles the
+     fact check or fires the control it sits beside. */
+  document.addEventListener("click", function(e){
+    var t = e.target;
+    if (!t || !t.closest) return;
+    var dot = t.closest(".help-dot");
+    if (dot) {
+      e.stopPropagation();
+      if (helpDotEl === dot && helpPop && !helpPop.hidden) {
+        if (helpPinned) closeHelp(); else helpPinned = true;
+      } else {
+        openHelp(dot, true);
+      }
+      return;
+    }
+    if (t.closest("#helpPop")) {
+      if (t.closest("#helpPopClose")) closeHelp();
+      return;
+    }
+    closeHelp();
+  }, true);
+  document.getElementById("helpPopClose").addEventListener("click", function(){ closeHelp(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeHelp(); });
+  window.addEventListener("resize", positionHelpPop);
+  window.addEventListener("scroll", positionHelpPop, { passive:true });
+  document.addEventListener("scroll", positionHelpPop, { capture:true, passive:true });
+  /* Hover (desktop pointers only): moving onto a dot opens its popup;
+     leaving both dot and popup closes it — unless a click pinned it. */
+  var helpHoverOK = !!(window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches);
+  document.addEventListener("mouseover", function(e){
+    if (!helpHoverOK || !e.target || !e.target.closest) return;
+    var dot = e.target.closest(".help-dot");
+    if (dot) {
+      if (helpHoverTimer) { clearTimeout(helpHoverTimer); helpHoverTimer = null; }
+      if (helpDotEl !== dot) openHelp(dot, false);
+    } else if (e.target.closest("#helpPop")) {
+      if (helpHoverTimer) { clearTimeout(helpHoverTimer); helpHoverTimer = null; }
+    }
+  });
+  document.addEventListener("mouseout", function(e){
+    if (!helpHoverOK || helpPinned || !helpDotEl || !e.target || !e.target.closest) return;
+    var fromDot = e.target.closest(".help-dot") === helpDotEl;
+    var fromPop = !!e.target.closest("#helpPop");
+    if (!fromDot && !fromPop) return;
+    var to = e.relatedTarget;
+    if (to && to.closest && (to.closest(".help-dot") === helpDotEl || to.closest("#helpPop"))) return;
+    helpHoverTimer = setTimeout(function(){ if (!helpPinned) closeHelp(); }, 180);
+  });
 
   function renderBars(){
     document.getElementById("bossBar").style.width = Math.max(0,state.boss) + "%";
@@ -1559,7 +1719,7 @@
     if (!bn || !state.battleMods) return;
     var aspect = ASPECTS[state.idx];
     var matched = MATCHUP[FIGHTERS[state.fighter].weapon] === aspect;
-    bn.innerHTML = "The Fade's aspect this battle: <b>" + ASPECT_NAMES[aspect] + "</b>" +
+    bn.innerHTML = "The Fade's aspect this battle: <b>" + ASPECT_NAMES[aspect] + "</b>" + helpDotHTML("matchup") +
       (matched ? " — " + FIGHTERS[state.fighter].wname + " counter it: <b>+2 to hit</b>" : "") +
       " · " + FIGHTERS[state.fighter].name + "'s attack: <b>" + fmtMod(state.battleMods.atk) + "</b> (" + state.battleMods.parts + ") vs The Fade's Defense <b>" + fadeDefense() + "</b>" +
       (state.gambitCollapsed ? " · <b>Gambit collapsed: +2 damage on the next hit</b>" : "") +
@@ -2110,9 +2270,9 @@
              : total <= 24 ? "Standard — the machine at cruising speed"
              : total <= 36 ? "Hard mode — the full war machine"
              : "Nightmare — maximum drumbeat";
-    var th = document.getElementById("fadeThreat"); if (th) th.textContent = "Threat level · " + tier;
+    var th = document.getElementById("fadeThreat"); if (th) th.innerHTML = "Threat level · " + tier + " " + helpDotHTML("threat");
     var lo = document.getElementById("fadeLoadout");
-    if (lo) lo.innerHTML = "The Fade's machine · War Drum <b>" + f.drum + "</b> · Sound Bite Spin <b>" + f.spin + "</b> · Mission Creep <b>" + f.creep + "</b> · Blowback Arsenal <b>" + f.blowback + "</b> · Defense <b>" + fadeDefense() + "</b>" + (state.hardMode ? " · <b>HARD SKILL LEVEL</b>" + (state.gambitCollapsed ? " · Gambit collapsed — Hard Defense bonus lost this battle" : " · Hard Defense +2 included") : " · Standard skill level") + (powerSpinSuppressed() ? " · <b>Power Card played — Spin Defense bonus 0 through Battle " + Math.min(QUESTS.length, state.powerSpinUntilIdx + 1) + "</b>" : "") + (state.runStarted ? " · Locked for this run" : " · Tune it on his sheet above");
+    if (lo) lo.innerHTML = "The Fade's machine · War Drum <b>" + f.drum + "</b> · Sound Bite Spin <b>" + f.spin + "</b> · Mission Creep <b>" + f.creep + "</b> · Blowback Arsenal <b>" + f.blowback + "</b> · Defense <b>" + fadeDefense() + "</b> " + helpDotHTML("defense") + (state.hardMode ? " · <b>HARD SKILL LEVEL</b>" + (state.gambitCollapsed ? " · Gambit collapsed — Hard Defense bonus lost this battle" : " · Hard Defense +2 included") : " · Standard skill level") + (powerSpinSuppressed() ? " · <b>Power Card played — Spin Defense bonus 0 through Battle " + Math.min(QUESTS.length, state.powerSpinUntilIdx + 1) + "</b>" : "") + (state.runStarted ? " · Locked for this run" : " · Tune it on his sheet above");
     refreshFadeFlavor();
   }
 
@@ -2198,18 +2358,19 @@
     state.battleMods = computeMods();
     var aspect = ASPECTS[state.idx];
     var matched = MATCHUP[FIGHTERS[state.fighter].weapon] === aspect;
-    html += '<p class="buff-note">The Fade\'s aspect this battle: <b>' + ASPECT_NAMES[aspect] + '</b>' +
+    html += '<p class="buff-note">The Fade\'s aspect this battle: <b>' + ASPECT_NAMES[aspect] + '</b>' + helpDotHTML("matchup") +
       (matched ? ' — ' + FIGHTERS[state.fighter].wname + ' counter it: <b>+2 to hit</b>' : '') +
       ' · ' + FIGHTERS[state.fighter].name + '\'s attack: <b>' + fmtMod(state.battleMods.atk) + '</b> (' + state.battleMods.parts + ') vs The Fade\'s Defense <b>' + fadeDefense() + '</b> · ' + FIGHTERS[state.fighter].name + '\'s Defense <b>' + state.battleMods.def + '</b></p>';
     renderHeroHp();
     if (gambit) {
-      html += '<div class="gambit-card" id="gambitCard"><span class="g-tag">Hard Mode · Fake News Gambit — rule before you answer</span>' +
+      html += '<div class="gambit-card" id="gambitCard"><span class="g-tag">Hard Mode · Fake News Gambit — rule before you answer</span>' + helpDotHTML("gambit") +
         '<p class="g-claim">“' + gambit.claim + '”</p>' +
         '<p>The Fade slides this “fact” into the fight, loud and confident. Rule on it first: is the claim TRUE or FAKE? The documented correction appears either way.</p>' +
         '<div class="g-actions"><button type="button" class="g-btn" data-gambit="fake">Rule: FAKE</button><button type="button" class="g-btn alt" data-gambit="true">Rule: TRUE</button><button type="button" class="g-btn ghost" data-gambit="skip">Skip the ruling</button></div>' +
         '<div id="gambitResult"></div></div>';
     }
     html += '<p class="q">' + q.q + "</p>";
+    if (state.idx === 0 && !state.coach.answer) html += '<p class="coach-hint">Coach: pick the answer the fact above supports.</p>';
     html += '<div class="choices">';
     q.choices.forEach(function(c, i){
       html += '<button class="choice" type="button" data-choice="' + i + '"' + (gambit ? " disabled" : "") + '><span class="wtag ' + wclass + '">' + q.wlabel + '</span><span>' + c + "</span></button>";
@@ -2217,7 +2378,7 @@
     html += "</div>";
     if (deathBlowEligible()) {
       var db = DEATH_BLOWS[state.fighter];
-      html += '<div class="deathblow-offer"><span class="db-tag">Golden opening · The Fade is reeling</span>' +
+      html += '<div class="deathblow-offer"><span class="db-tag">Golden opening · The Fade is reeling</span>' + helpDotHTML("deathblow") +
         "<p><b>" + db.title + " is available to " + FIGHTERS[state.fighter].name + ".</b> Attempt it <em>instead</em> of this battle's question: land it and The Fade falls on the spot. Miss it and The Fade heals +8 HP, you lose 12 Hope, and " + FIGHTERS[state.fighter].name + "'s Death Blow is spent for the rest of the game.</p>" +
         '<button class="db-btn" type="button" id="dbBtn">Attempt the Death Blow instead →</button></div>';
     }
@@ -2282,7 +2443,7 @@
     if (bn && state.battleMods) {
       var aspect2 = ASPECTS[state.idx];
       var matched2 = MATCHUP[FIGHTERS[state.fighter].weapon] === aspect2;
-      bn.innerHTML = "The Fade's aspect this battle: <b>" + ASPECT_NAMES[aspect2] + "</b>" + (matched2 ? " — " + FIGHTERS[state.fighter].wname + " counter it: <b>+2 to hit</b>" : "") + " · " + FIGHTERS[state.fighter].name + "'s attack: <b>" + fmtMod(state.battleMods.atk) + "</b> (" + state.battleMods.parts + ") vs The Fade's Defense <b>" + fadeDefense() + "</b>" + (state.gambitCollapsed ? " · <b>Gambit collapsed: +2 damage on the next hit</b>" : "") + " · " + FIGHTERS[state.fighter].name + "'s Defense <b>" + state.battleMods.def + "</b>";
+      bn.innerHTML = "The Fade's aspect this battle: <b>" + ASPECT_NAMES[aspect2] + "</b>" + helpDotHTML("matchup") + (matched2 ? " — " + FIGHTERS[state.fighter].wname + " counter it: <b>+2 to hit</b>" : "") + " · " + FIGHTERS[state.fighter].name + "'s attack: <b>" + fmtMod(state.battleMods.atk) + "</b> (" + state.battleMods.parts + ") vs The Fade's Defense <b>" + fadeDefense() + "</b>" + (state.gambitCollapsed ? " · <b>Gambit collapsed: +2 damage on the next hit</b>" : "") + " · " + FIGHTERS[state.fighter].name + "'s Defense <b>" + state.battleMods.def + "</b>";
     }
   }
 
@@ -2391,6 +2552,7 @@
   function answer(choiceIdx, btn){
     if (state.answered) return;
     state.answered = true;
+    state.coach.answer = true;
     startRun();
     var q = QUESTS[state.idx];
     var correct = choiceIdx === q.correct;
@@ -2409,6 +2571,13 @@
       fb.innerHTML = '<span class="verdict">Correct — ' + FIGHTERS[state.fighter].name + ' attacks!</span><p>' + q.good + '</p><p class="brief-note">' + q.brief + '</p><p class="brief-note">Power Card ' + (pcGain > 0 ? "+1 — facts charge it: <b>" + state.powerCharge + "/5</b>" : "is <b>CHARGED at 5/5</b> — ready to play from the arena") + ".</p>";
       var tray = makeTray("d20", FIGHTERS[state.fighter].name + "'s attack roll · d20 vs Defense " + fadeDefense());
       insertTray(tray);
+      if (!state.coach.roll) {
+        state.coach.roll = true;
+        var coachRoll = document.createElement("p");
+        coachRoll.className = "coach-hint";
+        coachRoll.textContent = "Coach: tap the die to roll your strike.";
+        tray.appendChild(coachRoll);
+      }
       log(FIGHTERS[state.fighter].name + " has the fact cold. Swipe or tap the d20 to strike.");
       tray.arm(function(roll){ resolveAttack(roll, fb); });
     } else {
@@ -2509,9 +2678,9 @@
     if (state.boss > 0 && creepTotal > 0) {
       state.boss = Math.min(100, state.boss + creepTotal);
       if (state.idx % 2 === 1) {
-        fb.innerHTML += '<p class="brief-note">Mission Creep — The War Chest: the factories lobby to stay open — The Fade regains +' + creepTotal + " HP. Contracts mean local jobs (the F-35 chain spans 45+ states), so the spending defends itself — the jobs are real, and so are the rationing, the five-fold debt rise of 1941–45, and Eisenhower's 1961 warning. Both halves, always.</p>";
+        fb.innerHTML += '<p class="brief-note">Mission Creep — The War Chest: the factories lobby to stay open — The Fade regains +' + creepTotal + " HP. Contracts mean local jobs (the F-35 chain spans 45+ states), so the spending defends itself — the jobs are real, and so are the rationing, the five-fold debt rise of 1941–45, and Eisenhower's 1961 warning. Both halves, always. " + helpDotHTML("creepnote") + "</p>";
       } else {
-        fb.innerHTML += '<p class="brief-note">Mission Creep: The Fade digs in and regains +' + creepTotal + " HP — stay long enough, and the occupation forgets why it came.</p>";
+        fb.innerHTML += '<p class="brief-note">Mission Creep: The Fade digs in and regains +' + creepTotal + " HP — stay long enough, and the occupation forgets why it came. " + helpDotHTML("creepnote") + "</p>";
       }
       if (state.debtInterest > 0) {
         fb.innerHTML += '<p class="brief-note">The Debt Mountain: the interest on the gambit you let stand comes due inside that heal — <b>+' + state.debtInterest + ' HP</b> of it is pure interest on a $40 trillion-plus debt that is refinanced, never repaid. The interest compounds — so does he.</p>';
@@ -2551,6 +2720,8 @@
     var campNote = document.getElementById("campNote"); if (campNote) campNote.innerHTML = "";
     var campTray = document.getElementById("campTray"); if (campTray) campTray.innerHTML = "";
     var campPanel = document.getElementById("campPanel"); if (campPanel) campPanel.hidden = false;
+    var campCoach = document.getElementById("campCoach");
+    if (campCoach) { campCoach.hidden = state.coach.camp; state.coach.camp = true; }
     refreshCamp();
     renderHeroHp();
     tauntEl.textContent = currentTaunt(q);
@@ -2632,6 +2803,8 @@
     state.battleMods = null; state.dbBonus = 0; state.allDown = false;
     state.hardMode = false; state.gambitResolved = true; state.gambitCollapsed = false; state.gambitClaim = null; state.gambitTauntOverride = null; state.debtInterest = 0;
     state.powerCharge = 0; state.powerPlayed = false; state.powerSpinUntilIdx = -1; state.canvassRallied = 0; state.runOver = false;
+    state.coach = { answer:false, roll:false, camp:false };
+    var campCoachEl = document.getElementById("campCoach"); if (campCoachEl) campCoachEl.hidden = true;
     var lpc2 = document.getElementById("losePowerCardLine");
     if (lpc2) { lpc2.textContent = ""; lpc2.style.display = "none"; }
     var pcl2 = document.getElementById("powerCardCreditLine");
@@ -2711,7 +2884,7 @@
     var pool = sheetPools[hero]; if (!pool) return;
     var line = document.getElementById("pool-" + hero); if (!line) return;
     var used = poolTotal(pool);
-    line.innerHTML = "Build points: <b>" + used + " / " + pool.budget + "</b> · Bank: <b>" + (pool.budget - used) + "</b>";
+    line.innerHTML = "Build points: <b>" + used + " / " + pool.budget + "</b> · Bank: <b>" + (pool.budget - used) + "</b> " + helpDotHTML("pool");
   }
   function setPoolNote(hero, msg){
     var n = document.getElementById("poolNote-" + hero);
