@@ -151,7 +151,7 @@
 
   /* ---------- Arena ---------- */
   .arena{background:var(--stage);color:var(--stage-ink);border-radius:14px;border:2px solid #000;overflow:hidden;margin-top:16px}
-  .hud{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:14px 16px 4px}
+  .hud{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 16px 4px}
   @media (max-width:560px){.hud{grid-template-columns:1fr 1fr}.hud .hud-turnout{grid-column:1/-1}}
   .hud label{font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--stage-muted);display:block;margin-bottom:5px}
   .bar{height:14px;background:#26343c;border-radius:999px;overflow:hidden;border:1px solid #3a4a52}
@@ -276,6 +276,9 @@
   .credits-scroll h4{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin:28px 0 8px}
   .credits-scroll p{margin:6px 0;font-size:1rem;line-height:1.6}
   .credits-scroll .small{font-size:.88rem;color:#c9d4d1}
+  .credits-scroll .closing-card{margin:150px auto 40px;max-width:640px;border:2px solid var(--amber);border-radius:12px;background:#10181d;padding:36px 26px}
+  .credits-scroll .closing-card p{font-family:"Anton",sans-serif;font-size:clamp(1.5rem,5.5vw,2.2rem);line-height:1.3;color:#fff;margin:0;text-transform:uppercase;letter-spacing:.01em}
+  .credits-scroll .closing-card p+p{margin-top:12px;color:var(--amber)}
   @media (prefers-reduced-motion: reduce){.credits-scroll{animation:none;top:0;position:relative}}
   .song-note{font-size:.85rem;color:var(--stage-muted);margin-top:10px}
 
@@ -399,6 +402,32 @@
   .g-btn.ghost{background:transparent;color:var(--stage-ink);border-color:#3a4a52}
   .choice[disabled]{opacity:.55}
 
+  /* ---------- The Power Card — the thesis, playable ---------- */
+  .power-pips{display:flex;gap:5px;align-items:center;min-height:17px}
+  .power-pips .pip{flex:none;width:14px;height:14px;border-radius:50%;border:2px solid var(--amber);background:transparent}
+  .power-pips .pip.filled{background:var(--amber)}
+  .power-state{font-family:"JetBrains Mono",monospace;font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+  .hud .power-state{color:var(--stage-muted);margin-top:4px;display:block}
+  .power-card{margin-top:12px;border:2px solid var(--amber);background:#fff7e0;color:#10181d;border-radius:10px;padding:12px 13px}
+  @media (prefers-color-scheme: dark){.power-card{background:#2a2410;color:var(--ink)}}
+  .power-card .pc-title{font-family:"Anton",sans-serif;font-size:.98rem;letter-spacing:.03em;text-transform:uppercase;display:block;line-height:1.25}
+  .power-card .power-pips{margin:9px 0 6px}
+  .power-card .power-pips .pip{border-color:#a86e00}
+  .power-card .power-pips .pip.filled{background:#a86e00}
+  @media (prefers-color-scheme: dark){.power-card .power-pips .pip{border-color:var(--amber)}.power-card .power-pips .pip.filled{background:var(--amber)}}
+  .power-card .power-state{color:#7a4a00}
+  @media (prefers-color-scheme: dark){.power-card .power-state{color:var(--amber)}}
+  .power-card p{margin:6px 0 0;font-size:.84rem;color:inherit}
+  .power-play{margin:12px 16px 0;border:2px solid var(--amber);background:#2a2110;border-radius:10px;padding:14px 16px}
+  .power-play[hidden]{display:none}
+  .power-play .pp-tag{font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block}
+  .power-play strong{display:block;font-size:1.02rem;color:#fff;margin-top:5px}
+  .power-play p{margin:5px 0 0;font-size:.9rem;color:var(--stage-ink)}
+  .play-power-btn{margin-top:11px;width:100%;background:var(--amber);color:#10181d;border:2px solid #000;box-shadow:3px 3px 0 #000;font-weight:800;font-size:.98rem;padding:12px 14px;border-radius:8px}
+  .play-power-btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #000}
+  .power-credit-line{font-weight:800;color:var(--amber)}
+  .lose-power-line{font-weight:800;font-size:1.02rem;color:#ffb3ab}
+
   footer{margin-top:40px;border-top:2px solid var(--line);padding-top:16px;font-size:.82rem;color:var(--muted)}
   footer a{color:var(--teal);font-weight:700}
 
@@ -455,18 +484,18 @@
         <button class="btn btn-primary" id="startBtn" type="button">Enter the battle ↓</button>
         <a class="btn btn-ghost" href="https://vote.gov" target="_blank" rel="noopener">Check your registration</a>
       </div>
-      <p class="howto">How it works: pick a fighter from the character sheets, then answer each battle with the most <em>informed</em> move. Right calls strike The Fade. Wrong calls teach you why — and cost you Hope. <strong>After every battle, you choose again:</strong> the band's character sheets come back up, and you send in whoever fits the next fight. Finish with The Fade at 40 HP or below to win. <strong>Death Blow:</strong> if The Fade drops under 15 HP, the fighter in the arena may get a golden one-shot Death Blow opening — land it and The Fade falls on the spot; miss it and that hero's Death Blow is spent for the game. <strong>The dice:</strong> a right answer earns an attack — swipe or tap the 3D d20, add your fighter's sheet bonuses and situational +2s, and beat The Fade's Defense or the blow only glances. A wrong answer lets The Fade counterattack your fighter's own hit points. Between battles you get <strong>one camp action</strong>: Priya's Healing Hands and the band's spells roll the three-sided die, and a landed Death Blow rolls the d6 for overkill. <strong>Fade Logic Engine:</strong> his taunts, excuses and label flips are drawn only from documented, non-partisan fact and history — tap his line in the arena for the correction and source. <strong>Hard Skill Level</strong> (on his sheet) raises his machine to 9–12, adds +2 Defense, unlocks his Fake News Gambit, and makes a Death Blow need a d6 roll of 3+ to finish him.</p>
+      <p class="howto">How it works: pick a fighter from the character sheets, then answer each battle with the most <em>informed</em> move. Right calls strike The Fade. Wrong calls teach you why — and cost you Hope. <strong>After every battle, you choose again:</strong> the band's character sheets come back up, and you send in whoever fits the next fight. Finish with The Fade at 40 HP or below to win. <strong>Death Blow:</strong> if The Fade drops under 15 HP, the fighter in the arena may get a golden one-shot Death Blow opening — land it and The Fade falls on the spot; miss it and that hero's Death Blow is spent for the game. <strong>The dice:</strong> a right answer earns an attack — swipe or tap the 3D d20, add your fighter's sheet bonuses and situational +2s, and beat The Fade's Defense or the blow only glances. A wrong answer lets The Fade counterattack your fighter's own hit points. Between battles you get <strong>one camp action</strong>: Priya's Healing Hands and the band's spells roll the three-sided die, and a landed Death Blow rolls the d6 for overkill. <strong>Fade Logic Engine:</strong> his taunts, excuses and label flips are drawn only from documented, non-partisan fact and history — tap his line in the arena for the correction and source. <strong>Hard Skill Level</strong> (on his sheet) raises his machine to 9–12, adds +2 Defense, unlocks his Fake News Gambit, and makes a Death Blow need a d6 roll of 3+ to finish him. <strong>The Power Card:</strong> facts charge it, courage plays it, and playing it is the strongest move the band owns besides a Death Blow.</p>
     </div>
   </header>
 
   <!-- CHOOSE FIGHTER -->
   <section class="block" id="chooseSection">
     <h2 id="chooseHeading">Choose your fighter</h2>
-    <p class="lede">Three young players, three uncertain futures — the band's character sheets. <b>Your fighter changes the story lines, not the facts</b> — every battle below is drawn from the real brief: the 2026 U.S.–Iran war, the Strait of Hormuz, sweeping tariffs, and what the midterms actually control. <b>And you choose again before every battle:</b> hit “Next battle” after a fight and you'll land back here to send in the band member who fits the fight ahead. <b>Tune each sheet, too:</b> every ability score sits on a slider, but the caps are true to class — a warrior's strength tops out where a healer's never could, and the healer's magic and healing run higher than anyone's. The sliders are real, too: each sheet derives its combat numbers live — <b>modifier = (stat − 8) ÷ 2, rounded, −2 to +4</b> — so tuning a stat moves the Attack, Damage and Defense numbers the dice use in the arena.</p>
+    <p class="lede">Three young players, three uncertain futures — the band's character sheets. <b>Your fighter changes the story lines, not the facts</b> — every battle below is drawn from the real brief: the 2026 U.S.–Iran war, the Strait of Hormuz, sweeping tariffs, and what the midterms actually control. <b>And you choose again before every battle:</b> hit “Next battle” after a fight and you'll land back here to send in the band member who fits the fight ahead. <b>Tune each sheet, too:</b> every ability score sits on a slider, but the caps are true to class — a warrior's strength tops out where a healer's never could, and the healer's magic and healing run higher than anyone's. The sliders are real, too: each sheet derives its combat numbers live — <b>modifier = (stat − 8) ÷ 2, rounded, −2 to +4</b> — so tuning a stat moves the Attack, Damage and Defense numbers the dice use in the arena. <b>The Power Card lives on every sheet:</b> facts charge it, courage plays it, and playing it is the strongest move the band owns besides a Death Blow.</p>
     <div class="pick-banner" id="pickBanner" role="status"></div>
     <div class="camp" id="campPanel" hidden>
       <span class="camp-tag">Between battles · One camp action</span>
-      <p class="camp-lede">The band catches its breath before the next fight. Choose <b>one</b> camp action — heal the dying, bless the next fighter, sharpen up, or press on. Healing Hands and spells roll the <b>three-sided die</b>: swipe or tap it to spin the prism.</p>
+      <p class="camp-lede">The band catches its breath before the next fight. Choose <b>one</b> camp action — heal the dying, bless the next fighter, sharpen up, canvass for the vote, or press on. Healing Hands and spells roll the <b>three-sided die</b>: swipe or tap it to spin the prism.</p>
       <div class="camp-actions">
         <div class="camp-row"><span class="camp-name">Healing Hands</span><span class="camp-sub">Priya · d3 + 3 + her HEAL bonus · pick who she lays hands on</span></div>
         <div class="camp-row">
@@ -477,6 +506,12 @@
         <div class="camp-row"><button type="button" class="camp-btn" id="campBless">Blessing of the Dawn <em>Priya's spell · d3 Inspiration for the next fighter</em></button></div>
         <div class="camp-row"><button type="button" class="camp-btn" id="campOmen">Scout's Omen <em>Maya's minor magic · d3 Inspiration + reveals the next battle's aspect</em></button></div>
         <div class="camp-row"><button type="button" class="camp-btn" id="campSharpen">Sharpen &amp; Brace <em>next fighter · +2 to hit, +2 Defense</em></button></div>
+        <div class="camp-row"><span class="camp-name">Canvass</span><span class="camp-sub">Rally a friend instead · Friends Rallied +25 · Power Card +1 charge · pick who knocks</span></div>
+        <div class="camp-row">
+          <button type="button" class="camp-btn" data-canvass="maya">Maya canvasses</button>
+          <button type="button" class="camp-btn" data-canvass="dre">Dre canvasses</button>
+          <button type="button" class="camp-btn" data-canvass="priya">Priya canvasses</button>
+        </div>
         <div class="camp-row"><button type="button" class="camp-btn ghost" id="campPress">Press on — no camp action</button></div>
       </div>
       <div id="campTray"></div>
@@ -505,6 +540,12 @@
           <div class="stat"><label for="st-maya-heal">HEAL</label><input type="range" id="st-maya-heal" min="2" max="8" value="5" /><output for="st-maya-heal">5</output></div>
         </div>
         <p class="derived" id="derived-maya"></p>
+        <div class="power-card">
+          <span class="pc-title">Maya's Power Card — Her Vote</span>
+          <div class="power-pips" data-power-pips aria-hidden="true"></div>
+          <span class="power-state" data-power-state>CHARGING · 0/5</span>
+          <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote.</p>
+        </div>
         <p class="cap-note">Ranger caps: strength tops out at 12 and magic stays low — her power is aim, nerve, and knowing the ground.</p>
         <button class="pick-btn" type="button" aria-pressed="true">Send Maya into battle →</button>
       </div>
@@ -530,6 +571,12 @@
           <div class="stat"><label for="st-dre-heal">HEAL</label><input type="range" id="st-dre-heal" min="2" max="7" value="4" /><output for="st-dre-heal">4</output></div>
         </div>
         <p class="derived" id="derived-dre"></p>
+        <div class="power-card">
+          <span class="pc-title">Dre's Power Card — His Vote</span>
+          <div class="power-pips" data-power-pips aria-hidden="true"></div>
+          <span class="power-state" data-power-state>CHARGING · 0/5</span>
+          <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote.</p>
+        </div>
         <p class="cap-note">Warrior caps: strength tops out at 12 and constitution runs highest in the band — books and spells were never his department.</p>
         <button class="pick-btn" type="button" aria-pressed="false">Send Dre into battle →</button>
       </div>
@@ -555,6 +602,12 @@
           <div class="stat"><label for="st-priya-heal">HEAL</label><input type="range" id="st-priya-heal" min="9" max="18" value="15" /><output for="st-priya-heal">15</output></div>
         </div>
         <p class="derived" id="derived-priya"></p>
+        <div class="power-card">
+          <span class="pc-title">Priya's Power Card — Her Vote</span>
+          <div class="power-pips" data-power-pips aria-hidden="true"></div>
+          <span class="power-state" data-power-state>CHARGING · 0/5</span>
+          <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote.</p>
+        </div>
         <p class="cap-note">Healer caps: strength tops out at 8 — but intelligence, magic and healing run higher than anyone else in the band.</p>
         <button class="pick-btn" type="button" aria-pressed="false">Send Priya into battle →</button>
       </div>
@@ -655,6 +708,14 @@
         <div><label>The Fade · Boss HP</label><div class="bar boss"><i id="bossBar" style="width:100%"></i></div><span class="val" id="bossVal">100 / 100</span></div>
         <div><label>Your Hope</label><div class="bar hope"><i id="hopeBar" style="width:100%"></i></div><span class="val" id="hopeVal">100 / 100</span></div>
         <div class="hud-turnout"><label>Friends rallied</label><div class="bar turnout"><i id="turnoutBar" style="width:0%"></i></div><span class="val" id="turnoutVal">0 — every right call rallies more</span></div>
+        <div><label>Power Card · The Vote</label><div class="power-pips" data-power-pips aria-hidden="true"></div><span class="power-state" data-power-state>CHARGING · 0/5</span></div>
+      </div>
+
+      <div class="power-play" id="powerPlayPanel" hidden>
+        <span class="pp-tag">The thesis, in your hand</span>
+        <strong>Your Power Card is charged — the band's vote is ready to cast.</strong>
+        <p>Play it and the record is read aloud: The Fade takes <b>12 damage</b>, his Sound Bite Spin Defense bonus drops to <b>zero for the next 2 battles</b>, and his current excuse is struck through in the battle log with its correction — the carousel jams.</p>
+        <button class="play-power-btn" id="playPowerCardBtn" type="button">PLAY YOUR POWER CARD — CAST THE VOTE</button>
       </div>
 
       <div class="fighterhud" id="fighterHud"></div>
@@ -766,6 +827,7 @@
     <h2>The Fade survives — this time.</h2>
     <div class="score-line"><span id="loseScore">Hits: 0/12</span><span id="loseHope">Hope left: 0</span></div>
     <p>The Fade doesn't need you to agree with it. It only needs you <b>uninformed, discouraged, and home on Election Day</b>. But notice what happened in every battle you missed: the explanation was right there, and now you know it. Knowledge doesn't fade. Hope doesn't either — it waits for the next sunrise. <b>Run it back</b> — and this time, bring friends, bring family, bring everyone who needs a home and a fair shot.</p>
+    <p class="lose-power-line" id="losePowerCardLine" style="display:none"></p>
     <div class="cta-row">
       <button class="btn btn-primary" type="button" data-replay>Try again — you've got this</button>
       <a class="btn btn-ghost" href="https://vote.gov" target="_blank" rel="noopener">Check registration anyway</a>
@@ -918,6 +980,11 @@
       <p class="small">Playing above via YouTube — the song chosen by the game's maker to carry the band home. If playback is blocked, open it here: <a href="https://youtu.be/AdakBIwpYcw?is=M29WCf5_jP9Xo_vN" target="_blank" rel="noopener" style="color:#e8a317;font-weight:700">youtu.be/AdakBIwpYcw</a></p>
       <p style="margin-top:36px">✦ &nbsp; THE END &nbsp; ✦</p>
       <p class="small">…or rather, the beginning.</p>
+      <p class="power-credit-line" id="powerCardCreditLine"></p>
+      <div class="closing-card">
+        <p>Play the game. Make your move count.</p>
+        <p>Play your power card in hand — cast your vote.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -1260,7 +1327,8 @@
     hp:{ maya:100, dre:100, priya:100 }, prevFighter:null,
     pendingBuffs:{ insp:0, sharpen:false }, activeBuffs:{ insp:0, sharpen:false },
     battleMods:null, dbBonus:0, allDown:false,
-    hardMode:false, gambitResolved:true, gambitCollapsed:false, gambitClaim:null, gambitTauntOverride:null, debtInterest:0 };
+    hardMode:false, gambitResolved:true, gambitCollapsed:false, gambitClaim:null, gambitTauntOverride:null, debtInterest:0,
+    powerCharge:0, powerPlayed:false, powerSpinUntilIdx:-1, canvassRallied:0, runOver:false };
 
   var questBox = document.getElementById("questBox");
   var chooseSection = document.getElementById("chooseSection");
@@ -1279,13 +1347,81 @@
     document.getElementById("bossVal").textContent = Math.max(0,state.boss) + " / 100";
     document.getElementById("hopeBar").style.width = Math.max(0,state.hope) + "%";
     document.getElementById("hopeVal").textContent = Math.max(0,state.hope) + " / 100";
-    var rallied = state.hits * 125;
-    document.getElementById("turnoutBar").style.width = Math.min(100, state.hits/QUESTS.length*100) + "%";
+    var rallied = state.hits * 125 + state.canvassRallied;
+    document.getElementById("turnoutBar").style.width = Math.min(100, rallied / (QUESTS.length * 125) * 100) + "%";
     document.getElementById("turnoutVal").textContent = rallied.toLocaleString() + " — every right call rallies more";
     bossImg.style.opacity = (0.35 + 0.65*(Math.max(0,state.boss)/100)).toFixed(2);
     bossImg.style.filter = "grayscale(" + ((100-Math.max(0,state.boss))*0.7/100).toFixed(2) + ") brightness(" + (1.25 - 0.45*(Math.max(0,state.boss)/100)).toFixed(2) + ")";
     refreshFadeFlavor();
     renderHeroHp();
+    renderPowerCard();
+  }
+
+  /* ============ THE POWER CARD — the thesis made playable ============
+     One shared party card, mirrored in the arena HUD and on every hero's
+     sheet. It charges ONLY through informed play: +1 per battle question
+     answered correctly, +1 per Fake News gambit correctly ruled FAKE
+     (Hard mode), +1 per Canvass camp action — and a landed Death Blow
+     fills it completely. Playing it (only at a full 5 pips) is the band's
+     culminating move: the record is read aloud, The Fade takes 12 damage,
+     and his Sound Bite Spin Defense bonus is zero for the next 2 battles.
+     It is powerful but bounded — the Death Blow remains the only instant
+     kill. After playing, the track empties and can charge again. */
+  function powerStateText(){
+    if (state.powerCharge >= 5) return "CHARGED · 5/5 — READY TO PLAY";
+    if (state.powerPlayed && state.powerCharge === 0) return "PLAYED";
+    return "CHARGING · " + state.powerCharge + "/5";
+  }
+  function renderPowerCard(){
+    var pipsHtml = "";
+    for (var i = 1; i <= 5; i++) pipsHtml += '<span class="pip' + (i <= state.powerCharge ? " filled" : "") + '"></span>';
+    document.querySelectorAll("[data-power-pips]").forEach(function(el){ el.innerHTML = pipsHtml; });
+    document.querySelectorAll("[data-power-state]").forEach(function(el){ el.textContent = powerStateText(); });
+    var panel = document.getElementById("powerPlayPanel");
+    if (panel) panel.hidden = !(state.powerCharge >= 5 && !state.awaitingPick && !state.runOver && !state.deathBlowWon);
+  }
+  function chargePower(amount){
+    var before = state.powerCharge;
+    state.powerCharge = Math.max(0, Math.min(5, state.powerCharge + amount));
+    renderPowerCard();
+    return state.powerCharge - before;
+  }
+  function powerSpinSuppressed(){
+    return typeof state.powerSpinUntilIdx === "number" && state.powerSpinUntilIdx >= state.idx;
+  }
+  function refreshBuffNote(){
+    var bn = questBox.querySelector(".buff-note");
+    if (!bn || !state.battleMods) return;
+    var aspect = ASPECTS[state.idx];
+    var matched = MATCHUP[FIGHTERS[state.fighter].weapon] === aspect;
+    bn.innerHTML = "The Fade's aspect this battle: <b>" + ASPECT_NAMES[aspect] + "</b>" +
+      (matched ? " — " + FIGHTERS[state.fighter].wname + " counter it: <b>+2 to hit</b>" : "") +
+      " · " + FIGHTERS[state.fighter].name + "'s attack: <b>" + fmtMod(state.battleMods.atk) + "</b> (" + state.battleMods.parts + ") vs The Fade's Defense <b>" + fadeDefense() + "</b>" +
+      (state.gambitCollapsed ? " · <b>Gambit collapsed: +2 damage on the next hit</b>" : "") +
+      (powerSpinSuppressed() ? " · <b>Power Card played: Spin Defense bonus is 0</b>" : "") +
+      " · " + FIGHTERS[state.fighter].name + "'s Defense <b>" + state.battleMods.def + "</b>";
+  }
+  function playPowerCard(){
+    if (state.powerCharge < 5 || state.awaitingPick || state.runOver || state.deathBlowWon) return;
+    startRun();
+    var excuse = excuseFor(state.boss);
+    var before = Math.max(0, state.boss);
+    state.boss = Math.max(0, state.boss - 12);
+    state.powerCharge = 0;
+    state.powerPlayed = true;
+    /* Spin stays jammed for the next 2 battles: if the current battle is
+       still unanswered it counts as the first; if it is already answered,
+       the suppression covers the two battles that follow this one. */
+    state.powerSpinUntilIdx = state.idx + (state.answered ? 2 : 1);
+    renderBars();
+    updateFadeUI();
+    refreshBuffNote();
+    dmgPop.textContent = "−12";
+    dmgPop.classList.remove("show"); void dmgPop.offsetWidth; dmgPop.classList.add("show");
+    bossStage.classList.remove("hurt"); void bossStage.offsetWidth; bossStage.classList.add("hurt");
+    if (navigator.vibrate) { try { navigator.vibrate([40,40,80]); } catch(e){} }
+    logEl.innerHTML = "Battle log: POWER CARD PLAYED — CAST THE VOTE. The record is read aloud: The Fade takes 12 damage (" + before + " → " + Math.max(0, state.boss) + " HP). His current excuse — <s>" + excuse + "</s> — is struck through by the documented correction: " + CAROUSEL_NOTE.correction + " The carousel jams: his Sound Bite Spin Defense bonus is 0 for the next 2 battles.";
+    logEl.scrollIntoView({ behavior:"smooth", block:"nearest" });
   }
 
   /* Death Blow cadence, set by who is fighting: Maya's eye is fastest (any battle under
@@ -1326,7 +1462,7 @@
      Blowback — after a battle, Blowback x 6.25% chance he fires the band's
              own gifted weapons back for 4 + round(Blowback/2) Hope damage. */
   function drumHope(){ return 6 + state.fade.drum; }
-  function fadeDefense(){ return 10 + Math.round(state.fade.spin / 4) + hardDefenseBonus(); }
+  function fadeDefense(){ return 10 + (powerSpinSuppressed() ? 0 : Math.round(state.fade.spin / 4)) + hardDefenseBonus(); }
   function creepHeal(){ return Math.round(state.fade.creep / 2); }
   function blowChance(){ return state.fade.blowback * 6.25; }
   function blowDmg(){ return 4 + Math.round(state.fade.blowback / 2); }
@@ -1676,6 +1812,11 @@
       b.disabled = campUsed || priyaDown || state.hp[t] >= 100;
       b.textContent = FIGHTERS[t].name + " · " + Math.max(0, state.hp[t]) + " HP";
     });
+    document.querySelectorAll("[data-canvass]").forEach(function(b){
+      var t = b.getAttribute("data-canvass");
+      b.disabled = campUsed || state.hp[t] <= 0;
+      b.textContent = FIGHTERS[t].name + (state.hp[t] <= 0 ? " is down" : " canvasses");
+    });
   }
   function campDone(msg){
     campUsed = true;
@@ -1733,12 +1874,27 @@
       campDone("<b>Sharpen &amp; Brace:</b> no die needed — the next fighter sent in gets <b>+2 to hit and +2 Defense</b> for the coming battle.");
       log("Sharpen & Brace readied for the next fighter.");
     });
+    document.querySelectorAll("[data-canvass]").forEach(function(b){
+      b.addEventListener("click", function(){
+        if (campUsed) return;
+        var t = b.getAttribute("data-canvass");
+        if (state.hp[t] <= 0) return;
+        var slot = document.getElementById("campTray"); if (slot) slot.innerHTML = "";
+        state.canvassRallied += 25;
+        var gained = chargePower(1);
+        renderBars();
+        campDone("<b>Canvass:</b> " + FIGHTERS[t].name + " knocks on one more door instead of resting — <b>Friends Rallied +25</b>, and the Power Card gains <b>+1 charge</b>" + (gained > 0 ? " (now " + state.powerCharge + "/5" : " (already CHARGED at 5/5") + "). Build toward the vote, or save the dying — never both.");
+        log("Canvass: " + FIGHTERS[t].name + " rallies a friend (+25). Power Card charge: " + state.powerCharge + "/5.");
+      });
+    });
     var press = document.getElementById("campPress");
     if (press) press.addEventListener("click", function(){
       if (campUsed) return;
       var slot = document.getElementById("campTray"); if (slot) slot.innerHTML = "";
       campDone("The band presses on — no camp action this stop. Choose the next fighter above.");
     });
+    var ppBtn = document.getElementById("playPowerCardBtn");
+    if (ppBtn) ppBtn.addEventListener("click", playPowerCard);
   }
 
   function refreshFadeFlavor(){
@@ -1768,7 +1924,7 @@
              : "Nightmare — maximum drumbeat";
     var th = document.getElementById("fadeThreat"); if (th) th.textContent = "Threat level · " + tier;
     var lo = document.getElementById("fadeLoadout");
-    if (lo) lo.innerHTML = "The Fade's machine · War Drum <b>" + f.drum + "</b> · Sound Bite Spin <b>" + f.spin + "</b> · Mission Creep <b>" + f.creep + "</b> · Blowback Arsenal <b>" + f.blowback + "</b> · Defense <b>" + fadeDefense() + "</b>" + (state.hardMode ? " · <b>HARD SKILL LEVEL</b>" + (state.gambitCollapsed ? " · Gambit collapsed — Hard Defense bonus lost this battle" : " · Hard Defense +2 included") : " · Standard skill level") + (state.runStarted ? " · Locked for this run" : " · Tune it on his sheet above");
+    if (lo) lo.innerHTML = "The Fade's machine · War Drum <b>" + f.drum + "</b> · Sound Bite Spin <b>" + f.spin + "</b> · Mission Creep <b>" + f.creep + "</b> · Blowback Arsenal <b>" + f.blowback + "</b> · Defense <b>" + fadeDefense() + "</b>" + (state.hardMode ? " · <b>HARD SKILL LEVEL</b>" + (state.gambitCollapsed ? " · Gambit collapsed — Hard Defense bonus lost this battle" : " · Hard Defense +2 included") : " · Standard skill level") + (powerSpinSuppressed() ? " · <b>Power Card played — Spin Defense bonus 0 through Battle " + Math.min(QUESTS.length, state.powerSpinUntilIdx + 1) + "</b>" : "") + (state.runStarted ? " · Locked for this run" : " · Tune it on his sheet above");
     refreshFadeFlavor();
   }
 
@@ -1894,8 +2050,9 @@
     var db2 = document.getElementById("dbBtn"); if (db2) db2.disabled = false;
     if (correctFake) {
       state.gambitCollapsed = true;
-      if (res) res.innerHTML = '<p class="g-fact"><b>Gambit collapsed — correct ruling: FAKE.</b> He loses his Hard Defense bonus for this battle, and your next hit deals <b>+2 damage</b>.<br><b>Documented fact:</b> ' + gambit.fact + '<br><span style="color:var(--stage-muted)">Source: ' + gambit.source + "</span></p>";
-      log("Fake News Gambit called FAKE — correct. His Defense bonus collapses this battle and the next hit deals +2. Documented fact: " + gambit.fact + " (" + gambit.source + ")");
+      var gGain = chargePower(1);
+      if (res) res.innerHTML = '<p class="g-fact"><b>Gambit collapsed — correct ruling: FAKE.</b> He loses his Hard Defense bonus for this battle, and your next hit deals <b>+2 damage</b>. Power Card ' + (gGain > 0 ? "+1 — facts charge it: <b>" + state.powerCharge + "/5</b>" : "stays <b>CHARGED at 5/5</b>") + '.<br><b>Documented fact:</b> ' + gambit.fact + '<br><span style="color:var(--stage-muted)">Source: ' + gambit.source + "</span></p>";
+      log("Fake News Gambit called FAKE — correct. His Defense bonus collapses this battle and the next hit deals +2. Power Card charge: " + state.powerCharge + "/5. Documented fact: " + gambit.fact + " (" + gambit.source + ")");
     } else {
       var heal = 0;
       var landText, landLog;
@@ -1979,7 +2136,8 @@
              A 1–2 leaves The Fade clinging on at 1 HP instead of dead. */
           state.boss = 1;
           state.prevFighter = state.fighter;
-          fb.innerHTML = '<span class="verdict">The blow lands — but he clings on at 1 HP</span><p>' + db.good + '</p><p class="brief-note">HARD MODE DEATH BLOW CHECK — d6 rolled <b>' + roll + "</b>, under the 3+ needed to finish him. " + FIGHTERS[state.fighter].name + "'s strike was true, so The Fade is driven down to <b>1 HP</b> — one more solid battle will end him, but this Death Blow did not.</p>";
+          state.powerCharge = 5; renderPowerCard();
+          fb.innerHTML = '<span class="verdict">The blow lands — but he clings on at 1 HP</span><p>' + db.good + '</p><p class="brief-note">HARD MODE DEATH BLOW CHECK — d6 rolled <b>' + roll + "</b>, under the 3+ needed to finish him. " + FIGHTERS[state.fighter].name + "'s strike was true, so The Fade is driven down to <b>1 HP</b> — one more solid battle will end him, but this Death Blow did not. <b>The landed Death Blow fills the Power Card completely — it is CHARGED.</b></p>";
           log("Hard mode Death Blow: d6 rolled " + roll + " (needed 3+). The Fade survives at 1 HP.");
           dmgPop.textContent = "−" + (remaining - 1);
           dmgPop.classList.remove("show"); void dmgPop.offsetWidth; dmgPop.classList.add("show");
@@ -1996,7 +2154,8 @@
         state.wonByDeathBlow = state.fighter;
         state.dbBonus += roll;
         state.prevFighter = state.fighter;
-        fb.innerHTML = '<span class="verdict">Death Blow · The Fade Falls</span><p>' + db.good + '</p><p class="brief-note">DEATH BLOW — ' + remaining + " remaining HP + " + roll + " (d6) = <b>" + total + " damage!</b> The overkill is totaled into the victory and remembered in the credits.</p>";
+        state.powerCharge = 5; renderPowerCard();
+        fb.innerHTML = '<span class="verdict">Death Blow · The Fade Falls</span><p>' + db.good + '</p><p class="brief-note">DEATH BLOW — ' + remaining + " remaining HP + " + roll + " (d6) = <b>" + total + " damage!</b> The overkill is totaled into the victory and remembered in the credits. <b>The landed Death Blow fills the Power Card completely.</b></p>";
         log("DEATH BLOW — " + remaining + " + " + roll + " = " + total + "! " + FIGHTERS[state.fighter].name + " lands " + db.name + ". The Fade is finished.");
         dmgPop.textContent = "−" + total;
         dmgPop.classList.remove("show"); void dmgPop.offsetWidth; dmgPop.classList.add("show");
@@ -2043,8 +2202,9 @@
          Roll + attack bonus vs The Fade's Defense (his Spin, folded in):
          natural 20 crits for double, a miss still glances for half. */
       state.hits++;
+      var pcGain = chargePower(1);
       fb.className = "feedback show good";
-      fb.innerHTML = '<span class="verdict">Correct — ' + FIGHTERS[state.fighter].name + ' attacks!</span><p>' + q.good + '</p><p class="brief-note">' + q.brief + "</p>";
+      fb.innerHTML = '<span class="verdict">Correct — ' + FIGHTERS[state.fighter].name + ' attacks!</span><p>' + q.good + '</p><p class="brief-note">' + q.brief + '</p><p class="brief-note">Power Card ' + (pcGain > 0 ? "+1 — facts charge it: <b>" + state.powerCharge + "/5</b>" : "is <b>CHARGED at 5/5</b> — ready to play from the arena") + ".</p>";
       var tray = makeTray("d20", FIGHTERS[state.fighter].name + "'s attack roll · d20 vs Defense " + fadeDefense());
       insertTray(tray);
       log(FIGHTERS[state.fighter].name + " has the fact cold. Swipe or tap the d20 to strike.");
@@ -2177,6 +2337,7 @@
   /* Between battles: route the player back to the character sheets to re-pick a fighter */
   function goToPick(){
     state.awaitingPick = true;
+    renderPowerCard();
     state.gambitTauntOverride = null; state.gambitCollapsed = false;
     var q = QUESTS[state.idx];
     chooseHeading.textContent = "Choose who fights battle " + (state.idx + 1) + " of " + QUESTS.length;
@@ -2199,6 +2360,7 @@
 
   function beginBattle(){
     state.awaitingPick = false;
+    renderPowerCard();
     /* Camp buffs chosen on the pick screen become this battle's active buffs. */
     state.activeBuffs = { insp: state.pendingBuffs.insp, sharpen: state.pendingBuffs.sharpen };
     state.pendingBuffs = { insp: 0, sharpen: false };
@@ -2223,7 +2385,9 @@
 
   function finish(){
     var win = state.boss <= 40 && !state.allDown;
-    var rallied = (state.hits * 125).toLocaleString();
+    state.runOver = true;
+    renderPowerCard();
+    var rallied = (state.hits * 125 + state.canvassRallied).toLocaleString();
     if (win) {
       document.getElementById("winScore").textContent = "Hits: " + state.hits + "/" + QUESTS.length + (state.dbBonus > 0 ? " · Death Blow overkill +" + state.dbBonus + " (d6)" : "");
       document.getElementById("winHope").textContent = "Hope left: " + state.hope;
@@ -2235,6 +2399,16 @@
     } else {
       document.getElementById("loseScore").textContent = "Hits: " + state.hits + "/" + QUESTS.length;
       document.getElementById("loseHope").textContent = "Hope left: " + state.hope;
+      var lpc = document.getElementById("losePowerCardLine");
+      if (lpc) {
+        if (state.powerCharge >= 5 && !state.powerPlayed) {
+          lpc.textContent = "A power card unplayed changes nothing.";
+          lpc.style.display = "";
+        } else {
+          lpc.textContent = "";
+          lpc.style.display = "none";
+        }
+      }
       var l = document.getElementById("loseEnding");
       l.classList.add("show");
       l.scrollIntoView({ behavior:"smooth", block:"start" });
@@ -2255,6 +2429,11 @@
     state.activeBuffs = { insp:0, sharpen:false };
     state.battleMods = null; state.dbBonus = 0; state.allDown = false;
     state.hardMode = false; state.gambitResolved = true; state.gambitCollapsed = false; state.gambitClaim = null; state.gambitTauntOverride = null; state.debtInterest = 0;
+    state.powerCharge = 0; state.powerPlayed = false; state.powerSpinUntilIdx = -1; state.canvassRallied = 0; state.runOver = false;
+    var lpc2 = document.getElementById("losePowerCardLine");
+    if (lpc2) { lpc2.textContent = ""; lpc2.style.display = "none"; }
+    var pcl2 = document.getElementById("powerCardCreditLine");
+    if (pcl2) pcl2.textContent = "";
     var ht2 = document.getElementById("hardToggle");
     if (ht2) { ht2.disabled = false; ht2.setAttribute("aria-pressed","false"); ht2.textContent = "Turn HARD mode ON"; }
     var hd2 = document.getElementById("hardDesc");
@@ -2413,6 +2592,12 @@
   }
 
   function openFinale(){
+    /* The credits remember the Power Card, on the line just before the
+       closing thesis line: played, or never played at all. */
+    var pcLine = document.getElementById("powerCardCreditLine");
+    if (pcLine) pcLine.textContent = state.powerPlayed
+      ? "Power Card: PLAYED — and it counted."
+      : "The power card was in your hand all along.";
     /* If the game was won by a Death Blow, that hero's finishing strike joins the
        credits pool as a featured scene, and the credit line names it. */
     var slot0 = overlay.querySelector(".vignette-slot");
