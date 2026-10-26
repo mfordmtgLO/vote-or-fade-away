@@ -1,0 +1,17 @@
+name: Publish module
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish module
+        run: |
+          git mv -f vote-or-fade-away-game-module.html module.html
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "Module: Sources & Story provenance appendix"
+          git push
