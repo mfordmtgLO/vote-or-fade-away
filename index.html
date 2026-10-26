@@ -104,6 +104,8 @@
   .pick-btn{margin-top:12px;width:100%;border:2px solid var(--ink);background:var(--panel2);color:var(--ink);font-weight:800;font-size:.95rem;padding:12px 14px;border-radius:8px}
   .pick-btn:active{transform:translate(1px,1px)}
   .fighter.selected .pick-btn{background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:3px 3px 0 var(--ink)}
+  .fighter.armed{border-color:#22c55e;box-shadow:4px 4px 0 #22c55e}
+  .fighter.armed .pick-btn{background:#22c55e;border-color:#14532d;color:#052e12;box-shadow:3px 3px 0 var(--ink)}
   .fighter .weapon{font-family:"JetBrains Mono",monospace;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
   .fighter h3{font-size:1.35rem;margin:6px 0 4px}
   .fighter .age{font-weight:800;font-size:.85rem;color:var(--muted)}
@@ -568,7 +570,7 @@
       <p class="camp-note" id="campNote" role="status"></p>
     </div>
     <div class="fighters" role="group" aria-label="Choose your fighter">
-      <div class="fighter selected" data-fighter="maya">
+      <div class="fighter" data-fighter="maya">
         <span class="sheet-tag">Character sheet · Ranger</span>
         <img class="sketch" data-img="maya" alt="Gray pencil sketch of Maya in a full attack stance — feet planted wide, longbow drawn to her cheek, aiming an arrow tipped with a ballot, quiver of Voting Arrows on her back, barista apron and gig-driver gear at her belt" />
         <span class="weapon" style="color:#a86e00">Weapon · Voting Arrows</span>
@@ -599,7 +601,7 @@
           <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote.</p>
         </div>
         <p class="cap-note">Ranger caps: strength tops out at 12 and magic stays low — her power is aim, nerve, and knowing the ground.</p>
-        <button class="pick-btn" type="button" aria-pressed="true">Send Maya into battle →</button>
+        <button class="pick-btn" type="button" aria-pressed="false">Send Maya into battle →</button>
       </div>
       <div class="fighter" data-fighter="dre">
         <span class="sheet-tag">Character sheet · Fighter</span>
@@ -1522,7 +1524,7 @@
   var HERO_FULL = { maya:"Maya Reyes", dre:"Dre Carter", priya:"Priya Nair" };
 
   /* ============ State ============ */
-  var state = { fighter:"maya", idx:0, boss:100, hope:100, hits:0, answered:false, awaitingPick:false,
+  var state = { fighter:"maya", armedPick:null, idx:0, boss:100, hope:100, hits:0, answered:false, awaitingPick:false,
     deathBlowSpent:{ maya:false, dre:false, priya:false }, deathBlowWon:false, wonByDeathBlow:null,
     battleStarts:0, renderedFor:-1,
     fade:{ drum:6, spin:6, creep:6, blowback:6 }, runStarted:false,
@@ -1999,10 +2001,14 @@
       }
       if (card) {
         card.classList.toggle("is-down", hp <= 0);
+        card.classList.toggle("armed", state.armedPick === k);
         var btn = card.querySelector(".pick-btn");
         if (btn) {
           btn.disabled = hp <= 0;
-          btn.textContent = hp <= 0 ? FIGHTERS[k].name + " is down — heal to revive" : "Send " + FIGHTERS[k].name + " into battle →";
+          btn.setAttribute("aria-pressed", state.armedPick === k ? "true" : "false");
+          btn.textContent = hp <= 0 ? FIGHTERS[k].name + " is down — heal to revive"
+            : state.armedPick === k ? "✓ Selected — tap again to enter battle"
+            : "Send " + FIGHTERS[k].name + " into battle →";
         }
       }
     });
@@ -2708,6 +2714,7 @@
   /* Between battles: route the player back to the character sheets to re-pick a fighter */
   function goToPick(){
     state.awaitingPick = true;
+    state.armedPick = null; /* a fresh pick screen always starts with no fighter armed */
     renderPowerCard();
     state.gambitTauntOverride = null; state.gambitCollapsed = false;
     var q = QUESTS[state.idx];
@@ -2790,7 +2797,7 @@
   }
 
   function reset(){
-    state.idx = 0; state.boss = 100; state.hope = 100; state.hits = 0; state.awaitingPick = false;
+    state.idx = 0; state.boss = 100; state.hope = 100; state.hits = 0; state.awaitingPick = false; state.armedPick = null;
     state.deathBlowSpent = { maya:false, dre:false, priya:false };
     state.deathBlowWon = false; state.wonByDeathBlow = null;
     state.battleStarts = 0; state.renderedFor = -1;
@@ -2840,19 +2847,35 @@
     log(FIGHTERS[state.fighter].line);
   }
 
-  /* Fighter select — the pick button on each character sheet (sliders stay free to tune) */
+  /* Fighter select — two-step, on every pick screen (the opening pick and each
+     between-battles re-pick). The FIRST tap on a sheet's "Send into battle"
+     button only arms that fighter: the button turns green and reads "Selected —
+     tap again to enter battle", and nothing navigates — the player can keep
+     scrolling, compare sheets, tune sliders, or use the camp panel, and arming a
+     different fighter moves the green state (only one armed at a time). The
+     SECOND tap on the already-armed button launches the battle with that
+     fighter, exactly as a single tap behaved before (beginBattle on a re-pick,
+     including its Death Blow offer check in renderQuest; renderQuest plus a
+     scroll to the arena on the opening pick). state.fighter is only set at
+     launch, so an armed-but-unlaunched pick never desyncs the rendered battle. */
   document.querySelectorAll(".pick-btn").forEach(function(btn){
     btn.addEventListener("click", function(){
       var card = btn.closest(".fighter");
-      document.querySelectorAll(".fighter").forEach(function(c){
-        c.classList.remove("selected");
-        c.querySelector(".pick-btn").setAttribute("aria-pressed","false");
-      });
-      card.classList.add("selected");
-      btn.setAttribute("aria-pressed","true");
-      state.fighter = card.getAttribute("data-fighter");
+      var key = card.getAttribute("data-fighter");
+      if (state.armedPick !== key) {
+        state.armedPick = key;
+        renderHeroHp();
+        log(FIGHTERS[key].name + " is selected — tap the green button again to enter the battle.");
+        return;
+      }
+      state.armedPick = null;
+      state.fighter = key;
+      renderHeroHp();
       if (state.awaitingPick) { beginBattle(); return; }
-      if (state.idx === 0 && !state.answered) { renderQuest(); }
+      if (state.idx === 0 && !state.answered) {
+        renderQuest();
+        document.getElementById("arena").scrollIntoView({ behavior:"smooth", block:"start" });
+      }
       log(FIGHTERS[state.fighter].line);
     });
   });
