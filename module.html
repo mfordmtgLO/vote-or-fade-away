@@ -86,10 +86,10 @@ table{width:100%;border-collapse:collapse;font-size:15px} th{font-family:Cinzel,
 .legendary{background:var(--ink);color:#f3e9d2;padding:16px} .legendary h4{color:#e9c46a;border-color:#e9c46a}
 /* ENCOUNTERS */
 .enc{border:1px solid var(--border);background:var(--card);margin:12px 0;overflow:hidden}
-.enc-head{width:100%;text-align:left;background:var(--card);border:0;padding:16px;display:flex;justify-content:space-between;gap:12px;cursor:pointer;color:var(--ink);font:inherit}
+.enc-head{width:100%;text-align:left;background:var(--card);border:0;padding:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;cursor:pointer;color:var(--ink);font:inherit}
 .enc-head h3{margin:2px 0;font-size:19px} .enc-num{font-family:Cinzel,serif;font-size:28px;color:var(--accent);line-height:1}
 .enc-body{display:none;padding:0 16px 18px;border-top:1px dashed var(--muted)} .enc.open .enc-body{display:block}
-.dc{display:inline-block;background:var(--accent);color:#fff;padding:3px 9px;border-radius:999px;font-family:Cinzel,serif;font-size:12px}
+.dc{flex:none;align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap;line-height:1.25;background:var(--accent);color:#fff;padding:5px 11px;border-radius:999px;font-family:Cinzel,serif;font-size:12px}
 /* TOOLS */
 .tools{display:grid;grid-template-columns:1.1fr .9fr;gap:14px} @media(max-width:760px){.tools{grid-template-columns:1fr}}
 .tool{background:var(--ink);color:#f3e9d2;padding:20px} .tool h3{color:#e9c46a;margin-top:0}
