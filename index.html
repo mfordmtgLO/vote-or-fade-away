@@ -241,11 +241,14 @@
   .ending.show{display:block}
   .ending.win{background:var(--stage);color:var(--stage-ink)}
   .ending.lose{background:#2a1416;color:#f6e8e6;border-color:#5a2327}
+  .ending.distance{background:linear-gradient(180deg,#26313d 0%,#4a4250 52%,#6e5138 100%);color:#f7efe0;border-color:#141a20}
   .ending h2{font-size:clamp(1.9rem,7vw,3rem)}
   .ending.win h2 .gold{color:var(--amber)}
+  .ending.distance h2 .firstlight{color:#ffb26b}
   .ending p{max-width:62ch}
   .ending p b{color:var(--amber)}
   .ending.lose p b{color:#ff9d94}
+  .ending.distance p b{color:#ffc46b}
   .score-line{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
   .score-line span{font-family:"JetBrains Mono",monospace;font-size:.75rem;font-weight:700;border:1px solid currentColor;border-radius:999px;padding:5px 10px}
   .plan{list-style:none;margin:16px 0;padding:0;display:grid;gap:9px;max-width:560px}
@@ -254,6 +257,36 @@
   .plan .n{flex:none;font-family:"Anton",sans-serif;background:var(--amber);color:#10181d;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.9rem}
   .plan a{color:var(--amber);font-weight:800}
   .ending .cta-row .btn-ghost{border-color:rgba(255,255,255,.4);color:inherit}
+
+  /* ---------- The Walk Off: the perfect finish — full morning, the
+     brightest of the four endings. The band walks home empowered, in
+     daylight, not into any paradise. ---------- */
+  .ending.walkoff{background:linear-gradient(180deg,#fdf6d8 0%,#ffeeb0 34%,#ffd98a 62%,#a8c686 100%);color:#10181d}
+  .ending.walkoff h2 .dawn-gold{color:#8a5a00}
+  .ending.walkoff p b{color:#7a4a00}
+  .ending.walkoff .plan li{background:rgba(255,255,255,.55);border-color:rgba(16,24,29,.25)}
+  .ending.walkoff .plan a{color:#7a4a00}
+  .ending.walkoff .cta-row .btn-ghost{border-color:rgba(16,24,29,.45);color:#10181d}
+  .morning{margin:18px 0;border-radius:12px;overflow:hidden;border:2px solid #000;background:linear-gradient(180deg,#8ec9e8 0%,#cfeef7 30%,#fdf3c0 58%,#ffd98a 78%,#a8c686 100%);color:#10181d;position:relative}
+  .morning-inner{padding:26px 20px 22px;background:linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,.05) 55%,rgba(20,60,30,.12))}
+  .morning p{color:#10181d;max-width:62ch}
+  .morning p b{color:#7a4a00}
+  .morning .walk-close{font-family:Georgia,serif;font-style:italic;font-size:clamp(1.15rem,4vw,1.5rem);line-height:1.35;max-width:36ch}
+  .morning .walkers{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+  .morning .walkers span{font-family:"JetBrains Mono",monospace;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(16,24,29,.85);color:#ffe9a8;padding:5px 9px;border-radius:999px}
+  .morning .song-note{color:#3d4a42}
+  /* The win screen's "what was missing" line — the gap named in plain words */
+  .missing-line{font-weight:700;font-size:1.02rem}
+  /* Per-hero Power Card cast marker on each character sheet */
+  .cast-status{display:block;margin-top:7px;font-family:"JetBrains Mono",monospace;font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#7a4a00}
+  .cast-status.cast{color:#0e7c74}
+  @media (prefers-color-scheme: dark){.cast-status{color:var(--amber)}.cast-status.cast{color:#5fd3c6}}
+  /* The lose ending's coda panel: what lies past death, in the words the
+     win screen used to carry — never a prize for winning. */
+  .greencountry{margin:16px 0;border-radius:12px;overflow:hidden;border:2px solid #000;background:linear-gradient(180deg,#eaf7e2 0%,#a8c686 55%,#7fb069 100%);color:#10181d;padding:22px 20px}
+  .greencountry blockquote{margin:0 0 10px;font-family:Georgia,serif;font-style:italic;font-size:clamp(1.2rem,4.2vw,1.6rem);line-height:1.3;max-width:24ch;color:#12291f}
+  .greencountry p{color:#12291f;max-width:62ch;margin:0}
+  .greencountry p b{color:#12291f}
 
   /* ---------- Hope & Home ---------- */
   .hope-strip{margin-top:16px;background:linear-gradient(100deg,#fff7e0,#e6f4ea);border:2px solid var(--amber);border-radius:12px;padding:16px 18px;color:#10181d}
@@ -277,6 +310,15 @@
   .sunrise .walkers span{font-family:"JetBrains Mono",monospace;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(0,0,0,.68);color:#ffe9a8;padding:5px 9px;border-radius:999px}
   .sunrise p{color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.5);max-width:62ch}
   .finale-btn{background:#fff3c4;color:#10181d;border:2px solid #10181d;box-shadow:4px 4px 0 #000}
+  /* First light, not full sunrise: the distance ending's scene panel — the
+     same family as .sunrise, but the sky only reaches a pale dawn band
+     over a dark horizon line. */
+  .dawn{margin:18px 0;border-radius:12px;overflow:hidden;border:2px solid #000;background:linear-gradient(180deg,#1d2836 0%,#46506b 34%,#8a5f4c 58%,#d99e5f 76%,#e9c184 88%,#5c6650 100%);color:#fff;position:relative}
+  .dawn-inner{padding:24px 20px 20px;background:linear-gradient(180deg,rgba(13,18,22,.28),rgba(255,255,255,.04) 55%,rgba(20,34,22,.25))}
+  .dawn p{color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.5);max-width:62ch}
+  .dawn p b{color:#ffe1a1}
+  .dawn blockquote{margin:16px 0;font-family:Georgia,serif;font-style:italic;font-size:clamp(1.12rem,4vw,1.45rem);line-height:1.35;max-width:30ch;color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,.45)}
+  .dawn .his-line-tag{display:block;font-family:"JetBrains Mono",monospace;font-style:normal;font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ffd98a;margin-bottom:7px;text-shadow:1px 1px 0 rgba(0,0,0,.5)}
   .credits-overlay{position:fixed;inset:0;background:#050807;z-index:80;display:none;flex-direction:column}
   .credits-overlay.show{display:flex}
   .credits-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:calc(12px + env(safe-area-inset-top, 0px)) calc(16px + env(safe-area-inset-right, 0px)) 12px calc(16px + env(safe-area-inset-left, 0px));color:#edf2f0}
@@ -820,6 +862,7 @@
           <span class="pc-title">Maya's Power Card — Her Vote</span>
           <div class="power-pips" data-power-pips aria-hidden="true"></div>
           <span class="power-state" data-power-state>CHARGING · 0/5</span>
+          <span class="cast-status" data-cast-status="maya">Card not yet cast</span>
           <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote.</p>
         </div>
         <p class="cap-note">Ranger caps: strength tops out at 12 and magic stays low — her power is aim, nerve, and knowing the ground.</p>
@@ -885,6 +928,7 @@
           <span class="pc-title">Dre's Power Card — His Vote</span>
           <div class="power-pips" data-power-pips aria-hidden="true"></div>
           <span class="power-state" data-power-state>CHARGING · 0/5</span>
+          <span class="cast-status" data-cast-status="dre">Card not yet cast</span>
           <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote.</p>
         </div>
         <p class="cap-note">Warrior caps: strength tops out at 12 and constitution runs highest in the band — books and spells were never his department.</p>
@@ -950,6 +994,7 @@
           <span class="pc-title">Priya's Power Card — Her Vote</span>
           <div class="power-pips" data-power-pips aria-hidden="true"></div>
           <span class="power-state" data-power-state>CHARGING · 0/5</span>
+          <span class="cast-status" data-cast-status="priya">Card not yet cast</span>
           <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote.</p>
         </div>
         <p class="cap-note">Healer caps: strength tops out at 8 — but intelligence, magic and healing run higher than anyone else in the band.</p>
@@ -1173,12 +1218,13 @@
   <div class="ending win" id="winEnding" role="status">
     <h2>The Fade is broken. <span class="gold">You did that.</span></h2>
     <div class="score-line"><span id="winScore">Hits: 0</span><span id="winHope">Hope left: 100</span><span id="winTurnout">Friends rallied: 0</span></div>
+    <p class="missing-line" id="winMissingLine" style="display:none"></p>
     <p>One day you'll look back on this — the <b>Age of Reckoning</b> — and remember the day your generation stopped fading and started voting like the future was theirs. Because it is.</p>
     <div class="sunrise" aria-label="Sunrise finale scene">
       <div class="sunrise-inner">
-        <blockquote>“…a far green country, under a swift sunrise.”</blockquote>
-        <p>The battle is won, and the road home opens. Our merry band of weary travelers — Maya with her arrows spent, Dre resting the Axe on his shoulder, Priya sheathing the Sword of Youth — walk on together, not as strangers who survived a hard age, but as kin. The kindship forged in the fight will last them a lifetime: shared tables, first keys in first doors, neighbors looking out for neighbors, and a country they helped bend back toward hope.</p>
-        <p><b>This is the victory that matters:</b> not just a boss defeated, but a future reclaimed — work that pays, a home within reach, and a generation walking into the light side by side.</p>
+        <blockquote>“The road home was the same road. They were not the same walkers.”</blockquote>
+        <p>The battle is won, and the road home opens — the same road they came in on. Our merry band of weary travelers — Maya with her arrows spent, Dre resting the Axe on his shoulder, Priya sheathing the Sword of Youth — walk it as changed people, carrying what they now know, the card they played, and each other. The kinship forged in the fight will last them a lifetime: shared tables, first keys in first doors, neighbors looking out for neighbors, and a country they helped bend back toward hope.</p>
+        <p><b>This is the victory that matters:</b> not just a boss defeated, but a future reclaimed — work that pays, a home within reach, and a generation walking home in the morning light, side by side.</p>
         <div class="walkers"><span>Maya · Archer</span><span>Dre · Axe-Bearer</span><span>Priya · Sword of Youth</span><span>+ Every Friend You Rallied</span></div>
         <div class="cta-row">
           <button class="btn finale-btn" id="playFinaleBtn" type="button">▶ Play the closing song &amp; roll credits</button>
@@ -1199,12 +1245,79 @@
     </div>
   </div>
 
+  <!-- WALK OFF ENDING — the perfect finish: he is broken, all three heroes
+       standing, and every hero cast the Power Card at least once. -->
+  <div class="ending walkoff" id="walkOffEnding" role="status">
+    <h2>And they walked off — <span class="dawn-gold">into the future they voted for.</span></h2>
+    <div class="score-line"><span id="walkScore">Hits: 0</span><span id="walkHope">Hope left: 100</span><span id="walkTurnout">Friends rallied: 0</span><span id="walkCast">Power Cards cast: Maya ✓ · Dre ✓ · Priya ✓</span></div>
+    <div class="morning" aria-label="Walk off finale scene">
+      <div class="morning-inner">
+        <p>The moment he breaks, the arena goes silent. The drums stop mid-beat. The carousel stalls on its track, its excuses hanging crooked in the sudden quiet — and then, piece by piece, the machinery of The Fade simply stops, the way a storm stops: not with a bang, but with stillness.</p>
+        <p>And the band is standing in it. <b>All three.</b> Maya on her feet, bow lowered. Dre upright, the Axe of Freedom grounded like a walking staff. Priya with the Sword of Youth point-down, her light steady. Around them, the friends they rallied — neighbors, coworkers, first-time voters — close in, not as an audience, but as part of the line.</p>
+        <p>Then they walk off. Not running. Not ascending. <b>Walking</b> — in a line, unhurried — off the field and down the road home, carrying what they know, the cards they played, and each other.</p>
+        <p>What waits ahead is the future this fight was always about, fulfilled the only way it ever is: the changes they battled for, carried now by leaders <b>they empowered</b> — chosen by them, aligned with what they fought for, and able at last to act. First keys turning in first doors. Work that pays what a life costs. A town where every voice counts, because every voice showed up.</p>
+        <p class="walk-close">The future was never his to keep. It was always theirs to claim — and today, informed and together, they claimed it.</p>
+        <div class="walkers"><span>Maya · Archer</span><span>Dre · Axe-Bearer</span><span>Priya · Sword of Youth</span><span>+ Every Friend You Rallied</span></div>
+        <div class="cta-row">
+          <button class="btn finale-btn" id="playFinaleBtnWalk" type="button">▶ Play the closing song &amp; roll credits</button>
+        </div>
+        <p class="song-note">Press play and let the final scene fade into the credits — the song carries the band home.</p>
+      </div>
+    </div>
+    <p>Now make the game real. Election Day is <b>Tuesday, November 3, 2026</b>:</p>
+    <ul class="plan">
+      <li><span class="n">1</span><span><b>Check your registration today</b> — and your polling place / mail-ballot rules, at <a href="https://vote.gov" target="_blank" rel="noopener">vote.gov</a>. Deadlines differ by state; don't guess.</span></li>
+      <li><span class="n">2</span><span><b>Grade your actual candidates</b> — House and Senate — on war funding, tariffs, cost of living and fiscal honesty. Record over label, every time.</span></li>
+      <li><span class="n">3</span><span><b>Make a voting plan:</b> when, where, how you'll get there, and what ID your state requires. Put it in your calendar now.</span></li>
+      <li><span class="n">4</span><span><b>Rally three friends.</b> Turnout is the combo multiplier — send them this game and a registration link.</span></li>
+    </ul>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://vote.gov" target="_blank" rel="noopener">Go to vote.gov</a>
+      <button class="btn btn-ghost" type="button" data-replay>Play again</button>
+    </div>
+  </div>
+
+  <!-- DISTANCE ENDING -->
+  <div class="ending distance" id="distEnding" role="status">
+    <h2>He's still standing. <span class="firstlight">So are you.</span></h2>
+    <div class="score-line"><span id="distScore">Hits: 0</span><span id="distHope">Hope left: 100</span><span id="distTurnout">Friends rallied: 0</span><span id="distNearMiss">The Fade: 100 HP left</span></div>
+    <div class="dawn" aria-label="First light finale scene">
+      <div class="dawn-inner">
+        <p>The sixteenth battle ends, and the arena goes quiet. He does not fall. But for the first time in sixteen battles, <b>The Fade steps back</b>. He reaches for a fresh excuse — and finds the struck-through one still hanging there, his carousel stuttering on its track. He is not broken. <b>He is bleeding.</b></p>
+        <p>The band is battered, and the band is upright. Maya's quiver is nearly empty. Dre leans on the Axe of Freedom like a crutch. Priya's light is down to an ember — but it is lit. And at the edge of the field, the friends you rallied arrive — late, out of breath, and here: not numbers on a bar, but <b>neighbors, coworkers, first-time voters</b>, standing where the shrug used to be.</p>
+        <blockquote><span class="his-line-tag">The Fade, retreating</span>“You can't kill me in a game, children. I live wherever someone shrugs and stays home.”</blockquote>
+        <p>Maya nocks her last arrow, looks at the light coming up, and answers: <b>“Then we'll see you on November third.”</b></p>
+        <p>First light — not the full sunrise of the victory songs. Nothing at the end of this road is handed to them; what waits there is a vote, and a country still theirs to bend. The road home is the road to Election Day — and the band starts walking it together.</p>
+        <div class="cta-row">
+          <button class="btn finale-btn" id="playFinaleBtnDist" type="button">▶ Play the closing song &amp; roll credits</button>
+        </div>
+        <p class="song-note">Press play — the closing song carries the band home at first light, and the credits roll over the road ahead.</p>
+      </div>
+    </div>
+    <p class="dist-power-line" id="distPowerCardLine" style="display:none"></p>
+    <p>The last battle isn't in this game. It's <b>Tuesday, November 3, 2026</b>:</p>
+    <ul class="plan">
+      <li><span class="n">1</span><span><b>Check your registration today</b> — and your polling place / mail-ballot rules, at <a href="https://vote.gov" target="_blank" rel="noopener">vote.gov</a>. Deadlines differ by state; don't guess.</span></li>
+      <li><span class="n">2</span><span><b>Grade your actual candidates</b> — House and Senate — on war funding, tariffs, cost of living and fiscal honesty. Record over label, every time.</span></li>
+      <li><span class="n">3</span><span><b>Make a voting plan:</b> when, where, how you'll get there, and what ID your state requires. Put it in your calendar now.</span></li>
+      <li><span class="n">4</span><span><b>Rally three friends.</b> Turnout is the combo multiplier — send them this game and a registration link.</span></li>
+    </ul>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://vote.gov" target="_blank" rel="noopener">Go to vote.gov</a>
+      <button class="btn btn-ghost" type="button" data-replay>Run it back — break him this time</button>
+    </div>
+  </div>
+
   <!-- LOSE ENDING -->
   <div class="ending lose" id="loseEnding" role="status">
     <h2>The Fade survives — this time.</h2>
     <div class="score-line"><span id="loseScore">Hits: 0</span><span id="loseHope">Hope left: 0</span></div>
     <p>The Fade doesn't need you to agree with it. It only needs you <b>uninformed, discouraged, and home on Election Day</b>. But notice what happened in every battle you missed: the explanation was right there, and now you know it. Knowledge doesn't fade. Hope doesn't either — it waits for the next sunrise. <b>Run it back</b> — and this time, bring friends, bring family, bring everyone who needs a home and a fair shot.</p>
     <p class="lose-power-line" id="losePowerCardLine" style="display:none"></p>
+    <div class="greencountry" aria-label="The fallen band walks on">
+      <blockquote>“…a far green country, under a swift sunrise.”</blockquote>
+      <p>And the fallen band walks on. What waits past the edge of this field is not his country — it is rest, at last, for weary travelers: a country he cannot drum, spin, or creep into, where no battle ever has to be fought again. <b>Death is not The Fade's victory over them — only over this run.</b> The journey doesn't end here. It changes roads.</p>
+    </div>
     <div class="cta-row">
       <button class="btn btn-primary" type="button" data-replay>Try again — you've got this</button>
       <a class="btn btn-ghost" href="https://vote.gov" target="_blank" rel="noopener">Check registration anyway</a>
@@ -1228,7 +1341,7 @@
   <div class="credits-viewport" aria-label="Scrolling credits">
     <div class="credits-scroll" id="creditsScroll">
       <h3>The Fade Is Broken</h3>
-      <p>And the band walks on —<br />into a far green country,<br />under a swift sunrise.</p>
+      <p>And the band walks on —<br />down the road home,<br />with open eyes, and a vote in hand.</p>
       <h4>Starring</h4>
       <p>Maya Reyes — Keeper of the Voting Arrows</p>
       <p>Dre Carter — Bearer of the Axe of Freedom</p>
@@ -1245,7 +1358,7 @@
             <img class="v-boss" data-img="boss" alt="The Fade recoiling from the strike" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−13 HP</span>
           </div>
-          <figcaption><b>Maya strikes true.</b> A ballot-tipped Voting Arrow punches through the fog of “why bother” — The Fade reels.</figcaption>
+          <figcaption><b>Maya strikes true — a landed hit from the sixteen battles, replayed.</b> A ballot-tipped Voting Arrow punches through the fog of “why bother,” because every arrow she loosed was an informed ballot aimed at an exact lever of power.</figcaption>
         </figure>
         <figure class="vignette hit hit-dre">
           <span class="v-head">Highlight · Hero Strike</span>
@@ -1254,7 +1367,7 @@
             <img class="v-boss" data-img="boss" alt="The Fade recoiling from the strike" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−13 HP</span>
           </div>
-          <figcaption><b>Dre brings the Axe down.</b> The Axe of Freedom splits a red-tape chain clean in two — The Fade reels.</figcaption>
+          <figcaption><b>Dre brings the Axe down — a landed hit from the sixteen battles, replayed.</b> The Axe of Freedom splits red tape and bad arguments alike, asking who built the crisis, who profits, and where the proof is.</figcaption>
         </figure>
         <figure class="vignette hit hit-priya">
           <span class="v-head">Highlight · Hero Strike</span>
@@ -1263,7 +1376,7 @@
             <img class="v-boss" data-img="boss" alt="The Fade recoiling from the strike" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−13 HP</span>
           </div>
-          <figcaption><b>Priya finds the seam.</b> The Sword of Youth cuts through the “we had no choice” story — The Fade reels.</figcaption>
+          <figcaption><b>Priya finds the seam — a landed hit from the sixteen battles, replayed.</b> The Sword of Youth cuts through the “we had no choice” story, because she had read the fine print the slogan hoped she would skip.</figcaption>
         </figure>
         <figure class="vignette fadehit fade-maya">
           <span class="v-head">The Fade Strikes Back</span>
@@ -1272,7 +1385,7 @@
             <img class="v-hero" data-img="maya" alt="Pencil sketch of Maya knocked back by the blow" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−12 Hope</span>
           </div>
-          <figcaption><b>The Fade clips Maya.</b> A gust of pump-price panic catches her at the gas station — she shakes it off and re-nocks her arrow.</figcaption>
+          <figcaption><b>The Fade clips Maya — one of his counterattacks, replayed.</b> A gust of pump-price panic catches her at the gas station, but a counterattack only spends Hope — it cannot take back what she has learned.</figcaption>
         </figure>
         <figure class="vignette fadehit fade-dre">
           <span class="v-head">The Fade Strikes Back</span>
@@ -1281,7 +1394,7 @@
             <img class="v-hero" data-img="dre" alt="Pencil sketch of Dre knocked back by the blow" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−12 Hope</span>
           </div>
-          <figcaption><b>The Fade catches Dre.</b> A tariff-tag lash and a late freight chain knock him down on the warehouse floor — he picks the Axe back up.</figcaption>
+          <figcaption><b>The Fade catches Dre — one of his counterattacks, replayed.</b> A tariff-tag lash and a late freight chain knock him down on the warehouse floor, and he picks the Axe back up.</figcaption>
         </figure>
         <figure class="vignette fadehit fade-priya">
           <span class="v-head">The Fade Strikes Back</span>
@@ -1290,7 +1403,7 @@
             <img class="v-hero" data-img="priya" alt="Pencil sketch of Priya knocked back by the blow" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−12 Hope</span>
           </div>
-          <figcaption><b>The Fade buries Priya.</b> A blizzard of rejection letters swamps her sword arm — she reads the fine print, and stands again.</figcaption>
+          <figcaption><b>The Fade buries Priya — one of his counterattacks, replayed.</b> A blizzard of rejection letters swamps her sword arm, and she reads the fine print and stands again.</figcaption>
         </figure>
         <figure class="vignette hit hit-maya">
           <span class="v-head">Battle 9 Highlight · Receipts: The Forecasts</span>
@@ -1299,7 +1412,7 @@
             <img class="v-boss" data-img="boss" alt="The Fade recoiling from the strike" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−13 HP</span>
           </div>
-          <figcaption><b>Maya keeps the receipts.</b> The June 2025 forecasts — $120–$130 oil, ~$4.50 gasoline — fulfilled almost to the cent in 2026.</figcaption>
+          <figcaption><b>Battle 9, replayed — Maya keeps the receipts.</b> The June 2025 forecasts of $120–$130 oil and roughly $4.50 gasoline were fulfilled almost to the cent in 2026, proof the spike was predicted in writing long before it reached the pump.</figcaption>
         </figure>
         <figure class="vignette hit hit-priya">
           <span class="v-head">Battle 10 Highlight · The Invisible Tax</span>
@@ -1308,7 +1421,7 @@
             <img class="v-boss" data-img="boss" alt="The Fade recoiling from the strike" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−13 HP</span>
           </div>
-          <figcaption><b>Priya names the invisible tax.</b> A 5.31% 10-year Treasury and ~7.4% mortgages — the war arrives as a monthly payment.</figcaption>
+          <figcaption><b>Battle 10, replayed — Priya names the invisible tax.</b> A 5.31% 10-year Treasury and roughly 7.4% mortgages meant the war arrived at kitchen tables as a monthly payment, headline or no headline.</figcaption>
         </figure>
         <figure class="vignette hit hit-dre">
           <span class="v-head">Battle 11 Highlight · “Two Weeks Away?”</span>
@@ -1317,7 +1430,7 @@
             <img class="v-boss" data-img="boss" alt="The Fade recoiling from the strike" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−13 HP</span>
           </div>
-          <figcaption><b>Dre splits the slogan.</b> Enrichment is step one; weaponization is 1–2+ years out — and “obliterated” can't also be “two weeks away.”</figcaption>
+          <figcaption><b>Battle 11, replayed — Dre splits the slogan.</b> Enrichment is step one and weaponization was 1–2+ years out, so a program cannot be obliterated and two weeks away at the same time.</figcaption>
         </figure>
         <figure class="vignette fadehit fade-priya">
           <span class="v-head">Battle 12 · The Empty Cushion</span>
@@ -1326,7 +1439,7 @@
             <img class="v-hero" data-img="priya" alt="Pencil sketch of Priya knocked back by the blow" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−12 Hope</span>
           </div>
-          <figcaption><b>The cushion is gone.</b> Inventories ~509 million barrels below pre-war levels — the next shock lands on bare frame, and still the band stands.</figcaption>
+          <figcaption><b>Battle 12, replayed — the cushion is gone.</b> Inventories sat roughly 509 million barrels below pre-war levels, so the next shock would land on bare frame — and still the band stands.</figcaption>
         </figure>
         <figure class="vignette hit hit-maya">
           <span class="v-head">Battle 13 Highlight · The Inheritance (Debt, in Context)</span>
@@ -1335,7 +1448,7 @@
             <img class="v-boss" data-img="boss" alt="The Fade recoiling from the strike" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−13 HP</span>
           </div>
-          <figcaption><b>Maya reads the ratio aloud.</b> ~57% of GDP in 2001, surplus and shrinking — past 120% today. The bill was inherited; the vote is the answer.</figcaption>
+          <figcaption><b>Battle 13, replayed — Maya reads the ratio aloud.</b> Gross federal debt stood near 57% of GDP in 2001, when the budget ran a surplus, and stands past 120% today — the bill was inherited, and the vote is the answer.</figcaption>
         </figure>
         <figure class="vignette hit hit-priya">
           <span class="v-head">Battle 14 Highlight · The War Chest</span>
@@ -1344,7 +1457,7 @@
             <img class="v-boss" data-img="boss" alt="The Fade recoiling from the strike" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−13 HP</span>
           </div>
-          <figcaption><b>Priya reads both halves of the chest.</b> The jobs were real — unemployment 14.7% to 1.2% — and so were the rationing, and Eisenhower's 1961 warning.</figcaption>
+          <figcaption><b>Battle 14, replayed — Priya reads both halves of the chest.</b> The jobs were real, with wartime unemployment falling from 14.7% to 1.2%, and so were the rationing, the five-fold debt rise of 1941–45, and Eisenhower's 1961 warning.</figcaption>
         </figure>
         <figure class="vignette hit hit-dre">
           <span class="v-head">Battle 15 Highlight · “Freedom Fighters”</span>
@@ -1353,7 +1466,7 @@
             <img class="v-boss" data-img="boss" alt="The Fade recoiling from the strike" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−13 HP</span>
           </div>
-          <figcaption><b>Dre splits the label.</b> Armed and praised as “freedom fighters” in the 1980s — fought for twenty years after 2001. The weapons outlived the alignment.</figcaption>
+          <figcaption><b>Battle 15, replayed — Dre splits the label.</b> Armed and praised as “freedom fighters” in the 1980s, the networks that legacy fed became al-Qaeda and the Taliban and were fought for twenty years after 2001 — the weapons outlived the alignment.</figcaption>
         </figure>
         <figure class="vignette fadehit fade-dre">
           <span class="v-head">Battle 16 · The Long Fuse</span>
@@ -1362,7 +1475,7 @@
             <img class="v-hero" data-img="dre" alt="Pencil sketch of Dre knocked back by the blow" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−12 Hope</span>
           </div>
-          <figcaption><b>The longest fuse in the file lands.</b> A 1953 coup, a 1979 revolution, a 2026 war — three generations, one arc of blowback, and still the band stands.</figcaption>
+          <figcaption><b>Battle 16, replayed — the longest fuse in the file lands.</b> A 1953 coup, a 1979 revolution, and a 2026 war form one arc of blowback across three generations — and still the band stands.</figcaption>
         </figure>
         <figure class="vignette fadehit fade-maya">
           <span class="v-head">The Debt Mountain</span>
@@ -1371,7 +1484,7 @@
             <img class="v-hero" data-img="maya" alt="Pencil sketch of Maya knocked back by the blow" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−12 Hope</span>
           </div>
-          <figcaption><b>A mountain of IOUs grows over the band.</b> $40 trillion and past 120% of GDP — refinanced forever, never paid down, the interest billed to the inheritors.</figcaption>
+          <figcaption><b>The Debt Mountain, replayed — a mountain of IOUs grows over the band.</b> Federal debt past $40 trillion is never paid down, only refinanced forever at whatever rate the market demands, and households carry the servicing bill through taxes, inflation, and higher rates.</figcaption>
         </figure>
         <figure class="vignette fadehit fade-priya">
           <span class="v-head">The War Chest · The Jobs Pitch</span>
@@ -1380,7 +1493,7 @@
             <img class="v-hero" data-img="priya" alt="Pencil sketch of Priya knocked back by the blow" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">−12 Hope</span>
           </div>
-          <figcaption><b>Contracts rain like confetti and The Fade grins.</b> Jobs in 45+ states mean a constituency in every district — war spending that defends itself.</figcaption>
+          <figcaption><b>The War Chest pitch, replayed — contracts rain like confetti and The Fade grins.</b> War contracts mean local jobs across 45+ states, which is exactly why the spending defends itself politically, district by district.</figcaption>
         </figure>
         <figure class="vignette hit hit-maya">
           <span class="v-head">The Power Card · Cast the Vote</span>
@@ -1389,7 +1502,7 @@
             <img class="v-boss" data-img="boss" alt="The Fade recoiling from the played Power Card" />
             <span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">THE VOTE</span>
           </div>
-          <figcaption><b>All three raise their power cards together, and the light breaks.</b> Facts charge it, courage plays it — play your power card in hand: cast your vote.</figcaption>
+          <figcaption><b>The Power Card, replayed — all three raise their cards together, and the light breaks.</b> Facts charged the card and courage plays it, because a vote actually cast is the one move The Fade cannot spin or strike through.</figcaption>
         </figure>
       </div>
       <h4>The Villain, Defeated</h4>
@@ -1835,9 +1948,9 @@
 
   /* Featured Death Blow scenes for the credits pool, used when the game is won by one */
   var DB_SCENES = {
-    maya:"Featured · The Death Blow — Maya's Archer's Eye ends it: one arrow down the authored timeline, and The Fade falls.",
-    dre:"Featured · The Death Blow — Dre's Axeman's Ledger ends it: the final swing is a sum no spin can carry, and The Fade falls.",
-    priya:"Featured · The Death Blow — Priya's Healer's Verdict ends it: the burden of proof, read aloud, and The Fade falls."
+    maya:"Featured · The Death Blow — Maya's Archer's Eye ends the run with one arrow down the authored timeline. Breakout stood at roughly 12 months and inspected under the deal, then compressed to weeks after the 2018 withdrawal, and that timeline was the tell she aimed at.",
+    dre:"Featured · The Death Blow — Dre's Axeman's Ledger ends the run with a final swing no spin can carry. A $40 trillion-plus debt refinanced forever helps hold the 10-year Treasury above 5% and mortgages near 7.4%, and that monthly bill is the exposed flank he read aloud.",
+    priya:"Featured · The Death Blow — Priya's Healer's Verdict ends the run with the burden of proof read aloud. The record showed capability but no credible evidence of imminence, and a rationale that contradicted itself within eight months — so the verdict the record supports ended the argument."
   };
   var HERO_FULL = { maya:"Maya Reyes", dre:"Dre Carter", priya:"Priya Nair" };
 
@@ -1872,7 +1985,7 @@
     pendingBuffs:{ insp:0, sharpen:false }, activeBuffs:{ insp:0, sharpen:false },
     battleMods:null, dbBonus:0, allDown:false,
     hardMode:false, gambitResolved:true, gambitCollapsed:false, gambitClaim:null, gambitTauntOverride:null, debtInterest:0,
-    powerCharge:0, powerPlayed:false, powerSpinUntilIdx:-1, canvassRallied:0, runOver:false, struckExcuse:null,
+    powerCharge:0, powerPlayed:false, powerCastBy:{ maya:false, dre:false, priya:false }, powerSpinUntilIdx:-1, canvassRallied:0, runOver:false, struckExcuse:null,
     coach:{ answer:false, roll:false, camp:false },
     readied:{ maya:null, dre:null, priya:null }, activeMove:null, moveKey:null,
     moveFx:{ attackUsed:false, counterUsed:false }, moveHealKey:null, moveHealText:"" };
@@ -2058,6 +2171,14 @@
     for (var i = 1; i <= 5; i++) pipsHtml += '<span class="pip' + (i <= state.powerCharge ? " filled" : "") + '"></span>';
     document.querySelectorAll("[data-power-pips]").forEach(function(el){ el.innerHTML = pipsHtml; });
     document.querySelectorAll("[data-power-state]").forEach(function(el){ el.textContent = powerStateText(); });
+    /* Per-hero cast markers on the character sheets: the shared card is
+       credited to whoever's battle it was played in (see playPowerCard). */
+    document.querySelectorAll("[data-cast-status]").forEach(function(el){
+      var k = el.getAttribute("data-cast-status");
+      var cast = !!(state.powerCastBy && state.powerCastBy[k]);
+      el.textContent = cast ? "Card cast ✓" : "Card not yet cast";
+      el.classList.toggle("cast", cast);
+    });
     var panel = document.getElementById("powerPlayPanel");
     if (panel) panel.hidden = !(state.powerCharge >= 5 && !state.awaitingPick && !state.runOver && !state.deathBlowWon);
   }
@@ -2090,6 +2211,11 @@
     state.boss = Math.max(0, state.boss - 12);
     state.powerCharge = 0;
     state.powerPlayed = true;
+    /* The play is credited to the fighter whose battle this is — the Walk
+       Off ending asks whether EACH hero cast at least once. */
+    var caster = state.fighter;
+    state.powerCastBy[caster] = true;
+    var casterPronoun = caster === "dre" ? "his" : "her";
     /* The excuse that was current when the card was played is the one the
        card strikes — the boss card shows it struck through until the
        carousel rotates a new excuse in at the next HP threshold. */
@@ -2105,7 +2231,7 @@
     dmgPop.classList.remove("show"); void dmgPop.offsetWidth; dmgPop.classList.add("show");
     bossStage.classList.remove("hurt"); void bossStage.offsetWidth; bossStage.classList.add("hurt");
     if (navigator.vibrate) { try { navigator.vibrate([40,40,80]); } catch(e){} }
-    logEl.innerHTML = "Battle log: POWER CARD PLAYED — CAST THE VOTE. The record is read aloud: The Fade takes 12 damage (" + before + " → " + Math.max(0, state.boss) + " HP). His current excuse — <s>" + excuse + "</s> — is struck through by the documented correction: " + CAROUSEL_NOTE.correction + " The carousel jams: his Sound Bite Spin Defense bonus is 0 for the next 2 battles.";
+    logEl.innerHTML = "Battle log: " + FIGHTERS[caster].name + " plays " + casterPronoun + " Power Card — " + casterPronoun + " vote. POWER CARD PLAYED — CAST THE VOTE. The record is read aloud: The Fade takes 12 damage (" + before + " → " + Math.max(0, state.boss) + " HP). His current excuse — <s>" + excuse + "</s> — is struck through by the documented correction: " + CAROUSEL_NOTE.correction + " The carousel jams: his Sound Bite Spin Defense bonus is 0 for the next 2 battles.";
     logEl.scrollIntoView({ behavior:"smooth", block:"nearest" });
   }
 
@@ -3379,23 +3505,79 @@
       state.idx++;
       goToPick();
     } else {
-      finish();
+      finish(true);
     }
   }
 
-  function finish(){
+  function finish(completedAll){
     var win = state.boss <= 40 && !state.allDown;
     state.runOver = true;
     renderPowerCard();
     var rallied = (state.hits * 125 + state.canvassRallied).toLocaleString();
-    if (win) {
+    /* The four-ending ladder: PERFECT (the Walk Off) — a win with all three
+       heroes still standing AND each hero having cast the Power Card at
+       least once. Any other win lands on the plain WIN screen, which names
+       what was missing. Distance and lose follow below, unchanged. */
+    var allStanding = state.hp.maya > 0 && state.hp.dre > 0 && state.hp.priya > 0;
+    var allCast = !!(state.powerCastBy.maya && state.powerCastBy.dre && state.powerCastBy.priya);
+    var perfect = win && allStanding && allCast;
+    if (perfect) {
+      document.getElementById("walkScore").textContent = "Hits: " + state.hits + "/" + QUESTS.length + (state.dbBonus > 0 ? " · Death Blow overkill +" + state.dbBonus + " (d6)" : "");
+      document.getElementById("walkHope").textContent = "Hope left: " + state.hope;
+      document.getElementById("walkTurnout").textContent = "Friends rallied: " + rallied;
+      document.getElementById("walkCast").textContent = "Power Cards cast: Maya ✓ · Dre ✓ · Priya ✓";
+      var wo = document.getElementById("walkOffEnding");
+      wo.classList.add("show");
+      wo.scrollIntoView({ behavior:"smooth", block:"start" });
+      log("THE WALK OFF. Full strength. Full turnout. The future, claimed.");
+    } else if (win) {
       document.getElementById("winScore").textContent = "Hits: " + state.hits + "/" + QUESTS.length + (state.dbBonus > 0 ? " · Death Blow overkill +" + state.dbBonus + " (d6)" : "");
       document.getElementById("winHope").textContent = "Hope left: " + state.hope;
       document.getElementById("winTurnout").textContent = "Friends rallied: " + rallied;
+      /* What was missing: name each unmet Walk Off condition in plain
+         words. On this path at least one note always exists — either a
+         hero is down at the finish, or a hero never cast. */
+      var missingNotes = [];
+      ["maya","dre","priya"].forEach(function(k){
+        if (state.hp[k] <= 0) missingNotes.push(FIGHTERS[k].name + " was carried home.");
+      });
+      ["maya","dre","priya"].forEach(function(k){
+        if (!state.powerCastBy[k]) missingNotes.push(FIGHTERS[k].name + " never played " + (k === "dre" ? "his" : "her") + " card.");
+      });
+      var wml = document.getElementById("winMissingLine");
+      if (wml) {
+        if (missingNotes.length) { wml.textContent = missingNotes.join(" "); wml.style.display = ""; }
+        else { wml.textContent = ""; wml.style.display = "none"; }
+      }
       var w = document.getElementById("winEnding");
       w.classList.add("show");
       w.scrollIntoView({ behavior:"smooth", block:"start" });
       log("THE FADE IS BROKEN. History will remember this day.");
+    } else if (completedAll && !state.allDown) {
+      /* Went the distance: all 16 battles completed, heroes still standing,
+         but The Fade above the 40 HP break bar. Not a win, not a wipe — he
+         retreats, bleeding, and the last battle moves to Election Day. */
+      document.getElementById("distScore").textContent = "Hits: " + state.hits + "/" + QUESTS.length;
+      document.getElementById("distHope").textContent = "Hope left: " + state.hope;
+      document.getElementById("distTurnout").textContent = "Friends rallied: " + rallied;
+      document.getElementById("distNearMiss").textContent = "The Fade: " + state.boss + " HP left. The bar was 40 — you were " + (state.boss - 40) + " points from breaking him.";
+      var dpc = document.getElementById("distPowerCardLine");
+      if (dpc) {
+        if (state.powerPlayed) {
+          dpc.textContent = "The Power Card bought this stand. When the band finally played it, his excuse was struck through in front of everyone, the damage landed, and the carousel jammed — the field held because the card was played, not carried. He is retreating with that strike still hanging over him.";
+          dpc.style.display = "";
+        } else if (state.powerCharge >= 5) {
+          dpc.textContent = "He glances at the card still glowing in your hand — charged, and never played. “You never even played it.” He's right, and he knows what it costs: a power card unplayed changes nothing. Don't leave the real one unplayed on November 3 either.";
+          dpc.style.display = "";
+        } else {
+          dpc.textContent = "";
+          dpc.style.display = "none";
+        }
+      }
+      var d = document.getElementById("distEnding");
+      d.classList.add("show");
+      d.scrollIntoView({ behavior:"smooth", block:"start" });
+      log("The Fade retreats at " + state.boss + " HP. The band went the distance.");
     } else {
       document.getElementById("loseScore").textContent = "Hits: " + state.hits + "/" + QUESTS.length;
       document.getElementById("loseHope").textContent = "Hope left: " + state.hope;
@@ -3429,7 +3611,7 @@
     state.activeBuffs = { insp:0, sharpen:false };
     state.battleMods = null; state.dbBonus = 0; state.allDown = false;
     state.hardMode = false; state.gambitResolved = true; state.gambitCollapsed = false; state.gambitClaim = null; state.gambitTauntOverride = null; state.debtInterest = 0;
-    state.powerCharge = 0; state.powerPlayed = false; state.powerSpinUntilIdx = -1; state.canvassRallied = 0; state.runOver = false; state.struckExcuse = null;
+    state.powerCharge = 0; state.powerPlayed = false; state.powerCastBy = { maya:false, dre:false, priya:false }; state.powerSpinUntilIdx = -1; state.canvassRallied = 0; state.runOver = false; state.struckExcuse = null;
     state.coach = { answer:false, roll:false, camp:false };
     state.readied = { maya:null, dre:null, priya:null };
     state.activeMove = null; state.moveKey = null; state.moveFx = { attackUsed:false, counterUsed:false };
@@ -3438,6 +3620,10 @@
     var campCoachEl = document.getElementById("campCoach"); if (campCoachEl) campCoachEl.hidden = true;
     var lpc2 = document.getElementById("losePowerCardLine");
     if (lpc2) { lpc2.textContent = ""; lpc2.style.display = "none"; }
+    var wml2 = document.getElementById("winMissingLine");
+    if (wml2) { wml2.textContent = ""; wml2.style.display = "none"; }
+    var dpc2 = document.getElementById("distPowerCardLine");
+    if (dpc2) { dpc2.textContent = ""; dpc2.style.display = "none"; }
     var pcl2 = document.getElementById("powerCardCreditLine");
     if (pcl2) pcl2.textContent = "";
     var ht2 = document.getElementById("hardToggle");
@@ -3467,6 +3653,8 @@
     chooseHeading.textContent = "Choose your fighter";
     document.getElementById("winEnding").classList.remove("show");
     document.getElementById("loseEnding").classList.remove("show");
+    document.getElementById("distEnding").classList.remove("show");
+    document.getElementById("walkOffEnding").classList.remove("show");
     renderBars(); renderQuest();
     log(FIGHTERS[state.fighter].line);
   }
@@ -3868,7 +4056,7 @@
         '<img class="v-hero" src="' + ART.heroes + '" alt="The three heroes raising their vote cards together as light breaks" />' +
         '<img class="v-boss" src="' + ART.boss + '" alt="The Fade recoiling from the played Power Card" />' +
         '<span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">Power Card</span>' +
-        "</div><figcaption>Featured · The Power Card — the band played it this run: the record read aloud, the excuse struck through, the carousel jammed. Facts charged it; courage played it.</figcaption>";
+        "</div><figcaption>Featured · The Power Card — Played: the band cast the shared card this run, the record read aloud and his excuse struck through in front of everyone. Facts charged it and courage played it, and the jammed carousel is the proof — a vote actually cast is the strongest move the band owns.</figcaption>";
       slot0.insertBefore(pcFig, slot0.firstChild);
     }
     buildVignettes();
@@ -3891,6 +4079,10 @@
   }
   var finaleBtn = document.getElementById("playFinaleBtn");
   if (finaleBtn) finaleBtn.addEventListener("click", openFinale);
+  var distFinaleBtn = document.getElementById("playFinaleBtnDist");
+  if (distFinaleBtn) distFinaleBtn.addEventListener("click", openFinale);
+  var walkFinaleBtn = document.getElementById("playFinaleBtnWalk");
+  if (walkFinaleBtn) walkFinaleBtn.addEventListener("click", openFinale);
   document.getElementById("creditsClose").addEventListener("click", closeFinale);
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && overlay.classList.contains("show")) closeFinale(); });
 
