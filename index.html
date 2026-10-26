@@ -210,6 +210,8 @@
   .feedback p{margin:6px 0 0;font-size:.94rem;color:var(--stage-ink)}
   .feedback p b{color:var(--amber)}
   .feedback .brief-note{margin-top:10px;font-size:.82rem;color:var(--stage-muted);border-top:1px dashed #3a4a52;padding-top:9px}
+  .feedback .kill-style{margin-top:10px;font-family:"JetBrains Mono",monospace;font-size:.82rem;font-weight:700;letter-spacing:.05em;color:#a86e00;background:#fff7e0;border:1px dashed #d9a514;border-radius:8px;padding:8px 10px}
+  @media (prefers-color-scheme: dark){.feedback .kill-style{background:#2a2410;color:var(--amber)}}
   .next-row{margin-top:14px;display:none}
   .next-row.show{display:block}
   .log{border-top:1px solid #26343c;padding:10px 16px 14px;font-family:"JetBrains Mono",monospace;font-size:.74rem;color:var(--stage-muted);min-height:2.2em}
@@ -727,6 +729,28 @@
   .flow-step b{color:var(--amber)}
   .flow-arrow{color:var(--amber);font-weight:800;font-size:.85rem}
   .flow-why{margin:9px 0 0;font-size:.88rem;color:var(--stage-muted)}
+  /* The thesis highlight: the one panel on the opening screen that argues
+     the game's whole point — charge the Power Card, then play it. Amber
+     frame on a warm dark ground so it reads as the centerpiece, set apart
+     from the quieter dm-card below it. */
+  .thesis-panel{margin-top:16px;border:2px solid var(--amber);background:#1d180b;border-radius:12px;padding:16px 18px 15px;box-shadow:4px 4px 0 rgba(0,0,0,.55)}
+  .thesis-panel h2{font-size:clamp(1.2rem,4.8vw,1.65rem);color:#ffd34d;margin:0}
+  .thesis-panel p{margin:9px 0 0;font-size:.95rem;color:var(--stage-ink);max-width:62ch}
+  .thesis-panel p b{color:#ffe9a8}
+  .thesis-panel .thesis-closer{margin-top:12px;border-top:1px dashed #8a6d1b;padding-top:10px;font-weight:800;font-size:1rem;color:#ffe9a8}
+  /* The opening scene: one quiet entry point beside the thesis panel. The
+     button is deliberately plainer than the battle entry — the scene is
+     optional flavor, read or skipped, and never required for anything. */
+  .scene-btn{display:inline-block;margin-top:14px;border:2px solid #43565f;border-radius:8px;padding:10px 16px;font-weight:700;font-size:.95rem;color:var(--stage-ink);background:transparent}
+  .scene-btn:active{transform:translate(1px,1px)}
+  .scene-sheet{align-items:center}
+  .scene-card{background:#1d180b;color:var(--stage-ink);border:2px solid var(--amber);border-radius:14px;max-width:560px;width:100%;padding:26px 24px 22px;box-shadow:5px 5px 0 rgba(0,0,0,.55);max-height:calc(100dvh - 48px);overflow-y:auto}
+  .scene-card h3{font-size:clamp(1.45rem,6vw,2rem);color:#ffd34d;text-align:center;margin:0}
+  .scene-card .scene-rule{border:0;border-top:1px dashed #8a6d1b;margin:16px auto 4px;max-width:180px}
+  .scene-card p{margin:14px 0 0;font-size:1rem;line-height:1.65}
+  .scene-card p b{color:#ffe9a8}
+  .scene-close{display:block;margin:22px auto 0;border:2px solid var(--amber);border-radius:8px;background:var(--amber);color:#10181d;font-weight:800;font-size:.95rem;padding:11px 18px;box-shadow:3px 3px 0 rgba(0,0,0,.55)}
+  .scene-close:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(0,0,0,.55)}
   .dm-card{margin-top:18px;border:1px solid #3a4a52;border-radius:10px;padding:14px 16px}
   .dm-card h2{font-size:1.05rem;color:var(--stage-ink);margin:0}
   .dm-link{display:inline-block;margin-top:10px;border:2px solid #43565f;border-radius:8px;padding:10px 16px;font-weight:700;font-size:.95rem;color:var(--stage-ink);text-decoration:none}
@@ -792,7 +816,7 @@
         <button class="btn btn-primary" id="startBtn" type="button">Enter the battle ↓</button>
         <a class="btn btn-ghost" href="https://vote.gov" target="_blank" rel="noopener">Check your registration</a>
       </div>
-      <p class="howto">How it works: pick a fighter from the character sheets, then answer each battle with the most <em>informed</em> move. Right calls strike The Fade. Wrong calls teach you why — and cost you Hope. <strong>After every battle, you choose again:</strong> the band's character sheets come back up, and you send in whoever fits the next fight. Finish with The Fade at 40 HP or below to win. <strong>Death Blow:</strong> if The Fade drops under 15 HP, the fighter in the arena may get a golden one-shot Death Blow opening — land it and The Fade falls on the spot; miss it and that hero's Death Blow is spent for the game. <strong>The dice:</strong> a right answer earns an attack — swipe or tap the 3D d20, add your fighter's sheet bonuses and situational +2s, and beat The Fade's Defense or the blow only glances. A wrong answer lets The Fade counterattack your fighter's own hit points. Between battles you get <strong>one camp action</strong>: Priya's Healing Hands and the band's spells roll the three-sided die, and a landed Death Blow rolls the d6 for overkill. <strong>Fade Logic Engine:</strong> his taunts, excuses and label flips are drawn only from documented, non-partisan fact and history — tap his line in the arena for the correction and source. <strong>Hard Skill Level</strong> (on his sheet) raises his machine to 9–12, adds +2 Defense, unlocks his Fake News Gambit, and makes a Death Blow need a d6 roll of 3+ to finish him. <strong>The Power Card:</strong> facts charge it, courage plays it, and playing it is the strongest move the band owns besides a Death Blow.</p>
+      <p class="howto">How it works: pick a fighter from the character sheets, then answer each battle with the most <em>informed</em> move. Right calls strike The Fade. Wrong calls teach you why — and cost you Hope. <strong>After every battle, you choose again:</strong> the band's character sheets come back up, and you send in whoever fits the next fight. Finish with The Fade at 40 HP or below to win. <strong>Death Blow:</strong> if The Fade drops under 15 HP, the fighter in the arena may get a golden one-shot Death Blow opening — land it and The Fade falls on the spot; miss it and that hero's Death Blow is spent for the game. <strong>The dice:</strong> a right answer earns an attack — swipe or tap the 3D d20, add your fighter's sheet bonuses and situational +2s, and beat The Fade's Defense or the blow only glances. A wrong answer lets The Fade counterattack your fighter's own hit points. Between battles you get <strong>one camp action</strong>: Priya's Healing Hands and the band's spells roll the three-sided die, and a landed Death Blow rolls the d6 for overkill — damage beyond what it took to finish him, counted into the victory. <strong>Fade Logic Engine:</strong> his taunts, excuses and label flips are drawn only from documented, non-partisan fact and history — tap his line in the arena for the correction and source. <strong>Hard Skill Level</strong> (on his sheet) raises his machine to 9–12, adds +2 Defense, unlocks his Fake News Gambit, and makes a Death Blow need a d6 roll of 3+ to finish him. <strong>The Power Card:</strong> facts charge it, courage plays it — a full 12 damage, his Spin Defense gone for the next two battles, his current excuse struck through, and he does not heal at the end of the battle you play it. It is the strongest move the band owns besides a Death Blow.</p>
       <div class="flow-strip" aria-label="How a battle flows">
         <span class="flow-step"><b>1 ·</b> Read the fact</span>
         <span class="flow-arrow" aria-hidden="true">→</span>
@@ -803,6 +827,12 @@
         <span class="flow-step"><b>4 ·</b> Break him to 40 HP by Battle 16 — or land a Death Blow</span>
       </div>
       <p class="flow-why">Why the facts? The fact is your weapon: a strike only happens because you got the fact right.</p>
+      <div class="thesis-panel">
+        <h2>Charge your Power Card — then play it. Don't sit on it.</h2>
+        <p>Right answers, true fact-checks and Canvassing charge it a pip at a time; at five pips it's live. Playing it lands a full 12, strips his Spin for two battles, strikes his excuse through — and stops his healing for that battle.</p>
+        <p class="thesis-closer">An unplayed card changes nothing. Your power card in hand is your vote — cast it.</p>
+      </div>
+      <button class="scene-btn" id="sceneBtn" type="button">Read the opening scene</button>
       <div class="dm-card">
         <h2>Running the tabletop version?</h2>
         <a class="dm-link" href="module.html">Open the DM Guide — the tabletop module →</a>
@@ -871,7 +901,7 @@
           <div class="power-pips" data-power-pips aria-hidden="true"></div>
           <span class="power-state" data-power-state>CHARGING · 0/5</span>
           <span class="cast-status" data-cast-status="maya">Card not yet cast</span>
-          <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote.</p>
+          <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote: a full 12 damage · his Spin Defense gone for the next two battles · his current excuse struck through · and he does not heal at the end of the battle you play it.</p>
         </div>
         <p class="cap-note">Ranger caps: strength tops out at 12 and magic stays low — her power is aim, nerve, and knowing the ground.</p>
         <div class="campaigns">
@@ -937,7 +967,7 @@
           <div class="power-pips" data-power-pips aria-hidden="true"></div>
           <span class="power-state" data-power-state>CHARGING · 0/5</span>
           <span class="cast-status" data-cast-status="dre">Card not yet cast</span>
-          <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote.</p>
+          <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote: a full 12 damage · his Spin Defense gone for the next two battles · his current excuse struck through · and he does not heal at the end of the battle you play it.</p>
         </div>
         <p class="cap-note">Warrior caps: strength tops out at 12 and constitution runs highest in the band — books and spells were never his department.</p>
         <div class="campaigns">
@@ -1003,7 +1033,7 @@
           <div class="power-pips" data-power-pips aria-hidden="true"></div>
           <span class="power-state" data-power-state>CHARGING · 0/5</span>
           <span class="cast-status" data-cast-status="priya">Card not yet cast</span>
-          <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote.</p>
+          <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote: a full 12 damage · his Spin Defense gone for the next two battles · his current excuse struck through · and he does not heal at the end of the battle you play it.</p>
         </div>
         <p class="cap-note">Healer caps: strength tops out at 8 — but intelligence, magic and healing run higher than anyone else in the band.</p>
         <div class="campaigns">
@@ -1097,6 +1127,7 @@
           <div class="fstat-head"><label for="fs-creep">Mission Creep</label><span class="fstat-val"><output id="fs-creep-out" for="fs-creep">6</output><button type="button" class="help-dot" data-help="creep" aria-label="Help: Mission Creep" aria-expanded="false">?</button></span></div>
           <input type="range" id="fs-creep" min="0" max="12" value="6" />
           <p class="fx"><b>Effect:</b> at the end of every battle The Fade survives, the occupation digs in and he regains <b id="fx-creep">+3</b> HP.</p>
+          <p class="cap">While he stands, he heals at the end of every battle — half his Mission Creep dial, rounded: Standard 6 → +3 · Hard 9 → +5 · dial at 12 → +6. Why: a war that drags on digs in — every battle you give him, his machine repairs itself. One thing stops it: play your Power Card that battle, and he does not heal.</p>
           <p class="cap">Wars are easy to start and brutal to end; stay long enough and nobody remembers the original reason.</p>
         </div>
         <div class="fstat">
@@ -1144,7 +1175,7 @@
       <div class="power-play" id="powerPlayPanel" hidden>
         <span class="pp-tag">The thesis, in your hand</span>
         <strong>Your Power Card is charged — the band's vote is ready to cast.</strong>
-        <p>Play it and the record is read aloud: The Fade takes <b>12 damage</b>, his Sound Bite Spin Defense bonus drops to <b>zero for the next 2 battles</b>, and his current excuse is struck through in the battle log with its correction — the carousel jams.</p>
+        <p>Play it and the record is read aloud: a full <b>12 damage</b>, his Sound Bite Spin Defense bonus gone for the <b>next 2 battles</b>, his current excuse struck through in the battle log with its correction — and he does not heal at the end of this battle. The carousel jams.</p>
         <button class="play-power-btn" id="playPowerCardBtn" type="button">PLAY YOUR POWER CARD — CAST THE VOTE</button>
       </div>
 
@@ -1573,6 +1604,21 @@
   </div>
 </div>
 
+<!-- Opening scene: optional storybook flavor. Opening or skipping it starts
+     no run and changes no state — closing returns the opening screen exactly
+     as it was left. -->
+<div class="sheet scene-sheet" id="sceneSheet" role="dialog" aria-modal="true" aria-labelledby="sceneTitle">
+  <div class="sheet-card scene-card">
+    <h3 id="sceneTitle">THE AGE OF RECKONING</h3>
+    <hr class="scene-rule" />
+    <p>Alder Creek was an ordinary town, which is to say it belonged to everyone who lived in it. Then The Fade came — not with an army, but with machinery. Drumbeats for wars nobody voted on. Prices that climb while wages stand still. A mountain of debt, rolled quietly downhill onto the young.</p>
+    <p>He doesn't argue. He distracts. He flips the labels, sells the sound bites, and counts on one thing above all: that you will shrug — and stay home.</p>
+    <p>Three travelers refused. Maya, whose arrows are questions. Dre, whose axe cuts ledgers open. Priya, whose sword heals as it fights. They carry no army. Only facts, each other — and one card apiece, charged by knowing.</p>
+    <p><b>You are holding yours. This is how the fight begins.</b></p>
+    <button class="scene-close" id="sceneClose" type="button">Close — back to the fight</button>
+  </div>
+</div>
+
 <!-- Shared novice-help popup: one card serves every "?" dot on the page -->
 <div class="help-pop" id="helpPop" role="dialog" aria-labelledby="helpPopTitle" hidden>
   <button type="button" class="help-pop-close" id="helpPopClose" aria-label="Close help">×</button>
@@ -1626,6 +1672,27 @@
   });
   document.getElementById("installClose").addEventListener("click", function(){ sheet.classList.remove("show"); });
   sheet.addEventListener("click", function(e){ if (e.target === sheet) sheet.classList.remove("show"); });
+
+  /* ============ Opening scene: optional storybook panel ============
+     Pure flavor. Opening or closing it touches no game state, starts no
+     run, and moves nothing — close returns the opening screen untouched. */
+  var sceneSheet = document.getElementById("sceneSheet");
+  var sceneBtn = document.getElementById("sceneBtn");
+  var sceneClose = document.getElementById("sceneClose");
+  function openScene(){
+    sceneSheet.classList.add("show");
+    sceneClose.focus();
+  }
+  function closeScene(){
+    sceneSheet.classList.remove("show");
+    sceneBtn.focus();
+  }
+  sceneBtn.addEventListener("click", openScene);
+  sceneClose.addEventListener("click", closeScene);
+  sceneSheet.addEventListener("click", function(e){ if (e.target === sceneSheet) closeScene(); });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && sceneSheet.classList.contains("show")) closeScene();
+  });
 
   /* ============ Game data ============ */
   var FIGHTERS = {
@@ -1920,6 +1987,12 @@
   ];
 
   /* ============ Death Blow: one-shot finishing questions, one per hero ============ */
+  /* The style ladder: the landed Death Blow's d6 overkill roll names the kill.
+     Flavor only — it changes no numbers, odds, or flow. The ladder applies
+     only when the Death Blow finishes him (any roll in normal mode; 3–6 in
+     Hard — a Hard 1–2 is the cling-at-1-HP outcome, not a kill). */
+  var DB_STYLE = { 1:"a narrow defeat", 2:"a close finish", 3:"a clean finish", 4:"a heavy blow", 5:"a crushing blow", 6:"a decisive blow" };
+  var DB_STYLE_TC = { 1:"A Narrow Defeat", 2:"A Close Finish", 3:"A Clean Finish", 4:"A Heavy Blow", 5:"A Crushing Blow", 6:"A Decisive Blow" };
   var DEATH_BLOWS = {
     maya: {
       name:"The Archer's Eye",
@@ -2000,9 +2073,9 @@
     fade:{ drum:6, spin:6, creep:6, blowback:6 }, runStarted:false,
     hp:{ maya:100, dre:100, priya:100 }, prevFighter:null,
     pendingBuffs:{ insp:0, sharpen:false }, activeBuffs:{ insp:0, sharpen:false },
-    battleMods:null, dbBonus:0, allDown:false,
+    battleMods:null, dbBonus:0, dbRoll:0, allDown:false,
     hardMode:false, gambitResolved:true, gambitCollapsed:false, gambitClaim:null, gambitTauntOverride:null, debtInterest:0,
-    powerCharge:0, powerPlayed:false, powerCastBy:{ maya:false, dre:false, priya:false }, powerSpinUntilIdx:-1, canvassRallied:0, runOver:false, struckExcuse:null,
+    powerCharge:0, powerPlayed:false, powerCastBy:{ maya:false, dre:false, priya:false }, powerSpinUntilIdx:-1, powerHealBlockIdx:-1, canvassRallied:0, runOver:false, struckExcuse:null,
     highlights:[], battleBest:null, battleCommitted:-1, pendingFall:null,
     coach:{ answer:false, roll:false, camp:false },
     readied:{ maya:null, dre:null, priya:null }, activeMove:null, moveKey:null,
@@ -2037,15 +2110,15 @@
     pool:     { t:"Build points", b:"Each hero has a fixed pool of build points. Raise one slider and the points come out of the pool: banked points spend first, then the hero's highest other slider automatically drops to pay for it. The total never grows — you are choosing trade-offs, not power." },
     drum:     { t:"War Drum Volume", b:"How loud his war drums beat. Wrong answers cost 6 + this number in Hope, and his counterattacks roll and hit with half this number added." },
     spin:     { t:"Sound Bite Spin", b:"His spin raises his Defense (about +1 for every 4 points), so your fighters' strikes are harder to land." },
-    creep:    { t:"Mission Creep", b:"After every battle he survives, The Fade heals half this number of HP, rounded. Finish him and there is no heal." },
+    creep:    { t:"Mission Creep", b:"After every battle he survives, The Fade heals half this number of HP, rounded. Finish him and there is no heal — and playing your Power Card in a battle stops that battle's heal too." },
     blowback: { t:"Blowback Arsenal", b:"A chance each battle (about 6% per point) that he fires the band's own side's old weapons back at you for extra Hope damage — yesterday's gifts, returned." },
     threat:   { t:"Threat Level", b:"His four sliders added together: how nasty the machine is this run. Higher total, higher tier — Story, Standard, Hard, Nightmare." },
     defense:  { t:"His Defense", b:"Your fighter rolls the 20-sided die and adds their Attack bonus. Meet or beat his Defense and the strike lands full; roll under it and the strike still grazes him for half damage. A natural 20 doubles the damage." },
     matchup:  { t:"Weapon matchups", b:"Each battle leans on one of his four tricks. The right weapon counters it for +2 to hit: Maya's Arrows counter Spin, Dre's Axe counters the War Drum, Priya's Sword counters Mission Creep. Blowback has no counter — brace for it." },
-    creepnote:{ t:"Why did he just heal?", b:"That's Mission Creep: at the end of every battle he survives, he regains half his Mission Creep slider in HP. It's the tax for not finishing him — correct answers out-damage it." },
+    creepnote:{ t:"Why did he just heal?", b:"That's Mission Creep: at the end of every battle he survives, he regains half his Mission Creep slider in HP. It's the tax for not finishing him — correct answers out-damage it, and playing your Power Card that battle stops the heal entirely." },
     gambit:   { t:"Fake News Gambit", b:"In Hard Skill Level he sometimes flashes a made-up 'fact' before the question. You must rule it TRUE or FAKE first. It is always fake: rule FAKE and his gambit collapses — he loses his Hard defense bonus and your next hit lands +2 harder. Fall for it and he heals on the spot." },
     deathblow:{ t:"Death Blow", b:"When The Fade is nearly finished (under 15 HP; under 10 for Dre), a fighter may be offered one golden hard question. Answer it right and he falls on the spot, whatever HP he has left. Miss and he regains 8 HP and that fighter's Death Blow is spent for the run. In Hard mode the follow-up d6 must also land 3 or higher." },
-    power:    { t:"The Power Card — your vote", b:"One card, shared by the whole band. It charges only through informed play: +1 for each battle question answered correctly, +1 for catching a Fake News gambit, +1 when a fighter Canvasses at camp; a landed Death Blow fills it. At 5 charges you can PLAY it: 12 damage, his Spin shield is stripped for 2 battles, and his current excuse is struck through with its documented correction. Then it can charge again." },
+    power:    { t:"The Power Card — your vote", b:"One card, shared by the whole band. It charges only through informed play: +1 for each battle question answered correctly, +1 for catching a Fake News gambit, +1 when a fighter Canvasses at camp; a landed Death Blow fills it. At 5 charges you can PLAY it: a full 12 damage, his Spin Defense gone for the next two battles, his current excuse struck through with its documented correction, and he does not heal at the end of the battle you play it. Then it can charge again." },
     readied:  { t:"Readied moves", b:"The move you tap is readied for that hero's next battle — one themed bonus, spent when that battle ends. Attack moves strike harder, guard moves blunt his first counter, and Freedom's Shout stops it cold." },
     /* Per-move help for the nine Campaigns of Friends tiles: the bonus in
        plain words plus when to pick it — shown BEFORE the player commits. */
@@ -2176,7 +2249,11 @@
      (Hard mode), +1 per Canvass camp action — and a landed Death Blow
      fills it completely. Playing it (only at a full 5 pips) is the band's
      culminating move: the record is read aloud, The Fade takes 12 damage,
-     and his Sound Bite Spin Defense bonus is zero for the next 2 battles.
+     his Sound Bite Spin Defense bonus is zero for the next 2 battles, his
+     current excuse is struck through — and he does not heal at the end of
+     the battle it is played in: the play cancels that battle's whole
+     end-of-battle heal (Mission Creep plus any banked debt interest),
+     recorded in state.powerHealBlockIdx and enforced in finalizeBattle.
      It is powerful but bounded — the Death Blow remains the only instant
      kill. After playing, the track empties and can charge again. */
   function powerStateText(){
@@ -2242,6 +2319,12 @@
        still unanswered it counts as the first; if it is already answered,
        the suppression covers the two battles that follow this one. */
     state.powerSpinUntilIdx = state.idx + (state.answered ? 2 : 1);
+    /* The play also cancels The Fade's end-of-battle heal for the battle it
+       is played in. If this battle's bookkeeping already ran (the card was
+       played from the still-open panel after the fight resolved), the block
+       lands on the next battle instead — the same convention the Spin
+       suppression above uses for post-answer plays. */
+    state.powerHealBlockIdx = (state.battleCommitted === state.idx) ? state.idx + 1 : state.idx;
     renderBars();
     updateFadeUI();
     refreshBuffNote();
@@ -2249,7 +2332,7 @@
     dmgPop.classList.remove("show"); void dmgPop.offsetWidth; dmgPop.classList.add("show");
     bossStage.classList.remove("hurt"); void bossStage.offsetWidth; bossStage.classList.add("hurt");
     if (navigator.vibrate) { try { navigator.vibrate([40,40,80]); } catch(e){} }
-    logEl.innerHTML = "Battle log: " + FIGHTERS[caster].name + " plays " + casterPronoun + " Power Card — " + casterPronoun + " vote. POWER CARD PLAYED — CAST THE VOTE. The record is read aloud: The Fade takes 12 damage (" + before + " → " + Math.max(0, state.boss) + " HP). His current excuse — <s>" + excuse + "</s> — is struck through by the documented correction: " + CAROUSEL_NOTE.correction + " The carousel jams: his Sound Bite Spin Defense bonus is 0 for the next 2 battles.";
+    logEl.innerHTML = "Battle log: " + FIGHTERS[caster].name + " plays " + casterPronoun + " Power Card — " + casterPronoun + " vote. POWER CARD PLAYED — CAST THE VOTE. The record is read aloud: The Fade takes 12 damage (" + before + " → " + Math.max(0, state.boss) + " HP). His current excuse — <s>" + excuse + "</s> — is struck through by the documented correction: " + CAROUSEL_NOTE.correction + " The carousel jams: his Sound Bite Spin Defense bonus is 0 for the next 2 battles. And he does not heal at the end of this battle.";
     logEl.scrollIntoView({ behavior:"smooth", block:"nearest" });
   }
 
@@ -3103,7 +3186,7 @@
     if (deathBlowEligible()) {
       var db = DEATH_BLOWS[state.fighter];
       html += '<div class="deathblow-offer"><span class="db-tag">Golden opening · The Fade is reeling</span>' + helpDotHTML("deathblow") +
-        "<p><b>" + db.title + " is available to " + FIGHTERS[state.fighter].name + ".</b> Attempt it <em>instead</em> of this battle's question: land it and The Fade falls on the spot. Miss it and The Fade heals +8 HP, you lose 12 Hope, and " + FIGHTERS[state.fighter].name + "'s Death Blow is spent for the rest of the game.</p>" +
+        "<p><b>" + db.title + " is available to " + FIGHTERS[state.fighter].name + ".</b> Attempt it <em>instead</em> of this battle's question: land it and The Fade falls on the spot. Miss it and The Fade heals +8 HP, you lose 12 Hope, and " + FIGHTERS[state.fighter].name + "'s Death Blow is spent for the rest of the game." + (state.hardMode ? " <b>Hard mode: this roll must land 3 or better — on 1–2 he hangs on at 1 HP.</b>" : "") + "</p>" +
         '<button class="db-btn" type="button" id="dbBtn">Attempt the Death Blow instead →</button></div>';
     }
     html += '<div class="feedback" id="feedback"></div>';
@@ -3242,13 +3325,14 @@
         state.boss = 0;
         state.deathBlowWon = true;
         state.wonByDeathBlow = state.fighter;
-        state.battleBest = { type:"battle", hero:state.fighter, battle:state.idx, title:QUESTS[state.idx].title, dmg:total, crit:false, ended:true, missed:false };
+        state.battleBest = { type:"battle", hero:state.fighter, battle:state.idx, title:QUESTS[state.idx].title, dmg:total, crit:false, ended:true, missed:false, dbRoll:roll };
         commitBattleHighlight();
         state.dbBonus += roll;
+        state.dbRoll = roll;
         state.prevFighter = state.fighter;
         state.powerCharge = 5; renderPowerCard();
-        fb.innerHTML = '<span class="verdict">Death Blow · The Fade Falls</span><p>' + db.good + '</p><p class="brief-note">DEATH BLOW — ' + remaining + " remaining HP + " + roll + " (d6) = <b>" + total + " damage!</b> The overkill is totaled into the victory and remembered in the credits. <b>The landed Death Blow fills the Power Card completely.</b></p>";
-        log("DEATH BLOW — " + remaining + " + " + roll + " = " + total + "! " + FIGHTERS[state.fighter].name + " lands " + db.name + ". The Fade is finished.");
+        fb.innerHTML = '<span class="verdict">Death Blow · The Fade Falls</span><p>' + db.good + '</p><p class="brief-note">DEATH BLOW — ' + remaining + " remaining HP + " + roll + " (d6) = <b>" + total + " damage!</b> The overkill is totaled into the victory and remembered in the credits. Overkill means exactly what it sounds like: more than it took. He was already finished — the d6 is the style you finished him with. <b>The landed Death Blow fills the Power Card completely.</b></p>" + '<p class="kill-style">Style of the kill: ' + DB_STYLE_TC[roll] + ".</p>";
+        log("DEATH BLOW — " + DB_STYLE[roll] + " (overkill +" + roll + "): " + remaining + " + " + roll + " = " + total + "! " + FIGHTERS[state.fighter].name + " lands " + db.name + ". The Fade is finished.");
         dmgPop.textContent = "−" + total;
         dmgPop.classList.remove("show"); void dmgPop.offsetWidth; dmgPop.classList.add("show");
         bossStage.classList.remove("hurt"); void bossStage.offsetWidth; bossStage.classList.add("hurt");
@@ -3478,14 +3562,20 @@
     spendReadiedMove();
     /* Mission Creep: a Fade that survives the battle digs in — the exit moves
        again. Interest banked by a fallen-for Debt Mountain gambit rides on
-       top of the heal, once, then is spent. */
+       top of the heal, once, then is spent. UNLESS the Power Card was played
+       this battle: then the whole heal — Creep plus banked interest — is
+       cancelled, the interest spent with it, and the log says so. */
     var creepTotal = creepHeal() + (state.debtInterest || 0);
-    if (state.boss > 0 && creepTotal > 0) {
+    var healBlocked = state.powerHealBlockIdx === state.idx && state.boss > 0 && creepTotal > 0;
+    if (healBlocked) {
+      state.debtInterest = 0;
+      state.powerHealBlockIdx = -1;
+    } else if (state.boss > 0 && creepTotal > 0) {
       state.boss = Math.min(100, state.boss + creepTotal);
       if (state.idx % 2 === 1) {
-        fb.innerHTML += '<p class="brief-note">Mission Creep — The War Chest: the factories lobby to stay open — The Fade regains +' + creepTotal + " HP. Contracts mean local jobs (the F-35 chain spans 45+ states), so the spending defends itself — the jobs are real, and so are the rationing, the five-fold debt rise of 1941–45, and Eisenhower's 1961 warning. Both halves, always. " + helpDotHTML("creepnote") + "</p>";
+        fb.innerHTML += '<p class="brief-note">Mission Creep — he digs in and repairs: +' + creepTotal + " HP. The War Chest: the factories lobby to stay open. Contracts mean local jobs (the F-35 chain spans 45+ states), so the spending defends itself — the jobs are real, and so are the rationing, the five-fold debt rise of 1941–45, and Eisenhower's 1961 warning. Both halves, always. " + helpDotHTML("creepnote") + "</p>";
       } else {
-        fb.innerHTML += '<p class="brief-note">Mission Creep: The Fade digs in and regains +' + creepTotal + " HP — stay long enough, and the occupation forgets why it came. " + helpDotHTML("creepnote") + "</p>";
+        fb.innerHTML += '<p class="brief-note">Mission Creep — he digs in and repairs: +' + creepTotal + " HP — stay long enough, and the occupation forgets why it came. " + helpDotHTML("creepnote") + "</p>";
       }
       if (state.debtInterest > 0) {
         fb.innerHTML += '<p class="brief-note">The Debt Mountain: the interest on the gambit you let stand comes due inside that heal — <b>+' + state.debtInterest + ' HP</b> of it is pure interest on a $40 trillion-plus debt that is refinanced, never repaid. The interest compounds — so does he.</p>';
@@ -3498,6 +3588,9 @@
       fb.innerHTML += '<p class="brief-note">BLOWBACK! The Fade fires ' + BLOWBACK_LINES[state.idx % BLOWBACK_LINES.length] + " back at the band — −" + blowDmg() + " Hope. Arm them today, fight them tomorrow.</p>";
       log("BLOWBACK — The Fade turns the band's own gifted weapons on it. Hope: " + state.hope + ".");
     }
+    /* Logged last so the cancellation is the battle's closing word in the
+       session log, even when Blowback also fired. */
+    if (healBlocked) log("The Power Card stops his repair — The Fade does not heal this battle.");
     state.prevFighter = state.fighter;
     renderBars();
     if (state.hp.maya <= 0 && state.hp.dre <= 0 && state.hp.priya <= 0) {
@@ -3663,9 +3756,9 @@
     state.prevFighter = null;
     state.pendingBuffs = { insp:0, sharpen:false };
     state.activeBuffs = { insp:0, sharpen:false };
-    state.battleMods = null; state.dbBonus = 0; state.allDown = false;
+    state.battleMods = null; state.dbBonus = 0; state.dbRoll = 0; state.allDown = false;
     state.hardMode = false; state.gambitResolved = true; state.gambitCollapsed = false; state.gambitClaim = null; state.gambitTauntOverride = null; state.debtInterest = 0;
-    state.powerCharge = 0; state.powerPlayed = false; state.powerCastBy = { maya:false, dre:false, priya:false }; state.powerSpinUntilIdx = -1; state.canvassRallied = 0; state.runOver = false; state.struckExcuse = null;
+    state.powerCharge = 0; state.powerPlayed = false; state.powerCastBy = { maya:false, dre:false, priya:false }; state.powerSpinUntilIdx = -1; state.powerHealBlockIdx = -1; state.canvassRallied = 0; state.runOver = false; state.struckExcuse = null;
     state.highlights = []; state.battleBest = null; state.battleCommitted = -1; state.pendingFall = null;
     state.coach = { answer:false, roll:false, camp:false };
     state.readied = { maya:null, dre:null, priya:null };
@@ -4106,6 +4199,10 @@
       head = "Battle " + n + " · " + h.title;
       dmg = "CRIT " + h.dmg;
       caption = full + " rolled a natural 20 in Battle " + n + " and landed a critical strike for " + h.dmg + " damage with the " + FIGHTERS[h.hero].wname + ", the blow that ended the battle. The roll was luck, but the strike only existed because the answer was informed before the die ever moved.";
+    } else if (h.dbRoll) {
+      head = "Battle " + n + " · " + h.title;
+      dmg = "" + h.dmg;
+      caption = full + " landed the Death Blow — " + DEATH_BLOWS[h.hero].name + " — in Battle " + n + " for " + h.dmg + " damage with the " + FIGHTERS[h.hero].wname + ", the blow that ended the battle. The overkill d6 named the style of the kill: " + DB_STYLE[h.dbRoll] + " (overkill +" + h.dbRoll + "), damage beyond what it took to finish him, totaled into the victory.";
     } else {
       head = "Battle " + n + " · " + h.title;
       dmg = "" + h.dmg;
@@ -4164,10 +4261,10 @@
         '<img class="v-hero" src="' + DB_SKETCH[w] + '" alt="Pencil sketch of ' + FIGHTERS[w].name + ' delivering the Death Blow" />' +
         '<img class="v-boss" src="' + ART.boss + '" alt="The Fade falling to the Death Blow" />' +
         '<span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">Death Blow</span>' +
-        "</div><figcaption>" + DB_SCENES[w] + "</figcaption>";
+        "</div><figcaption>" + (state.dbRoll ? DB_SCENES[w].replace("ends the run", "ends the run — " + DB_STYLE[state.dbRoll] + " —") : DB_SCENES[w]) + "</figcaption>";
       slot0.insertBefore(fig, slot0.firstChild);
       if (dbLine) {
-        dbLine.textContent = "Victory by Death Blow — " + HERO_FULL[w] + " · " + DEATH_BLOWS[w].name + (state.dbBonus > 0 ? " · overkill +" + state.dbBonus + " (d6)" : "");
+        dbLine.textContent = "Victory by Death Blow — " + HERO_FULL[w] + " · " + DEATH_BLOWS[w].name + (state.dbBonus > 0 ? " · overkill +" + state.dbBonus + " (d6)" : "") + (state.dbRoll ? " · " + DB_STYLE[state.dbRoll] : "");
         dbLine.style.display = "";
       }
     } else if (dbLine) {
