@@ -166,7 +166,7 @@
 
   /* ---------- Arena ---------- */
   .arena{background:var(--stage);color:var(--stage-ink);border-radius:14px;border:2px solid #000;overflow:hidden;margin-top:16px}
-  .hud{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 16px 4px}
+  .hud{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:calc(14px + env(safe-area-inset-top, 0px)) 16px 4px;background:var(--stage)}
   @media (max-width:560px){.hud{grid-template-columns:1fr 1fr}.hud .hud-turnout{grid-column:1/-1}}
   .hud label{font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--stage-muted);display:block;margin-bottom:5px}
   .bar{height:14px;background:#26343c;border-radius:999px;overflow:hidden;border:1px solid #3a4a52}
