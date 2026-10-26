@@ -406,7 +406,20 @@
   .fact-check .fc-tag{font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7a4a00;display:block;margin-bottom:4px}
   .fact-check .fc-back{display:block;margin-top:8px;font-family:"JetBrains Mono",monospace;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7a4a00}
   .boss-name{cursor:pointer}
-  .boss-name .tap-hint{display:block;font-style:normal;font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-top:4px}
+  /* The fact-check pill: the one obvious control on the boss card. A real
+     button, pill-shaped with a visible border — closed it invites the tap,
+     open it flips its label to say how to close. */
+  .fc-pill{display:inline-block;margin-top:7px;padding:6px 14px;border:2px solid var(--amber);border-radius:999px;background:rgba(0,0,0,.35);color:var(--amber);font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+  .fc-pill:hover{background:var(--amber);color:#10181d}
+  .fc-pill[aria-expanded="true"]{background:var(--amber);color:#10181d}
+  /* The excuse as a status chip: a plain mono label (no border, no pill —
+     status information, not a control) with the excuse text beside it. When
+     the Power Card strikes it, the text takes a visible strikethrough and a
+     small note names what struck it. */
+  .excuse-badge{display:inline-block;margin-right:7px;font-family:"JetBrains Mono",monospace;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9fb8ae;font-style:normal}
+  .boss-name .excuse-text{font-style:italic}
+  .boss-name .excuse s{text-decoration-thickness:2px;text-decoration-color:#ff6b5e}
+  .excuse-note{display:block;margin-top:3px;font-family:"JetBrains Mono",monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);font-style:normal}
   .gambit-card{margin-top:14px;border:2px solid #ff6b5e;background:#2a1214;border-radius:10px;padding:14px 16px;transition:border-color .3s ease,background .3s ease,box-shadow .3s ease}
   .gambit-card .g-tag{font-family:"JetBrains Mono",monospace;font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ff9d94}
   .gambit-card .g-claim{margin:8px 0;font-size:1rem;font-weight:800;color:#fff}
@@ -463,6 +476,12 @@
   .move-tile .fx{position:absolute;pointer-events:none;display:block}
   .move-tile .readied-tag{position:absolute;top:6px;left:6px;z-index:3;display:none;padding:2px 6px;border-radius:4px;background:var(--teal);color:#fff;font-family:"JetBrains Mono",monospace;font-size:.56rem;font-weight:700;letter-spacing:.1em}
   .move-tile.readied .readied-tag{display:block}
+  /* Per-tile help dot: the tile itself is a <button>, so the dot cannot nest
+     inside it — each tile sits in a positioned .tile-cell wrapper and its
+     dot is a sibling button floated over the tile's top-right corner,
+     clear of the READIED tag at top-left. */
+  .tile-cell{position:relative;min-width:0}
+  .tile-help{position:absolute;top:6px;right:6px;z-index:5;margin-left:0;box-shadow:0 1px 5px rgba(16,24,29,.45)}
   .readied-line{margin:10px 0 0;font-size:.86rem;line-height:1.45;color:var(--muted)}
   .readied-line.is-set{color:var(--ink)}
   .readied-line.is-set b{color:var(--teal)}
@@ -797,18 +816,27 @@
         <div class="campaigns">
           <span class="campaigns-head">Campaigns of Friends <button type="button" class="help-dot" data-help="readied" aria-label="Help: Readied moves" aria-expanded="false">?</button></span>
           <div class="move-tiles" role="group" aria-label="Maya's campaign moves">
-            <button type="button" class="move-tile" data-move-tile="maya" data-move="0" aria-pressed="false">
-              <span class="tile-stage scene-arrows"><img data-img="maya" alt="" /><span class="fx arrow a1"></span><span class="fx arrow a2"></span><span class="fx arrow a3"></span><span class="fx impact i1"></span><span class="fx impact i2"></span><span class="fx impact i3"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
-              <span class="tile-name">Voting Arrows</span>
-            </button>
-            <button type="button" class="move-tile" data-move-tile="maya" data-move="1" aria-pressed="false">
-              <span class="tile-stage scene-omen"><img data-img="maya" alt="" /><span class="fx omen-pulse"></span><span class="fx omen-glint"></span><span class="fx spark s1"></span><span class="fx spark s2"></span><span class="fx spark s3"></span><span class="fx spark s4"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
-              <span class="tile-name">Scout's Omen</span>
-            </button>
-            <button type="button" class="move-tile" data-move-tile="maya" data-move="2" aria-pressed="false">
-              <span class="tile-stage scene-brace"><img data-img="maya" alt="" /><span class="fx brace-arc"></span><span class="fx dust d1"></span><span class="fx dust d2"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
-              <span class="tile-name">Swift Brace</span>
-            </button>
+            <div class="tile-cell">
+              <button type="button" class="move-tile" data-move-tile="maya" data-move="0" aria-pressed="false">
+                <span class="tile-stage scene-arrows"><img data-img="maya" alt="" /><span class="fx arrow a1"></span><span class="fx arrow a2"></span><span class="fx arrow a3"></span><span class="fx impact i1"></span><span class="fx impact i2"></span><span class="fx impact i3"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
+                <span class="tile-name">Voting Arrows</span>
+              </button>
+              <button type="button" class="help-dot tile-help" data-help="mv-arrows" aria-label="Help: Voting Arrows" aria-expanded="false">?</button>
+            </div>
+            <div class="tile-cell">
+              <button type="button" class="move-tile" data-move-tile="maya" data-move="1" aria-pressed="false">
+                <span class="tile-stage scene-omen"><img data-img="maya" alt="" /><span class="fx omen-pulse"></span><span class="fx omen-glint"></span><span class="fx spark s1"></span><span class="fx spark s2"></span><span class="fx spark s3"></span><span class="fx spark s4"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
+                <span class="tile-name">Scout's Omen</span>
+              </button>
+              <button type="button" class="help-dot tile-help" data-help="mv-omen" aria-label="Help: Scout's Omen" aria-expanded="false">?</button>
+            </div>
+            <div class="tile-cell">
+              <button type="button" class="move-tile" data-move-tile="maya" data-move="2" aria-pressed="false">
+                <span class="tile-stage scene-brace"><img data-img="maya" alt="" /><span class="fx brace-arc"></span><span class="fx dust d1"></span><span class="fx dust d2"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
+                <span class="tile-name">Swift Brace</span>
+              </button>
+              <button type="button" class="help-dot tile-help" data-help="mv-brace" aria-label="Help: Swift Brace" aria-expanded="false">?</button>
+            </div>
           </div>
           <p class="readied-line" data-readied-line="maya">Tap a move to ready it for the next battle — and hear its campaign tale.</p>
           <div class="tale-panel" data-tale-panel="maya" role="button" tabindex="0" aria-label="Maya's campaign tale panel — tap to pause or resume the scrolling tale">
@@ -853,18 +881,27 @@
         <div class="campaigns">
           <span class="campaigns-head">Campaigns of Friends <button type="button" class="help-dot" data-help="readied" aria-label="Help: Readied moves" aria-expanded="false">?</button></span>
           <div class="move-tiles" role="group" aria-label="Dre's campaign moves">
-            <button type="button" class="move-tile" data-move-tile="dre" data-move="0" aria-pressed="false">
-              <span class="tile-stage scene-axe"><img data-img="dre" alt="" /><span class="fx axe-trail"></span><svg class="fx axe-cracks" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true"><path d="M8 34 L26 20 L34 24 L48 10 M48 10 L58 18 L74 12 M34 24 L44 33" stroke="#3a332a" stroke-width="1.6" fill="none"/></svg><span class="readied-tag" aria-hidden="true">READIED</span></span>
-              <span class="tile-name">Axe of Freedom</span>
-            </button>
-            <button type="button" class="move-tile" data-move-tile="dre" data-move="1" aria-pressed="false">
-              <span class="tile-stage scene-shout"><img data-img="dre" alt="" /><span class="fx shout-pulse"></span><span class="fx shout-ring"></span><span class="fx shout-ring r2"></span><span class="fx shout-ring r3"></span><span class="fx mote m1"></span><span class="fx mote m2"></span><span class="fx mote m3"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
-              <span class="tile-name">Freedom's Shout</span>
-            </button>
-            <button type="button" class="move-tile" data-move-tile="dre" data-move="2" aria-pressed="false">
-              <span class="tile-stage scene-guard"><img data-img="dre" alt="" /><span class="fx guard-arc"></span><span class="fx guard-hit"></span><span class="fx gs g1"></span><span class="fx gs g2"></span><span class="fx gs g3"></span><span class="fx gs g4"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
-              <span class="tile-name">Iron Guard</span>
-            </button>
+            <div class="tile-cell">
+              <button type="button" class="move-tile" data-move-tile="dre" data-move="0" aria-pressed="false">
+                <span class="tile-stage scene-axe"><img data-img="dre" alt="" /><span class="fx axe-trail"></span><svg class="fx axe-cracks" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true"><path d="M8 34 L26 20 L34 24 L48 10 M48 10 L58 18 L74 12 M34 24 L44 33" stroke="#3a332a" stroke-width="1.6" fill="none"/></svg><span class="readied-tag" aria-hidden="true">READIED</span></span>
+                <span class="tile-name">Axe of Freedom</span>
+              </button>
+              <button type="button" class="help-dot tile-help" data-help="mv-axe" aria-label="Help: Axe of Freedom" aria-expanded="false">?</button>
+            </div>
+            <div class="tile-cell">
+              <button type="button" class="move-tile" data-move-tile="dre" data-move="1" aria-pressed="false">
+                <span class="tile-stage scene-shout"><img data-img="dre" alt="" /><span class="fx shout-pulse"></span><span class="fx shout-ring"></span><span class="fx shout-ring r2"></span><span class="fx shout-ring r3"></span><span class="fx mote m1"></span><span class="fx mote m2"></span><span class="fx mote m3"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
+                <span class="tile-name">Freedom's Shout</span>
+              </button>
+              <button type="button" class="help-dot tile-help" data-help="mv-shout" aria-label="Help: Freedom's Shout" aria-expanded="false">?</button>
+            </div>
+            <div class="tile-cell">
+              <button type="button" class="move-tile" data-move-tile="dre" data-move="2" aria-pressed="false">
+                <span class="tile-stage scene-guard"><img data-img="dre" alt="" /><span class="fx guard-arc"></span><span class="fx guard-hit"></span><span class="fx gs g1"></span><span class="fx gs g2"></span><span class="fx gs g3"></span><span class="fx gs g4"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
+                <span class="tile-name">Iron Guard</span>
+              </button>
+              <button type="button" class="help-dot tile-help" data-help="mv-guard" aria-label="Help: Iron Guard" aria-expanded="false">?</button>
+            </div>
           </div>
           <p class="readied-line" data-readied-line="dre">Tap a move to ready it for the next battle — and hear its campaign tale.</p>
           <div class="tale-panel" data-tale-panel="dre" role="button" tabindex="0" aria-label="Dre's campaign tale panel — tap to pause or resume the scrolling tale">
@@ -909,18 +946,27 @@
         <div class="campaigns">
           <span class="campaigns-head">Campaigns of Friends <button type="button" class="help-dot" data-help="readied" aria-label="Help: Readied moves" aria-expanded="false">?</button></span>
           <div class="move-tiles" role="group" aria-label="Priya's campaign moves">
-            <button type="button" class="move-tile" data-move-tile="priya" data-move="0" aria-pressed="false">
-              <span class="tile-stage scene-sword"><img data-img="priya" alt="" /><span class="fx slash x1"></span><span class="fx slash x2"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
-              <span class="tile-name">Sword of Youth</span>
-            </button>
-            <button type="button" class="move-tile" data-move-tile="priya" data-move="1" aria-pressed="false">
-              <span class="tile-stage scene-heal"><img data-img="priya" alt="" /><span class="fx heal-glow"></span><span class="fx heal-mote hm1"></span><span class="fx heal-mote hm2"></span><span class="fx heal-mote hm3"></span><span class="fx plus p1"></span><span class="fx plus p2"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
-              <span class="tile-name">Healing Hands</span>
-            </button>
-            <button type="button" class="move-tile" data-move-tile="priya" data-move="2" aria-pressed="false">
-              <span class="tile-stage scene-ward"><img data-img="priya" alt="" /><span class="fx ward-rays"></span><span class="fx ward-dome"></span><svg class="fx ward-bolt" viewBox="0 0 34 52" aria-hidden="true"><path d="M20 0 L8 26 L15 26 L6 52 L28 20 L20 20 L30 0 Z" fill="#4a3b57"/></svg><span class="fx ward-spark ws1"></span><span class="fx ward-spark ws2"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
-              <span class="tile-name">Ward of Dawn</span>
-            </button>
+            <div class="tile-cell">
+              <button type="button" class="move-tile" data-move-tile="priya" data-move="0" aria-pressed="false">
+                <span class="tile-stage scene-sword"><img data-img="priya" alt="" /><span class="fx slash x1"></span><span class="fx slash x2"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
+                <span class="tile-name">Sword of Youth</span>
+              </button>
+              <button type="button" class="help-dot tile-help" data-help="mv-sword" aria-label="Help: Sword of Youth" aria-expanded="false">?</button>
+            </div>
+            <div class="tile-cell">
+              <button type="button" class="move-tile" data-move-tile="priya" data-move="1" aria-pressed="false">
+                <span class="tile-stage scene-heal"><img data-img="priya" alt="" /><span class="fx heal-glow"></span><span class="fx heal-mote hm1"></span><span class="fx heal-mote hm2"></span><span class="fx heal-mote hm3"></span><span class="fx plus p1"></span><span class="fx plus p2"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
+                <span class="tile-name">Healing Hands</span>
+              </button>
+              <button type="button" class="help-dot tile-help" data-help="mv-hands" aria-label="Help: Healing Hands" aria-expanded="false">?</button>
+            </div>
+            <div class="tile-cell">
+              <button type="button" class="move-tile" data-move-tile="priya" data-move="2" aria-pressed="false">
+                <span class="tile-stage scene-ward"><img data-img="priya" alt="" /><span class="fx ward-rays"></span><span class="fx ward-dome"></span><svg class="fx ward-bolt" viewBox="0 0 34 52" aria-hidden="true"><path d="M20 0 L8 26 L15 26 L6 52 L28 20 L20 20 L30 0 Z" fill="#4a3b57"/></svg><span class="fx ward-spark ws1"></span><span class="fx ward-spark ws2"></span><span class="readied-tag" aria-hidden="true">READIED</span></span>
+                <span class="tile-name">Ward of Dawn</span>
+              </button>
+              <button type="button" class="help-dot tile-help" data-help="mv-ward" aria-label="Help: Ward of Dawn" aria-expanded="false">?</button>
+            </div>
           </div>
           <p class="readied-line" data-readied-line="priya">Tap a move to ready it for the next battle — and hear its campaign tale.</p>
           <div class="tale-panel" data-tale-panel="priya" role="button" tabindex="0" aria-label="Priya's campaign tale panel — tap to pause or resume the scrolling tale">
@@ -1046,11 +1092,11 @@
       <div class="boss-stage" id="bossStage">
         <img id="bossImg" data-img="boss" alt="Illustration of The Fade — a towering figure wrapped in red tape and chains, hung with tariff tags and oil barrels, ballot boxes chained at its waist, looming over cargo ships in a narrow strait" />
         <div class="dmg" id="dmgPop">−13</div>
-        <div class="boss-name" id="bossNameCard" role="button" tabindex="0" aria-expanded="false" aria-controls="factCheck" aria-label="Tap The Fade's line for the documented fact check; tap again to go back">
+        <div class="boss-name" id="bossNameCard" role="button" tabindex="0" aria-expanded="false" aria-controls="factCheck" aria-label="The Fade. Tap the card, or the Fact-check his line button on it, for the documented fact check; tap again to go back">
           <span class="display">The Fade</span>
           <p id="bossTaunt">“Stay home, kids. Nothing ever changes.”</p>
-          <p class="excuse" id="bossExcuse"></p>
-          <span class="tap-hint" id="tapHint">Tap his line · Fact-check the trick</span>
+          <button type="button" class="fc-pill" id="factCheckBtn" aria-expanded="false" aria-controls="factCheck">FACT-CHECK HIS LINE</button>
+          <p class="excuse" id="bossExcuse"><span class="excuse-badge">Excuse of the hour</span><span class="excuse-text">“An existential threat — we had no choice but to act.”</span></p>
         </div>
       </div>
       <div class="fact-check" id="factCheck" role="button" tabindex="0" aria-label="Fact check. Tap to go back to The Fade's line"></div>
@@ -1816,7 +1862,7 @@
     pendingBuffs:{ insp:0, sharpen:false }, activeBuffs:{ insp:0, sharpen:false },
     battleMods:null, dbBonus:0, allDown:false,
     hardMode:false, gambitResolved:true, gambitCollapsed:false, gambitClaim:null, gambitTauntOverride:null, debtInterest:0,
-    powerCharge:0, powerPlayed:false, powerSpinUntilIdx:-1, canvassRallied:0, runOver:false,
+    powerCharge:0, powerPlayed:false, powerSpinUntilIdx:-1, canvassRallied:0, runOver:false, struckExcuse:null,
     coach:{ answer:false, roll:false, camp:false },
     readied:{ maya:null, dre:null, priya:null }, activeMove:null, moveKey:null,
     moveFx:{ attackUsed:false, counterUsed:false }, moveHealKey:null, moveHealText:"" };
@@ -1859,7 +1905,18 @@
     gambit:   { t:"Fake News Gambit", b:"In Hard Skill Level he sometimes flashes a made-up 'fact' before the question. You must rule it TRUE or FAKE first. It is always fake: rule FAKE and his gambit collapses — he loses his Hard defense bonus and your next hit lands +2 harder. Fall for it and he heals on the spot." },
     deathblow:{ t:"Death Blow", b:"When The Fade is nearly finished (under 15 HP; under 10 for Dre), a fighter may be offered one golden hard question. Answer it right and he falls on the spot, whatever HP he has left. Miss and he regains 8 HP and that fighter's Death Blow is spent for the run. In Hard mode the follow-up d6 must also land 3 or higher." },
     power:    { t:"The Power Card — your vote", b:"One card, shared by the whole band. It charges only through informed play: +1 for each battle question answered correctly, +1 for catching a Fake News gambit, +1 when a fighter Canvasses at camp; a landed Death Blow fills it. At 5 charges you can PLAY it: 12 damage, his Spin shield is stripped for 2 battles, and his current excuse is struck through with its documented correction. Then it can charge again." },
-    readied:  { t:"Readied moves", b:"The move you tap is readied for that hero's next battle — one themed bonus, spent when that battle ends. Attack moves strike harder, guard moves blunt his first counter, and Freedom's Shout stops it cold." }
+    readied:  { t:"Readied moves", b:"The move you tap is readied for that hero's next battle — one themed bonus, spent when that battle ends. Attack moves strike harder, guard moves blunt his first counter, and Freedom's Shout stops it cold." },
+    /* Per-move help for the nine Campaigns of Friends tiles: the bonus in
+       plain words plus when to pick it — shown BEFORE the player commits. */
+    "mv-arrows": { t:"Voting Arrows", b:"+2 to hit and +2 damage on Maya's first attack of her next battle. Pick it when you want her opening shot to land hard." },
+    "mv-omen":   { t:"Scout's Omen", b:"+1 to all of Maya's attack rolls for her whole next battle. Pick it when The Fade's Defense is high and every roll needs help." },
+    "mv-brace":  { t:"Swift Brace", b:"The first counterattack that hits Maya in her next battle deals 5 less damage. Pick it when she is low on HP and has to survive his reply." },
+    "mv-axe":    { t:"Axe of Freedom", b:"+4 damage on Dre's first hit of his next battle. Pick it to open big — especially when The Fade is nearly broken." },
+    "mv-shout":  { t:"Freedom's Shout", b:"The Fade's first counterattack in Dre's next battle is stopped cold — no damage at all. Pick it when Dre is low and cannot afford to be hit back." },
+    "mv-guard":  { t:"Iron Guard", b:"The first counterattack that hits Dre in his next battle deals 5 less damage, and 2 damage bounces back onto The Fade. Pick it when you expect a heavy counter and want him to pay for swinging." },
+    "mv-sword":  { t:"Sword of Youth", b:"+2 damage on Priya's first hit of her next battle, and +4 Hope. Pick it when Hope is running low and she is the one striking." },
+    "mv-hands":  { t:"Healing Hands", b:"At the start of Priya's next battle, the band's most-wounded standing hero heals 8 HP. Pick it when someone is badly hurt but still on their feet." },
+    "mv-ward":   { t:"Ward of Dawn", b:"The first counterattack that hits Priya in her next battle deals 4 less damage, and the band gains +3 Hope. Pick it when she is exposed and Hope needs a lift." }
   };
   function helpDotHTML(key){
     var h = HELP[key];
@@ -2023,6 +2080,10 @@
     state.boss = Math.max(0, state.boss - 12);
     state.powerCharge = 0;
     state.powerPlayed = true;
+    /* The excuse that was current when the card was played is the one the
+       card strikes — the boss card shows it struck through until the
+       carousel rotates a new excuse in at the next HP threshold. */
+    state.struckExcuse = excuse;
     /* Spin stays jammed for the next 2 battles: if the current battle is
        still unanswered it counts as the first; if it is already answered,
        the suppression covers the two battles that follow this one. */
@@ -2174,13 +2235,22 @@
     return { correction:q ? q.brief.replace(/^Source line:\s*/,"") : SOUND_BITE_NOTE.correction,
              source:q ? ("Battle " + (state.idx+1) + " brief — " + q.title) : "Game brief" };
   }
+  /* The pill on the boss card is the fact check's visible state: closed it
+     reads FACT-CHECK HIS LINE; open it flips to FACT CHECK OPEN — TAP TO
+     CLOSE. There is no separate hint line on the card anymore. */
+  function syncFactCheckBtn(open){
+    var btn = document.getElementById("factCheckBtn");
+    if (btn) {
+      btn.textContent = open ? "FACT CHECK OPEN — TAP TO CLOSE" : "FACT-CHECK HIS LINE";
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+    var card = document.getElementById("bossNameCard");
+    if (card) card.setAttribute("aria-expanded", open ? "true" : "false");
+  }
   function hideFactCheck(){
     var fc = document.getElementById("factCheck");
     if (fc) { fc.classList.remove("show"); fc.innerHTML = ""; delete fc.dataset.line; }
-    var hint = document.getElementById("tapHint");
-    if (hint) hint.textContent = "Tap his line · Fact-check the trick";
-    var card = document.getElementById("bossNameCard");
-    if (card) card.setAttribute("aria-expanded", "false");
+    syncFactCheckBtn(false);
   }
   function toggleFactCheck(){
     var fc = document.getElementById("factCheck");
@@ -2199,10 +2269,7 @@
     fc.innerHTML = '<span class="fc-tag">Fade Logic Engine · Fact check</span><b>His claim:</b> ' + taleEscape(tauntEl.textContent) + '<br><b>The documented fact:</b> ' + info.correction + '<br><span style="color:#506068">Source: ' + info.source + '</span><span class="fc-back">Tap to go back</span>';
     fc.dataset.line = tauntEl.textContent;
     fc.classList.add("show");
-    var hint = document.getElementById("tapHint");
-    if (hint) hint.textContent = "Fact check open below · Tap again to go back";
-    var card = document.getElementById("bossNameCard");
-    if (card) card.setAttribute("aria-expanded", "true");
+    syncFactCheckBtn(true);
     log("Fact check — his claim: " + tauntEl.textContent + " The documented fact: " + info.correction);
   }
 
@@ -2671,7 +2738,17 @@
     var val = document.getElementById("fadeHpVal"); if (val) val.textContent = hp + " / 100";
     var ex = excuseFor(state.boss);
     var se = document.getElementById("fadeExcuse"); if (se) se.innerHTML = "<b>Current excuse:</b> " + ex;
-    var be = document.getElementById("bossExcuse"); if (be) be.textContent = "Excuse of the hour: " + ex;
+    /* Boss-card excuse = a labeled status chip, not a control: badge + the
+       excuse text. While the excuse the Power Card struck is still the
+       current one, it renders struck through with its note; the moment the
+       carousel rotates (ex !== state.struckExcuse) the strike is gone. */
+    var be = document.getElementById("bossExcuse");
+    if (be) {
+      var struck = !!state.struckExcuse && state.struckExcuse === ex;
+      be.innerHTML = "<span class=\"excuse-badge\">Excuse of the hour</span>" +
+        (struck ? "<s class=\"excuse-text\">" + ex + "</s><span class=\"excuse-note\">Struck by your Power Card</span>"
+                : "<span class=\"excuse-text\">" + ex + "</span>");
+    }
   }
 
   function updateFadeUI(){
@@ -2742,13 +2819,24 @@
     log(state.hardMode ? "HARD SKILL LEVEL engaged. The Fade's machine is at 9–12, Defense +2, Fake News Gambit armed." : "Hard Skill Level off — standard rules.");
   });
 
-  /* Tap The Fade's line (or press Enter on it) to flip to the Logic Engine
-     fact check; tap his card OR the fact-check card to flip back — the two
-     toggle back and forth any number of times. */
+  /* The FACT-CHECK HIS LINE pill on the boss card is the primary control:
+     it toggles the Logic Engine fact check exactly as tapping the card
+     does. Whole-card tap and Enter/Space on the card keep working too, as
+     does tapping the open fact-check card to flip back. The pill consumes
+     its own click so the card's handler never double-toggles, and the
+     card's keydown ignores keys aimed at the pill — a focused pill
+     activates natively as a button, which lands here as a click. */
+  var factCheckBtn = document.getElementById("factCheckBtn");
+  if (factCheckBtn) {
+    factCheckBtn.addEventListener("click", function(e){ e.stopPropagation(); toggleFactCheck(); });
+  }
   var bossNameCard = document.getElementById("bossNameCard");
   if (bossNameCard) {
     bossNameCard.addEventListener("click", toggleFactCheck);
-    bossNameCard.addEventListener("keydown", function(e){ if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleFactCheck(); } });
+    bossNameCard.addEventListener("keydown", function(e){
+      if (factCheckBtn && e.target === factCheckBtn) return;
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleFactCheck(); }
+    });
   }
   var factCheckEl = document.getElementById("factCheck");
   if (factCheckEl) {
@@ -3331,7 +3419,7 @@
     state.activeBuffs = { insp:0, sharpen:false };
     state.battleMods = null; state.dbBonus = 0; state.allDown = false;
     state.hardMode = false; state.gambitResolved = true; state.gambitCollapsed = false; state.gambitClaim = null; state.gambitTauntOverride = null; state.debtInterest = 0;
-    state.powerCharge = 0; state.powerPlayed = false; state.powerSpinUntilIdx = -1; state.canvassRallied = 0; state.runOver = false;
+    state.powerCharge = 0; state.powerPlayed = false; state.powerSpinUntilIdx = -1; state.canvassRallied = 0; state.runOver = false; state.struckExcuse = null;
     state.coach = { answer:false, roll:false, camp:false };
     state.readied = { maya:null, dre:null, priya:null };
     state.activeMove = null; state.moveKey = null; state.moveFx = { attackUsed:false, counterUsed:false };
