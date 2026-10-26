@@ -114,6 +114,21 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
 .pip.on{background:#e9c46a;color:#1c1710;font-weight:700}
 #pcPlay:disabled{opacity:.45;cursor:not-allowed}
 .dm-box ul{margin:8px 0;padding-left:20px} .dm-box li{margin:4px 0} .dm-box p{margin:8px 0 0}
+/* SOURCES & STORY */
+.src-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0} @media(max-width:800px){.src-grid{grid-template-columns:1fr}}
+.src-entry{background:var(--card);border:1px solid var(--border);padding:14px 16px}
+.src-entry h3{margin:0 0 8px;font-size:16px;line-height:1.25}
+.src-entry h3 .src-num{color:var(--accent);margin-right:4px}
+.src-entry p{margin:6px 0;font-size:15.5px;line-height:1.5}
+.src-entry p:last-child{margin-bottom:0}
+.src-tag{font-family:Cinzel,serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.traps-head{margin:34px 0 10px;border-top:3px double var(--border);padding-top:16px}
+.traps-head h3{margin:0;font-size:22px}
+.trap{border:1px solid var(--border);background:var(--card);padding:14px 16px;margin:10px 0}
+.trap h4{margin:0 0 6px;font-size:16px}
+.trap h4 .src-num{color:var(--accent);margin-right:4px}
+.trap p{margin:5px 0;font-size:15.5px;line-height:1.55}
+.trap p:last-child{margin-bottom:0}
 </style>
 </head>
 <body>
@@ -130,7 +145,7 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
 </header>
 
 <nav aria-label="Module contents">
-  <a href="index.html">← Back to the Game</a><a href="#how">How to Play</a><a href="#dmguide">DM Guide</a><a href="#heroes">Hero Sheets</a><a href="#monsters">Monsters</a><a href="#adventure">The Adventure</a><a href="#tools">DM Tools</a><a href="#realquest">Real-World Quest</a>
+  <a href="index.html">← Back to the Game</a><a href="#how">How to Play</a><a href="#dmguide">DM Guide</a><a href="#heroes">Hero Sheets</a><a href="#monsters">Monsters</a><a href="#adventure">The Adventure</a><a href="#sources">Sources</a><a href="#tools">DM Tools</a><a href="#realquest">Real-World Quest</a>
 </nav>
 
 <main>
@@ -447,6 +462,101 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
     <div class="section-head"><div><div class="kicker">Chapter Four • The Adventure</div><h2>Sixteen Encounters to the Boss</h2><p>Tap each encounter to open the DM's notes. Run them in order — each one hands the party a weapon of understanding for the finale.</p></div></div>
 
     <div id="encounters"></div>
+  </section>
+
+  <!-- SOURCES & STORY -->
+  <section id="sources">
+    <div class="section-head"><div><div class="kicker">Appendix • Provenance</div><h2>Sources &amp; Story</h2><p>Where every lesson came from — the documented record, and the night that turned it into a game.</p></div></div>
+    <p>Every lesson in this module traces to two things: a documented source a player can check, and the night's research that turned it into a lesson. The full record — the fact-checked brief, how each brief point became a battle, and this game's whole backstory — lives in BACKSTORY.md, in the same repository as this module. DM: if a player asks 'is that real?' — that's a win. Look it up together.</p>
+    <div class="src-grid">
+      <article class="src-entry"><h3><span class="src-num">E1</span> The Strait Slams Shut</h3>
+        <p><span class="src-tag">Source:</span> EIA, World Oil Transit Chokepoints: Hormuz carried ~20.9M barrels/day in 1H25 — 26.2% of world maritime oil trade, ~20% of global LNG — with only ~2.6M barrels/day of pipeline bypass; UNCTAD puts ~25% of seaborne oil through the strait.</p>
+        <p><span class="src-tag">Story:</span> The warning record: forecasters published the closure scenario in writing in June 2025, and 2026 tracked it — the strait was closed in fact by insurance withdrawal, not sunken ships: premiums ran from ~0.05% to over 5% of a vessel's value.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E2</span> Who Pays the Tariff Toll?</h3>
+        <p><span class="src-tag">Source:</span> NBER tariff-incidence studies of the 2018 tariffs (most cost fell on U.S. importers and consumers); Federal Reserve Bank of New York: tariffs had added ~2.9 percentage points to consumer goods inflation by February 2026.</p>
+        <p><span class="src-tag">Story:</span> The landed-cost ledger from the exchange: the importer pays at the border, and the toll lands on the shelf price — the Wraith's receipt is written backwards.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E3</span> Who Built the Corner?</h3>
+        <p><span class="src-tag">Source:</span> JCPOA terms and U.S. State Department history; IAEA compliance certifications before 2018 — under the deal, breakout time stood at ~12 months with inspectors inside.</p>
+        <p><span class="src-tag">Story:</span> The manufactured-crisis analysis: the deal held breakout at a year and the U.S. withdrew on May 8, 2018 anyway; Tehran escalated afterward in announced, reversible steps — and the compressed timeline was then cited as the emergency.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E4</span> The Landed-Cost Pincer</h3>
+        <p><span class="src-tag">Source:</span> The landed-cost formula documented in the exchange's macro review: product + freight + fuel surcharge + insurance + tariffs + delay/inventory costs; OECD outlooks on the combined squeeze.</p>
+        <p><span class="src-tag">Story:</span> No single villain — a pincer: when every input rises at once, that is the stagflation recipe, and it squeezes households from several directions at the same time.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E5</span> Aftershocks — Bread &amp; Chips</h3>
+        <p><span class="src-tag">Source:</span> IMF: roughly a third of global fertilizer shipments transit Hormuz; helium and sulfur supply chains are likewise exposed.</p>
+        <p><span class="src-tag">Story:</span> The second-order channels added to the brief during the night's review: the shock reaches the farm and the chip fab, not only the gas pump — fabs die on missing $20 parts.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E6</span> The Rate-Freeze Cavern</h3>
+        <p><span class="src-tag">Source:</span> OECD 2026 outlook (~2.9% global growth, higher prices and rates weighing on activity); the Federal Reserve hiked into the supply shock in September 2026, to 3.75–4.00%.</p>
+        <p><span class="src-tag">Story:</span> Monetary policy cannot create oil or reopen a shipping lane — the exchange's cost-of-capital channel: a central bank fighting a supply shock with the only tool it has freezes everything else.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E7</span> The Spiral Watch</h3>
+        <p><span class="src-tag">Source:</span> Federal Reserve research diagnostics: core and services inflation, breadth of price increases, wage growth minus productivity, and 5–10 year inflation expectations.</p>
+        <p><span class="src-tag">Story:</span> The night's diagnostic upgrade: don't watch the headline — watch these gauges to tell a one-time price shock from a true wage-price spiral.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E8</span> The Record, Not the Label</h3>
+        <p><span class="src-tag">Source:</span> Congressional Research Service: midterms decide control of Congress — the purse, oversight, sanctions, trade and war-powers debates.</p>
+        <p><span class="src-tag">Story:</span> The debate encounter: labels flip with the decade (see 'Freedom Fighters'); records don't. The lesson of the whole module in one room — vote the record in your district.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E9</span> Receipts: The Forecasts</h3>
+        <p><span class="src-tag">Source:</span> JPMorgan, June 2025: a closure scenario put oil at $120–130; Lipow Oil Associates: ~$4.50 national gasoline, ~$6 in California. The EIA price record: gasoline $2.98 on Feb 28, 2026, peaking at $4.55 in May.</p>
+        <p><span class="src-tag">Story:</span> Mapping #1 from the brief: the consequences were forecast in writing, with numbers, in advance — a dated, numbered forecast is a receipt, not a vibe.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E10</span> The Invisible Tax</h3>
+        <p><span class="src-tag">Source:</span> U.S. Treasury: the 10-year closed at 5.31% on Oct 5, 2026, its highest close since 2002; Kim–Wright term premium ~1.07 points, highest since 2010; Freddie Mac survey: 30-year mortgages ~7.3–7.4%.</p>
+        <p><span class="src-tag">Story:</span> Mapping #2: America is a net energy exporter — the war reached households through finance, not fuel supply. In a modern economy, a distant blockade is paid at the mortgage closing table.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E11</span> “Two Weeks Away?”</h3>
+        <p><span class="src-tag">Source:</span> IAEA Director General, March 2, 2026: the agency saw no structured program to manufacture nuclear weapons; Arms Control Association, Feb 28, 2026: the urgency claims were made without credible evidence.</p>
+        <p><span class="src-tag">Story:</span> Mapping #3 — the anatomy of a claim: capability is real (~441 kg at 60%), imminence is not supported, intent is the weakest leg. Three assertions, three separate evidences — weigh them separately.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E12</span> The Empty Cushion</h3>
+        <p><span class="src-tag">Source:</span> IEA / OPEC inventory estimates: observed global stocks ~509 million barrels below pre-war levels by fall 2026, spare capacity drawn down; war-risk insurance repriced from ~0.05% to over 5% of vessel value.</p>
+        <p><span class="src-tag">Story:</span> Mapping #4: buffers are finite. A system that has spent its cushion answers the next shock at full force — resilience is a stock, not a mood.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E13</span> The Inheritance (Debt, in Context)</h3>
+        <p><span class="src-tag">Source:</span> U.S. Treasury Fiscal Data and CBO historical tables: gross federal debt ~57% of GDP in 2001, with a federal surplus; past 120% of GDP today; total debt past $40 trillion; net interest now exceeds defense outlays.</p>
+        <p><span class="src-tag">Story:</span> The ratio over the headline number: the debt is never repaid — it is refinanced forever, and the inheritors did not make the decisions. The ratio is how the inheritance is measured.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E14</span> The War Chest</h3>
+        <p><span class="src-tag">Source:</span> The U.S. WWII record: unemployment 14.7% in 1940 to 1.2% in 1944, ~17 million civilian jobs on war contracts, rationing and price controls at the peak, federal debt up roughly five-fold 1941–45; Eisenhower's farewell address, Jan 17, 1961.</p>
+        <p><span class="src-tag">Story:</span> Both halves, always: the jobs are real — and activity is not the same as welfare. The general who won that war used his farewell to name the machine: the military-industrial complex and its unwarranted influence.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E15</span> “Freedom Fighters”</h3>
+        <p><span class="src-tag">Source:</span> The documented record of Operation Cyclone (1979–89) — U.S., Saudi and ISI support to the Afghan mujahideen, celebrated as 'freedom fighters' — and the post-2001 war against networks formed in that war; the 1980s tilt toward Saddam's Iraq, fought in 1991 and overthrown in 2003.</p>
+        <p><span class="src-tag">Story:</span> The flipping-sides file: arm them today, fight them tomorrow — the alignment expires; the arsenal doesn't. The labels change with the decade. The weapons remain.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E16</span> The Long Fuse</h3>
+        <p><span class="src-tag">Source:</span> The documented record: the 1953 coup, backed by the U.S. and U.K., removed Prime Minister Mossadegh and consolidated the Shah's rule; the 1979 revolution defined itself against that intervention.</p>
+        <p><span class="src-tag">Story:</span> The longest arc in the file runs three generations: the adversary of 2026 was authored in 1953. History's fuse is longer than any news cycle.</p></article>
+      <article class="src-entry"><h3><span class="src-num">E17</span> The Boss Gate</h3>
+        <p><span class="src-tag">Source:</span> The whole brief — every source above.</p>
+        <p><span class="src-tag">Story:</span> The finale is the thesis test: the band wins with facts stated aloud (the Informed Strike), or not at all. What works at this gate is what works on November 3.</p></article>
+    </div>
+
+    <div class="traps-head"><div class="kicker">Hard Mode • The Fake News Gambits, Printed Whole</div><h3>THE TRAPS (Hard mode)</h3></div>
+    <p>In Hard mode the DM deals these as written — the party rules TRUE, FAKE, or passes, and the DM reads the documented fact aloud either way.</p>
+    <p class="small">These are the game's eight trap cards — His claim, the documented fact, and the source, exactly as the DM needs them at the table.</p>
+    <article class="trap"><h4><span class="src-num">Trap 1</span></h4>
+      <p><span class="src-tag">His claim:</span> “The Strait of Hormuz carries barely 2% of world oil — this is all overblown.”</p>
+      <p><span class="src-tag">The documented fact:</span> Hormuz carries ~20–21 million barrels a day — about a fifth of global petroleum liquids, roughly a quarter of seaborne oil trade, and ~20% of global LNG, with only ~2.6M barrels/day of bypass pipeline.</p>
+      <p><span class="src-tag">Source:</span> EIA — World Oil Transit Chokepoints</p></article>
+    <article class="trap"><h4><span class="src-num">Trap 2</span></h4>
+      <p><span class="src-tag">His claim:</span> “Foreign exporters pay the tariffs, not Americans.”</p>
+      <p><span class="src-tag">The documented fact:</span> The importer pays at the border. NY Fed and NBER research found most tariff cost passed to U.S. importers and consumers — about +2.9 points of goods inflation by Feb 2026 in this brief.</p>
+      <p><span class="src-tag">Source:</span> Federal Reserve Bank of New York; NBER tariff-incidence studies</p></article>
+    <article class="trap"><h4><span class="src-num">Trap 3</span></h4>
+      <p><span class="src-tag">His claim:</span> “Inspectors confirmed a finished nuclear weapon in February.”</p>
+      <p><span class="src-tag">The documented fact:</span> The IAEA's director said in March 2026 he saw no structured program to manufacture nuclear weapons. The ~441 kg at 60% is capability; weaponization, miniaturisation and delivery add roughly 1–2+ years.</p>
+      <p><span class="src-tag">Source:</span> IAEA, Mar 2026; Arms Control Association, Feb–Mar 2026</p></article>
+    <article class="trap"><h4><span class="src-num">Trap 4</span></h4>
+      <p><span class="src-tag">His claim:</span> “JCPOA inspectors were thrown out for catching cheating before 2018.”</p>
+      <p><span class="src-tag">The documented fact:</span> Under the 2015 JCPOA, breakout stood at ~12 months with inspectors inside and compliance certified. The U.S. withdrew in May 2018; only then did Iran escalate in announced steps and inspectors lose access.</p>
+      <p><span class="src-tag">Source:</span> JCPOA terms; IAEA compliance certifications pre-2018</p></article>
+    <article class="trap"><h4><span class="src-num">Trap 5</span></h4>
+      <p><span class="src-tag">His claim:</span> “Oil inventories are at record highs — there is a huge cushion left.”</p>
+      <p><span class="src-tag">The documented fact:</span> World oil inventories sit ~509 million barrels below pre-war levels and spare capacity is drawn down — the cushion that absorbed the first shock is spent.</p>
+      <p><span class="src-tag">Source:</span> IEA / OPEC inventory estimates, fall 2026 brief</p></article>
+    <article class="trap"><h4><span class="src-num">Trap 6</span></h4>
+      <p><span class="src-tag">His claim:</span> “The national debt costs ordinary families nothing.”</p>
+      <p><span class="src-tag">The documented fact:</span> The debt is never paid down — it is refinanced forever at whatever rate the market demands, and net interest is now one of the largest single federal outlays, larger than the defense budget, paid out of taxes every year. Refinancing a $40 trillion-plus stock at 5%+ rates reprices the whole mountain over time, and households pay through three pressure valves: higher taxes and fees over time, inflation that quietly taxes savings and wages, and higher-for-longer mortgage rates. After WWII the debt was not repaid either — it was outgrown and inflated down as a share of GDP, which required decades of growth.</p>
+      <p><span class="src-tag">Source:</span> U.S. Treasury Fiscal Data (total federal debt, $40T+); CBO budget outlook — net interest vs. defense outlays</p></article>
+    <article class="trap"><h4><span class="src-num">Trap 7</span></h4>
+      <p><span class="src-tag">His claim:</span> “War spending is pure economic gain — everybody wins.”</p>
+      <p><span class="src-tag">The documented fact:</span> Both halves, as documented: the jobs and output are real — WWII mobilisation cut unemployment from 14.7% (1940) to 1.2% (1944) and created ~17 million civilian jobs on war contracts, and programs like the F-35 (supply chain in 45+ states) build a constituency that defends the spending itself. And: the peak came with rationing and price controls, the debt rose roughly five-fold 1941–45, activity is not the same as welfare (the broken-window point), and Eisenhower — the general who won that war — warned in his 1961 farewell against the 'military-industrial complex' and its 'unwarranted influence.' Real jobs; not pure gain.</p>
+      <p><span class="src-tag">Source:</span> U.S. WWII employment record; federal debt 1941–45; Eisenhower farewell address, Jan 17, 1961</p></article>
+    <article class="trap"><h4><span class="src-num">Trap 8</span></h4>
+      <p><span class="src-tag">His claim:</span> “The debt-to-GDP ratio is just an economists' statistic — it has no effect on real families.”</p>
+      <p><span class="src-tag">The documented fact:</span> The ratio measures the debt against the economy that has to carry it. Gross federal debt stood at roughly 57% of GDP in 2001, with a federal surplus — the debt was shrinking relative to the economy. After two decades of borrowed-money wars, tax cuts, the 2008 crisis and the pandemic, it crossed 100% in the early 2010s and stands past 120% of GDP today. At that ratio, interest alone claims a growing share of every tax dollar before a single school, ship or road is funded — and households feel it through higher taxes and fees, inflation, and higher-for-longer rates. The inheritors did not make those decisions; the ratio is how the inheritance is measured.</p>
+      <p><span class="src-tag">Source:</span> U.S. Treasury / CBO historical debt and GDP tables, 2001–2026</p></article>
   </section>
 
   <!-- TOOLS -->
