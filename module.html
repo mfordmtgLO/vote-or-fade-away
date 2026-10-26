@@ -52,6 +52,11 @@ main{max-width:1060px;margin:0 auto;padding:22px 16px 50px}
 .dm-box{background:var(--accent-light);border-left:6px solid var(--accent);padding:18px 20px;margin:16px 0}
 .readaloud{background:#fff;border:1px solid var(--ink);padding:16px 18px;font-family:"IM Fell English",serif;font-style:italic;box-shadow:4px 4px 0 var(--ink);margin:12px 0}
 @media(prefers-color-scheme:dark){.readaloud{background:#2a241e}}
+.opening-box{background:var(--paper);border:2px solid var(--border);box-shadow:6px 6px 0 var(--accent);padding:20px 22px;margin:18px 0 26px}
+.opening-label{font-family:Cinzel,serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);text-align:center;margin:0 0 8px}
+.opening-box h3{font-family:Cinzel,serif;text-align:center;font-size:26px;letter-spacing:.08em;margin:0 0 14px;line-height:1.1}
+.opening-box p{font-family:"IM Fell English",serif;font-style:italic;font-size:19px;line-height:1.6;margin:0 0 12px}
+.opening-box p:last-child{margin-bottom:0}
 table{width:100%;border-collapse:collapse;font-size:15px} th{font-family:Cinzel,serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-align:left;border-bottom:2px solid var(--border);padding:8px 6px} td{padding:7px 6px;border-bottom:1px solid #d8cbb0;vertical-align:top} @media(prefers-color-scheme:dark){td{border-color:#3d352a}}
 /* SHEETS */
 .sheet{background:var(--paper);border:2px solid var(--border);box-shadow:var(--shadow);margin:22px 0;overflow:hidden}
@@ -165,7 +170,8 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
         <li><strong>Dre — The Axeman's Ledger</strong> (INT / Investigation): the fiscal-sum question.</li>
         <li><strong>Priya — The Healer's Verdict</strong> (WIS / Insight): capability vs. imminence vs. intent — was the burden of proof met?</li>
       </ul>
-      <p><strong>Success:</strong> The Fade falls on the spot, whatever HP remains. Roll 1d6 — the strike deals his remaining HP + the roll as overkill; read it aloud and total it in the epilogue. Go to the epilogue.</p>
+      <p><strong>Success:</strong> The Fade falls on the spot, whatever HP remains. Roll 1d6 — the strike deals his remaining HP + the roll as overkill; read it aloud and total it and its style in the epilogue. Go to the epilogue.</p>
+      <p><strong>Style ladder — read aloud:</strong> Name the kill by the roll: 1 — a narrow defeat (his: he nearly clung on) · 2 — a close finish · 3 — a clean finish · 4 — a heavy blow · 5 — a crushing blow · 6 — a decisive blow. Record the style in the epilogue beside the overkill total.</p>
       <p><strong>Failure:</strong> The Fade regains 15 HP, the hero takes 1d8 Hope damage, and that hero's Death Blow is spent for the session.</p>
       <p><strong>Cadence:</strong> Maya may attempt in any round inside the window; Priya only every other round; Dre only when The Fade is at 15 HP or fewer.</p>
       <p><strong>Hard mode:</strong> after a correct Death Blow answer, roll the d6 — on 1–2 The Fade clings on at 1 HP; 3+ finishes him.</p>
@@ -176,12 +182,21 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
   <section id="dmguide">
     <div class="section-head"><div><div class="kicker">The DM Guide</div><h2>Running The Fade</h2><p>His difficulty dials, his dice, his logic engine — and the one card that ends him.</p></div></div>
 
+    <div class="opening-box" role="note" aria-label="The Opening — Read Aloud">
+      <p class="opening-label">THE OPENING — READ ALOUD</p>
+      <h3>THE AGE OF RECKONING</h3>
+      <p>Alder Creek was an ordinary town, which is to say it belonged to everyone who lived in it. Then The Fade came — not with an army, but with machinery. Drumbeats for wars nobody voted on. Prices that climb while wages stand still. A mountain of debt, rolled quietly downhill onto the young.</p>
+      <p>He doesn’t argue. He distracts. He flips the labels, sells the sound bites, and counts on one thing above all: that you will shrug — and stay home.</p>
+      <p>Three travelers refused. Maya, whose arrows are questions. Dre, whose axe cuts ledgers open. Priya, whose sword heals as it fights. They carry no army. Only facts, each other — and one card apiece, charged by knowing.</p>
+      <p>You are holding yours. This is how the fight begins.</p>
+    </div>
+
     <h3>The Fade's Difficulty Dials</h3>
     <p>The DM sets four sliders (0–12, default 6) before play, announces them up front, and locks them once Encounter 1 begins. Set them here — the Threat Level reads out live.</p>
     <div class="dials">
       <div class="dial"><label>War Drum Volume <span id="dialDrumVal">6</span></label><input type="range" id="dialDrum" min="0" max="12" value="6" oninput="updateDials()" aria-label="War Drum Volume"><p class="small">Failed checks cost extra Hope: Drum ÷ 2 (round down) additional Hope damage.</p></div>
       <div class="dial"><label>Sound Bite Spin <span id="dialSpinVal">6</span></label><input type="range" id="dialSpin" min="0" max="12" value="6" oninput="updateDials()" aria-label="Sound Bite Spin"><p class="small">The Fade's Defense rises by Spin ÷ 4 (round down). At Spin 9+, the DM delivers his taunts as polished sound bites — and the party must name the distortion before striking.</p></div>
-      <div class="dial"><label>Mission Creep <span id="dialCreepVal">6</span></label><input type="range" id="dialCreep" min="0" max="12" value="6" oninput="updateDials()" aria-label="Mission Creep"><p class="small">At the start of each encounter after the first, The Fade regains Creep HP — unless the party ended the previous encounter with a stated exit condition (fact + source).</p></div>
+      <div class="dial"><label>Mission Creep <span id="dialCreepVal">6</span></label><input type="range" id="dialCreep" min="0" max="12" value="6" oninput="updateDials()" aria-label="Mission Creep"><p class="small">At the start of each encounter after the first, The Fade regains Creep HP — unless the party ended the previous encounter with a stated exit condition (fact + source). (Playing the Power Card cancels the next regain.)</p></div>
       <div class="dial"><label>Blowback Arsenal <span id="dialBlowVal">6</span></label><input type="range" id="dialBlow" min="0" max="12" value="6" oninput="updateDials()" aria-label="Blowback Arsenal"><p class="small">Once per encounter, on a party natural 1, The Fade fires the band's own gifted weapons back: 1d8 Hope damage — and the DM names the history the shot came from.</p></div>
     </div>
     <p class="threat" id="threatLevel">Threat Level: Standard — slider total 24 / 48</p>
@@ -233,7 +248,7 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
     <ul>
       <li><strong>Charge:</strong> +1 pip whenever a hero succeeds on an encounter's named DC check by stating the fact first — a bare dice success with no fact stated charges NOTHING (ignorance charges nothing). +1 pip when the party correctly rules a Fake News gambit FAKE. A successful Death Blow fills the track to 5.</li>
       <li><strong>Canvass (camp action):</strong> one hero may Canvass instead of resting or sharpening — the party gains 1d8 Hope and +1 pip. One Canvass per intermission.</li>
-      <li><strong>Play:</strong> when the track is full, on any hero's turn the party may play the card (party consensus; the DM reads the cast line aloud: <em>“Play your power card in hand — cast your vote.”</em>). The Fade takes exactly <strong>12 damage</strong> — flat, unscaled; it is a vote, not a weapon. His Spin bonus to Defense is 0 for the next two encounters. The DM reads his current excuse aloud, strikes it through in the session log, and reads its documented correction. The track empties; it can recharge.</li>
+      <li><strong>Play:</strong> when the track is full, on any hero's turn the party may play the card (party consensus; the DM reads the cast line aloud: <em>“Play your power card in hand — cast your vote.”</em>). The Fade takes exactly <strong>12 damage</strong> — flat, unscaled; it is a vote, not a weapon, and The Fade does not regain Mission Creep hit points at the start of the next encounter — the vote stops his repair. His Spin bonus to Defense is 0 for the next two encounters. The DM reads his current excuse aloud, strikes it through in the session log, and reads its documented correction. The track empties; it can recharge.</li>
       <li><strong>Epilogue:</strong> the DM records PLAYED or unplayed on the epilogue page (vote.gov, Nov 3, 2026): played = <em>“Power Card: PLAYED — and it counted”</em>; won unplayed = <em>“The power card was in your hand all along”</em>; if the party falls in the Boss Gate with the track at 5 unplayed, the session closes on <em>“A power card unplayed changes nothing.”</em></li>
     </ul>
   </section>
