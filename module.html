@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="color-scheme" content="light dark"/>
 <link rel="icon" href="data:,">
-<title>Vote or Fade Away: Game Module</title>
+<title>Power Card — Vote or Fade Away: Game Module</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
@@ -93,23 +93,39 @@ table{width:100%;border-collapse:collapse;font-size:15px} th{font-family:Cinzel,
 .checklist{list-style:none;padding:0;margin:0} .checklist li{padding:10px 0;border-bottom:1px solid #ddd0af;display:flex;gap:10px} .checklist li::before{content:"☐";font-size:20px;line-height:1.2;color:var(--accent)}
 footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);font-size:14px;text-align:center}
 .small{font-size:14px;color:var(--muted)} .weapon-note{color:var(--accent);font-weight:700}
+/* DM GUIDE ADDITIONS */
+.pcard-line{margin-top:10px;border:1.5px dashed var(--accent2);background:var(--accent-light);padding:9px 12px;font-size:15px}
+.dials{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0} @media(max-width:700px){.dials{grid-template-columns:1fr}}
+.dial{background:var(--card);border:1px solid var(--border);padding:14px 16px}
+.dial label{font-family:Cinzel,serif;font-size:13px;letter-spacing:.06em;display:flex;justify-content:space-between;gap:10px}
+.dial label span{font-size:20px;color:var(--accent)}
+.dial input[type=range]{width:100%;accent-color:var(--accent)}
+.dial p{margin:6px 0 0}
+.threat{font-family:Cinzel,serif;font-size:20px;color:var(--accent);margin:10px 0 2px}
+.preset{padding:9px 14px;border:1px solid var(--border);background:var(--card);color:var(--ink);font-family:Cinzel,serif;cursor:pointer;margin:4px 6px 4px 0}
+.preset:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pips{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.pip{width:36px;height:36px;border-radius:50%;border:2px solid #c9a86a;display:flex;align-items:center;justify-content:center;font-family:Cinzel,serif;font-size:15px;color:#c9a86a}
+.pip.on{background:#e9c46a;color:#1c1710;font-weight:700}
+#pcPlay:disabled{opacity:.45;cursor:not-allowed}
+.dm-box ul{margin:8px 0;padding-left:20px} .dm-box li{margin:4px 0} .dm-box p{margin:8px 0 0}
 </style>
 </head>
 <body>
 
 <header class="cover">
   <div class="cover-inner">
-    <div class="module-code"><span>Module VF-1</span><span>Age of Reckoning</span><span>For 3–5 Players + 1 DM</span></div>
+    <div class="module-code"><span>Module VF-2</span><span>Age of Reckoning</span><span>For 3–5 Players + 1 DM</span></div>
     <p class="kicker" style="color:#e9c46a;margin-top:18px">An adventure in the world as it is — and as it could be</p>
-    <h1>VOTE OR<br>FADE AWAY <span>The Battle for a Future</span></h1>
+    <h1>POWER<br>CARD <span>Vote or Fade Away</span></h1>
     <p class="fell">“When the Strait closed and the prices rose and the hiring boards went dark, three young heroes picked up older weapons than swords — facts, records, and a ballot — and marched on The Fade.”</p>
     <div class="cover-meta"><span class="pill">⏱ 90–120 min session</span><span class="pill">🎲 Needs 1× d20 per player</span><span class="pill">📜 No prep — pick up & play</span><span class="pill">Levels 3–5</span></div>
-    <div class="cover-grid"><div><b>1 DM</b><span>Narrator & Keeper of the Record</span></div><div><b>3 Heroes + 2 Sidekicks</b><span>5 playable sheets inside</span></div><div><b>8 Encounters + Boss</b><span>One unforgettable night</span></div></div>
+    <div class="cover-grid"><div><b>1 DM</b><span>Narrator & Keeper of the Record</span></div><div><b>3 Heroes + 2 Sidekicks</b><span>5 playable sheets inside</span></div><div><b>16 Encounters + Boss Gate</b><span>One unforgettable night</span></div></div>
   </div>
 </header>
 
 <nav aria-label="Module contents">
-  <a href="#how">How to Play</a><a href="#heroes">Hero Sheets</a><a href="#monsters">Monsters</a><a href="#adventure">The Adventure</a><a href="#tools">DM Tools</a><a href="#realquest">Real-World Quest</a>
+  <a href="#how">How to Play</a><a href="#dmguide">DM Guide</a><a href="#heroes">Hero Sheets</a><a href="#monsters">Monsters</a><a href="#adventure">The Adventure</a><a href="#tools">DM Tools</a><a href="#realquest">Real-World Quest</a>
 </nav>
 
 <main>
@@ -142,6 +158,84 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
       <tr><td><strong>Damage</strong></td><td>Weapon die + modifier</td><td>Axe of Freedom: 1d12+4 slashing</td></tr>
     </table>
     <p class="small">No dice at home? Use the DM Dice Tray at the bottom of this page, or any phone dice app. Coins work too: heads = success on a coin-flip check for younger tables.</p>
+
+    <div class="dm-box"><strong>DM Rule Box — The Death Blow.</strong> The window opens when The Fade is at <strong>25 HP or fewer</strong> (he is CR 10, 185 HP). On their turn, a hero may attempt their Death Blow <em>instead of attacking</em>: a <strong>DC 18</strong> check in their domain, the question read aloud by the DM.
+      <ul>
+        <li><strong>Maya — The Archer's Eye</strong> (WIS / Perception): the JCPOA timeline question.</li>
+        <li><strong>Dre — The Axeman's Ledger</strong> (INT / Investigation): the fiscal-sum question.</li>
+        <li><strong>Priya — The Healer's Verdict</strong> (WIS / Insight): capability vs. imminence vs. intent — was the burden of proof met?</li>
+      </ul>
+      <p><strong>Success:</strong> The Fade falls on the spot, whatever HP remains. Roll 1d6 — the strike deals his remaining HP + the roll as overkill; read it aloud and total it in the epilogue. Go to the epilogue.</p>
+      <p><strong>Failure:</strong> The Fade regains 15 HP, the hero takes 1d8 Hope damage, and that hero's Death Blow is spent for the session.</p>
+      <p><strong>Cadence:</strong> Maya may attempt in any round inside the window; Priya only every other round; Dre only when The Fade is at 15 HP or fewer.</p>
+      <p><strong>Hard mode:</strong> after a correct Death Blow answer, roll the d6 — on 1–2 The Fade clings on at 1 HP; 3+ finishes him.</p>
+    </div>
+  </section>
+
+  <!-- DM GUIDE -->
+  <section id="dmguide">
+    <div class="section-head"><div><div class="kicker">The DM Guide</div><h2>Running The Fade</h2><p>His difficulty dials, his dice, his logic engine — and the one card that ends him.</p></div></div>
+
+    <h3>The Fade's Difficulty Dials</h3>
+    <p>The DM sets four sliders (0–12, default 6) before play, announces them up front, and locks them once Encounter 1 begins. Set them here — the Threat Level reads out live.</p>
+    <div class="dials">
+      <div class="dial"><label>War Drum Volume <span id="dialDrumVal">6</span></label><input type="range" id="dialDrum" min="0" max="12" value="6" oninput="updateDials()" aria-label="War Drum Volume"><p class="small">Failed checks cost extra Hope: Drum ÷ 2 (round down) additional Hope damage.</p></div>
+      <div class="dial"><label>Sound Bite Spin <span id="dialSpinVal">6</span></label><input type="range" id="dialSpin" min="0" max="12" value="6" oninput="updateDials()" aria-label="Sound Bite Spin"><p class="small">The Fade's Defense rises by Spin ÷ 4 (round down). At Spin 9+, the DM delivers his taunts as polished sound bites — and the party must name the distortion before striking.</p></div>
+      <div class="dial"><label>Mission Creep <span id="dialCreepVal">6</span></label><input type="range" id="dialCreep" min="0" max="12" value="6" oninput="updateDials()" aria-label="Mission Creep"><p class="small">At the start of each encounter after the first, The Fade regains Creep HP — unless the party ended the previous encounter with a stated exit condition (fact + source).</p></div>
+      <div class="dial"><label>Blowback Arsenal <span id="dialBlowVal">6</span></label><input type="range" id="dialBlow" min="0" max="12" value="6" oninput="updateDials()" aria-label="Blowback Arsenal"><p class="small">Once per encounter, on a party natural 1, The Fade fires the band's own gifted weapons back: 1d8 Hope damage — and the DM names the history the shot came from.</p></div>
+    </div>
+    <p class="threat" id="threatLevel">Threat Level: Standard — slider total 24 / 48</p>
+    <p class="small" id="dialEffects"></p>
+    <p><button class="preset" onclick="setDials(6)">Standard — All 6s</button><button class="preset" onclick="setDials(10)">Hard Skill Level — 9–12 Country</button></p>
+    <p class="small">Threat Level readout: slider total 0–12 <strong>Story</strong> • 13–24 <strong>Standard</strong> • 25–36 <strong>Hard</strong> • 37–48 <strong>Nightmare</strong>.</p>
+
+    <h3 style="margin-top:28px">The Dice Layer</h3>
+    <p><strong>Informed Strike stays the gate</strong> — state a real fact, then roll d20 + attack bonus vs. The Fade's Defense. Natural 20 = critical, double damage. A rolled miss is a <em>glancing blow</em> for half damage — an informed swing never wholly whiffs.</p>
+    <p>Each hero tracks their own HP on their sheet below. At <strong>15 HP or fewer</strong> a hero is <em>“clawing at death's door”</em> (disadvantage on CHA checks). At <strong>0 HP</strong> a hero is <strong>DOWN</strong> — out of the rotation until healed. All three down = The Fade wins the session.</p>
+    <h4 class="cinzel" style="font-size:14px;letter-spacing:.1em;margin:18px 0 6px">CAMP ACTIONS — BETWEEN ENCOUNTERS, THE PARTY PICKS EXACTLY ONE</h4>
+    <table>
+      <tr><th>Camp Action</th><th>Effect</th></tr>
+      <tr><td><strong>Healing Hands</strong></td><td>Priya only, and not while she is down: roll the d3 prism, heal one hero for d3 + her HEAL bonus. The <strong>only</strong> way to revive a downed hero.</td></tr>
+      <tr><td><strong>Blessing / Scout's Omen</strong></td><td>Roll the d3 prism: that many Inspiration pips the party may spend (+1 each) on rolls in the next encounter.</td></tr>
+      <tr><td><strong>Sharpen &amp; Brace</strong></td><td>+2 to hit and +2 Defense for the next encounter.</td></tr>
+      <tr><td><strong>Canvass</strong></td><td>See The Power Card, below.</td></tr>
+      <tr><td><strong>Press On</strong></td><td>No benefit. Sometimes the road is the road.</td></tr>
+    </table>
+    <p><strong>Situational +2s — pin these to the DM screen:</strong> Voting Arrows +2 vs. Spin • Axe of Freedom +2 vs. War Drum • Sword of Youth +2 vs. Mission Creep • Fresh Legs +2 for a hero who sat out the last encounter • Cornered +2 for a hero at 30 HP or fewer.</p>
+
+    <h3 style="margin-top:28px">The Fade Logic Engine — DM Move Library</h3>
+    <p>His antics run on the record, non-partisan: every move is a documented fact pattern or a distortion of one — and the documented correction always prints.</p>
+    <div class="rules">
+      <article class="rule"><h3>Rationale Carousel</h3><p>His stated reason rotates as his HP falls: threat → liberation → stability → “we're already there.” The DM announces each rotation; a party member who names the rotation pattern aloud earns Inspiration.</p></article>
+      <article class="rule"><h3>Label Flips</h3><p>The same fighters renamed as the decade demands — “freedom fighters” is the central artifact. Any flipped label must be answerable from the flipping-sides record.</p></article>
+      <article class="rule"><h3>Sound Bites</h3><p>Always a checkable number said wrong, loudly. The DM keeps the documented correction + source face-down. Any hero may spend their turn <strong>Fact-Checking</strong> instead of attacking: correct = the bite collapses (Fade Defense −2 until next encounter); wrong = the bite stands.</p></article>
+      <article class="rule"><h3>The War Chest</h3><p>His jobs pitch — “Full employment, kid — check the history” — used as taunts in Encounters 5 and 10, and as the stated reason on alternate Mission Creep regains (“the factories lobby to stay open”).</p></article>
+    </div>
+
+    <h3 style="margin-top:28px">Hard Skill Level Mode</h3>
+    <p>An optional DM mode, chosen before Encounter 1: his sliders are set 9–12 and his Defense gains +2.</p>
+    <div class="dm-box"><strong>The Fake News Gambit.</strong> About every other encounter, before the party may act, The Fade injects one polished false “fact” — built only as a distortion of a fact already in the record (e.g., “War spending is pure economic gain — everybody wins”; “The national debt costs ordinary families nothing”). The party rules <strong>TRUE / FAKE / PASS</strong> collectively:
+      <ul>
+        <li><strong>FAKE (correct)</strong> — the gambit collapses, his +2 Defense bonus dies, and the party's next hit bites +2 deeper.</li>
+        <li><strong>Fooled</strong> — he heals (Mission Creep) and may quote the lie as established for the rest of that encounter.</li>
+        <li><strong>Either way</strong> — the DM reads the documented correction + source aloud. A lost ruling still teaches the real number.</li>
+      </ul>
+    </div>
+
+    <h3 style="margin-top:28px">Lore Box — Read Aloud: The War Economy</h3>
+    <div class="readaloud">WWII mobilization cut US unemployment from 14.7% (1940) to 1.2% (1944) and created ~17 million civilian jobs, overwhelmingly on federal contracts; modern programs spread contracts deliberately (the F-35 supply chain touches 45+ states), so the spending defends itself politically. The other half: the peak came with rationing and price controls, federal debt rose roughly five-fold 1941–45, output measures activity not welfare — and Eisenhower's 1961 farewell warned against the military-industrial complex and its “unwarranted influence.”</div>
+
+    <h3 style="margin-top:28px">Lore Box — Read Aloud: The Debt Mountain</h3>
+    <div class="readaloud">The federal debt has passed $40 trillion and in the modern era is never paid down — it is refinanced indefinitely at market rates, one reason the term premium sits at ~1.07 and mortgages near 7.4%. Net interest is now among the largest federal outlays, exceeding the defense budget, and buys nothing. Households carry it through higher taxes/fees over time, inflation on wages and savings, and higher-for-longer borrowing rates. The WWII exception: the debt was not repaid then either — it was outgrown, inflated down as a share of GDP across decades of growth. That exit requires the growth.</div>
+
+    <h3 style="margin-top:28px">The Power Card — the Party's Vote</h3>
+    <p>One party-wide Power Card tracker (5 pips) sits in the DM's tray beside the Hope tracker — every player can see it; no hero owns it. The working tracker lives in the <a href="#tools">DM Tools</a> below; the rules are here:</p>
+    <ul>
+      <li><strong>Charge:</strong> +1 pip whenever a hero succeeds on an encounter's named DC check by stating the fact first — a bare dice success with no fact stated charges NOTHING (ignorance charges nothing). +1 pip when the party correctly rules a Fake News gambit FAKE. A successful Death Blow fills the track to 5.</li>
+      <li><strong>Canvass (camp action):</strong> one hero may Canvass instead of resting or sharpening — the party gains 1d8 Hope and +1 pip. One Canvass per intermission.</li>
+      <li><strong>Play:</strong> when the track is full, on any hero's turn the party may play the card (party consensus; the DM reads the cast line aloud: <em>“Play your power card in hand — cast your vote.”</em>). The Fade takes exactly <strong>12 damage</strong> — flat, unscaled; it is a vote, not a weapon. His Spin bonus to Defense is 0 for the next two encounters. The DM reads his current excuse aloud, strikes it through in the session log, and reads its documented correction. The track empties; it can recharge.</li>
+      <li><strong>Epilogue:</strong> the DM records PLAYED or unplayed on the epilogue page (vote.gov, Nov 3, 2026): played = <em>“Power Card: PLAYED — and it counted”</em>; won unplayed = <em>“The power card was in your hand all along”</em>; if the party falls in the Boss Gate with the track at 5 unplayed, the session closes on <em>“A power card unplayed changes nothing.”</em></li>
+    </ul>
   </section>
 
   <!-- HEROES -->
@@ -160,6 +254,7 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
             <div><b>15</b><span>Defense (AC)</span></div><div><b>+5</b><span>Initiative</span></div><div><b>1d10</b><span>Hit Dice</span></div>
           </div>
           <div class="hp-controls"><button onclick="changeHP('maya',-5,34)">−5 HP Damage</button><button onclick="changeHP('maya',5,34)">+5 HP Heal</button><button onclick="changeHP('maya',0,34)">Reset <span data-hp-num="maya">34</span> HP</button></div>
+          <p class="pcard-line"><strong class="cinzel" style="font-size:12px;letter-spacing:.1em">THE POWER CARD</strong><br>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote. Track the pips in the DM Tools tray.</p>
           <p class="small" style="margin-top:8px"><strong>Stake in the fight:</strong> Gas at the pump decides whether she can afford the drive to the better-paying job across town. <strong>Flaw:</strong> Trusts a viral clip if it confirms what she already fears. <strong>Bond:</strong> Her little brother turns 18 before the next election.</p>
         </div>
       </div>
@@ -201,6 +296,7 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
           <div class="badges"><span class="badge">Background: Shop Steward</span><span class="badge">Alignment: Neutral Good</span><span class="badge">Speed 30 ft</span><span class="badge">Prof. Bonus +3</span></div>
           <div class="combat"><div><b>44</b><span>Hit Points</span><div class="hpbar"><i data-hp-bar="dre" style="width:100%"></i></div></div><div><b>16</b><span>Defense (AC)</span></div><div><b>+2</b><span>Initiative</span></div><div><b>1d12</b><span>Hit Dice</span></div></div>
           <div class="hp-controls"><button onclick="changeHP('dre',-5,44)">−5 HP Damage</button><button onclick="changeHP('dre',5,44)">+5 HP Heal</button><button onclick="changeHP('dre',0,44)">Reset <span data-hp-num="dre">44</span> HP</button></div>
+          <p class="pcard-line"><strong class="cinzel" style="font-size:12px;letter-spacing:.1em">THE POWER CARD</strong><br>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote. Track the pips in the DM Tools tray.</p>
           <p class="small" style="margin-top:8px"><strong>Stake:</strong> A hiring freeze killed the promotion he trained six months for. <strong>Flaw:</strong> Swings first, reads second. <strong>Bond:</strong> Coaches kids who ask why adults “let it get like this.”</p>
         </div>
       </div>
@@ -242,6 +338,7 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
           <div class="badges"><span class="badge">Background: Archivist</span><span class="badge">Alignment: Lawful Good</span><span class="badge">Speed 30 ft</span><span class="badge">Spell DC 14</span></div>
           <div class="combat"><div><b>38</b><span>Hit Points</span><div class="hpbar"><i data-hp-bar="priya" style="width:100%"></i></div></div><div><b>17</b><span>Defense (AC)</span></div><div><b>+1</b><span>Initiative</span></div><div><b>1d10</b><span>Hit Dice</span></div></div>
           <div class="hp-controls"><button onclick="changeHP('priya',-5,38)">−5 HP Damage</button><button onclick="changeHP('priya',5,38)">+5 HP Heal</button><button onclick="changeHP('priya',0,38)">Reset <span data-hp-num="priya">38</span> HP</button></div>
+          <p class="pcard-line"><strong class="cinzel" style="font-size:12px;letter-spacing:.1em">THE POWER CARD</strong><br>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote. Track the pips in the DM Tools tray.</p>
           <p class="small" style="margin-top:8px"><strong>Stake:</strong> Did everything “right” and still can't make a first home pencil out. <strong>Flaw:</strong> Won't act until the data is perfect — sometimes too late. <strong>Bond:</strong> Grandmother who never missed an election, even in rain.</p>
         </div>
       </div>
@@ -279,8 +376,8 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
     <h3 style="margin-top:28px">Sidekick Sheets — For a 4th & 5th Player</h3>
     <p>Got a bigger table? Two more complete, playable sheets — sketch your own portrait in the blank box at the table, in pencil, as tradition demands.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" class="monster-grid">
-      <article class="rule"><div style="border:2px dashed var(--muted);height:140px;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;margin-bottom:12px"><span class="small">✏️ DRAW YOUR PENCIL PORTRAIT HERE<br>Leo — Bard of the Group Chat</span></div><h3>LEO PARK, 21 — Bard • Level 4</h3><p><strong>HP 30 • Defense (AC) 14 • Speed 30 • Prof +3</strong><br>STR 10 (0) • DEX 16 (+3) • CON 13 (+1) • INT 14 (+2) • WIS 12 (+1) • CHA 18 (+4)<br><strong>Saves:</strong> DEX +6, CHA +7 • <strong>Skills:</strong> Persuasion +7, Performance +7, Deception +6</p><p><strong>Weapons:</strong> Rapier of the Punchline +6, <strong>1d8+3</strong> piercing (+1 dmg when it follows a successful joke — DM judges); Dagger of Memes +5, 1d4+3, target must save WIS DC 14 or laugh (lose Reaction).</p><p><strong>Spells & Options:</strong> <em>Bardic Inspiration</em> (3/day, +1d6 to ally roll); <em>Healing Word</em> 1d4+4 HP at range; <em>Vicious Fact-Check</em> cantrip — 1d4 psychic + disadvantage if the claim was false; <em>Song of the Line</em> — allies in a queue never lose Hope to boredom.</p></article>
-      <article class="rule"><div style="border:2px dashed var(--muted);height:140px;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;margin-bottom:12px"><span class="small">✏️ DRAW YOUR PENCIL PORTRAIT HERE<br>Sam — Rogue of the Routes</span></div><h3>SAM ORTIZ, 23 — Rogue • Level 4</h3><p><strong>HP 32 • Defense (AC) 15 • Speed 30 • Prof +3</strong><br>STR 11 (0) • DEX 18 (+4) • CON 14 (+2) • INT 15 (+2) • WIS 13 (+1) • CHA 12 (+1)<br><strong>Saves:</strong> DEX +7, INT +5 • <strong>Skills:</strong> Stealth +7, Sleight of Hand +7, Investigation +5, Acrobatics +7</p><p><strong>Weapons:</strong> Shortsword of Shortcuts +7, <strong>1d6+4</strong> + Sneak Attack <strong>+2d6</strong> with advantage or ally adjacent (+1 to hit when flanking with Dre); Hand Crossbow “Reroute” +7, 1d6+4, ignores Strait Chokehold speed penalty.</p><p><strong>Features & Options:</strong> <em>Cunning Action</em> (Dash/Disengage/Hide as bonus); <em>Reroute</em> — once/encounter teleport the party's plan: swap two heroes' positions; <em>Second-Story Work</em> — climb supply chains at full speed; <em>Healing Kit</em> — stabilize + restore 1d6 HP, 3 uses.</p></article>
+      <article class="rule"><div style="border:2px dashed var(--muted);height:140px;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;margin-bottom:12px"><span class="small">✏️ DRAW YOUR PENCIL PORTRAIT HERE<br>Leo — Bard of the Group Chat</span></div><h3>LEO PARK, 21 — Bard • Level 4</h3><p><strong>HP 30 • Defense (AC) 14 • Speed 30 • Prof +3</strong><br>STR 10 (0) • DEX 16 (+3) • CON 13 (+1) • INT 14 (+2) • WIS 12 (+1) • CHA 18 (+4)<br><strong>Saves:</strong> DEX +6, CHA +7 • <strong>Skills:</strong> Persuasion +7, Performance +7, Deception +6</p><p><strong>Weapons:</strong> Rapier of the Punchline +6, <strong>1d8+3</strong> piercing (+1 dmg when it follows a successful joke — DM judges); Dagger of Memes +5, 1d4+3, target must save WIS DC 14 or laugh (lose Reaction).</p><p><strong>Spells & Options:</strong> <em>Bardic Inspiration</em> (3/day, +1d6 to ally roll); <em>Healing Word</em> 1d4+4 HP at range; <em>Vicious Fact-Check</em> cantrip — 1d4 psychic + disadvantage if the claim was false; <em>Song of the Line</em> — allies in a queue never lose Hope to boredom.</p><p class="small"><strong>The Power Card:</strong> One shared card on every sheet — the band votes together.</p></article>
+      <article class="rule"><div style="border:2px dashed var(--muted);height:140px;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;margin-bottom:12px"><span class="small">✏️ DRAW YOUR PENCIL PORTRAIT HERE<br>Sam — Rogue of the Routes</span></div><h3>SAM ORTIZ, 23 — Rogue • Level 4</h3><p><strong>HP 32 • Defense (AC) 15 • Speed 30 • Prof +3</strong><br>STR 11 (0) • DEX 18 (+4) • CON 14 (+2) • INT 15 (+2) • WIS 13 (+1) • CHA 12 (+1)<br><strong>Saves:</strong> DEX +7, INT +5 • <strong>Skills:</strong> Stealth +7, Sleight of Hand +7, Investigation +5, Acrobatics +7</p><p><strong>Weapons:</strong> Shortsword of Shortcuts +7, <strong>1d6+4</strong> + Sneak Attack <strong>+2d6</strong> with advantage or ally adjacent (+1 to hit when flanking with Dre); Hand Crossbow “Reroute” +7, 1d6+4, ignores Strait Chokehold speed penalty.</p><p><strong>Features & Options:</strong> <em>Cunning Action</em> (Dash/Disengage/Hide as bonus); <em>Reroute</em> — once/encounter teleport the party's plan: swap two heroes' positions; <em>Second-Story Work</em> — climb supply chains at full speed; <em>Healing Kit</em> — stabilize + restore 1d6 HP, 3 uses.</p><p class="small"><strong>The Power Card:</strong> One shared card on every sheet — the band votes together.</p></article>
     </div>
   </section>
 
@@ -331,7 +428,7 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
 
   <!-- ADVENTURE -->
   <section id="adventure">
-    <div class="section-head"><div><div class="kicker">Chapter Four • The Adventure</div><h2>Eight Encounters to the Boss</h2><p>Tap each encounter to open the DM's notes. Run them in order — each one hands the party a weapon of understanding for the finale.</p></div></div>
+    <div class="section-head"><div><div class="kicker">Chapter Four • The Adventure</div><h2>Sixteen Encounters to the Boss</h2><p>Tap each encounter to open the DM's notes. Run them in order — each one hands the party a weapon of understanding for the finale.</p></div></div>
 
     <div id="encounters"></div>
   </section>
@@ -340,8 +437,15 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
   <section id="tools">
     <div class="section-head"><div><div class="kicker">Chapter Five</div><h2>DM Tools</h2><p>Everything on this page — nothing leaves the table.</p></div></div>
     <div class="tools">
-      <div class="tool"><h3>🎲 Dice Tray — Tap to Roll</h3><div class="dice-btns"><button onclick="rollDie(4)">d4</button><button onclick="rollDie(6)">d6</button><button onclick="rollDie(8)">d8</button><button onclick="rollDie(10)">d10</button><button onclick="rollDie(12)">d12</button><button onclick="rollDie(20)">d20</button><button onclick="rollDie(100)">d100</button></div><div id="diceResult">—</div><div id="diceLog">No rolls yet. May your first be a Natural 20.</div></div>
+      <div class="tool"><h3>🎲 Dice Tray — Tap to Roll</h3><div class="dice-btns"><button onclick="rollDie(3)">d3 prism</button><button onclick="rollDie(4)">d4</button><button onclick="rollDie(6)">d6</button><button onclick="rollDie(8)">d8</button><button onclick="rollDie(10)">d10</button><button onclick="rollDie(12)">d12</button><button onclick="rollDie(20)">d20</button><button onclick="rollDie(100)">d100</button></div><div id="diceResult">—</div><div id="diceLog">No rolls yet. May your first be a Natural 20.</div></div>
       <div style="background:var(--card);border:1px solid var(--border);padding:20px"><h3 style="margin-top:0">Session Checklist for the DM</h3><ul class="checklist"><li>Heroes chosen, names said aloud in character</li><li>Hope Pool explained, snacks deployed</li><li>Read-Aloud boxes read <em>dramatically</em> — ham is encouraged</li><li>Every player gets at least one Informed Strike moment</li><li>Boss defeated? Read the Real-World Quest as the epilogue</li><li>Take a party photo — this is the campaign poster now</li></ul></div>
+    </div>
+    <div class="tool" style="margin-top:14px"><h3>🗳 The Power Card Tracker — the Party's Vote</h3>
+      <p style="margin:0">One shared card — no hero owns it, every player can see it. Facts charge it; playing it casts the vote.</p>
+      <div class="pips" id="pcPips"><span class="pip">1</span><span class="pip">2</span><span class="pip">3</span><span class="pip">4</span><span class="pip">5</span></div>
+      <p id="pcStatus" style="font-family:Cinzel,serif;letter-spacing:.04em">CHARGING · 0/5</p>
+      <div class="dice-btns"><button onclick="chargePC()">+1 Charge — Fact Stated, Check Passed</button><button id="pcPlay" onclick="playPC()" disabled>Play the Power Card — Cast the Vote</button><button onclick="resetPC()">Reset Track</button></div>
+      <p class="small" style="color:#d9c9a3;margin-top:10px">Playing it: the DM reads the cast line aloud — “Play your power card in hand — cast your vote.” The Fade takes exactly 12 damage (flat, unscaled — it is a vote, not a weapon), his Spin bonus to Defense is 0 for the next two encounters, and the DM reads his current excuse aloud, strikes it through in the session log, and reads its documented correction. In the epilogue, record it: PLAYED — and it counted.</p>
     </div>
   </section>
 
@@ -357,7 +461,7 @@ footer{max-width:1060px;margin:0 auto;padding:24px 16px 40px;color:var(--muted);
     <p class="small" style="margin-top:14px">Sources woven through this module: Congressional Research Service & Reuters on the Strait of Hormuz; IMF & OECD outlooks on energy, fertilizer and growth; NBER research on who pays tariffs; Federal Reserve History on the 1970s oil shocks; U.S. State Department history on the JCPOA timeline (deal 2015, U.S. withdrawal May 8, 2018). DM: if a player asks “is that real?” — that's a win. Look it up together.</p>
   </section>
 </main>
-<footer>Vote or Fade Away — Game Module VF-1 • A fan-made, educational tabletop module for home play. Not affiliated with Wizards of the Coast. Heroes, monsters & mechanics are original to this module; play it, print the sheets at home, pass it to the next table. • Age of Reckoning, 2026</footer>
+<footer>Power Card — Vote or Fade Away — Game Module VF-2 • A fan-made, educational tabletop module for home play. Not affiliated with Wizards of the Coast. Heroes, monsters & mechanics are original to this module; play it, print the sheets at home, pass it to the next table. • Age of Reckoning, 2026</footer>
 
 <script>
 var ENCOUNTERS=[
@@ -368,7 +472,16 @@ var ENCOUNTERS=[
  {n:5,t:"Aftershocks — Bread & Chips",loc:"Fields & the Clean Room",dc:"CON / INT DC 13",read:"Months later, in places no missile fell: a farmer staring at fertilizer prices. An engineer staring at a fab schedule, waiting on helium and specialty gases that travel the same seas.",challenge:"Connect Hormuz to (a) food prices months later and (b) semiconductors — without claiming every chip sails through the Strait.",success:"Party earns Allies: Farmers & Engineers (advantage in finale).",fail:"Aftershock hits late: lose 1d8 Hope at start of Encounter 7.",lore:"IMF: ~1/3 of fertilizer shipments transit Hormuz. Helium & sulfur chains also exposed; fabs die on missing $20 parts, not just missing chips."},
  {n:6,t:"The Rate-Freeze Cavern",loc:"Vault of the Central Bankers",dc:"WIS DC 14",read:"Two levers, both wired to alarms. Pull one, inflation cools and jobs freeze. Pull the other, jobs thaw and prices climb. The Golem guarding them isn't evil. It's exhausted.",challenge:"Explain the central bank's trade-off in one honest paragraph. No villain, no hero — just the dilemma.",success:"Golem steps aside and gifts the Lever of Patience (+2 vs. Panic).",fail:"Freeze: party speed 0 for one encounter; debate while thawing.",lore:"OECD projects ~2.9% global growth in 2026 with higher prices & rates weighing on activity. Monetary policy cannot create oil or reopen a lane."},
  {n:7,t:"The Spiral Watch",loc:"Tower of Expectations",dc:"INT DC 15",read:"Alarms labelled PRICES! ring constantly. The Watcher's job is harder: tell a one-off spike from the true monster — a spiral, where wages chase prices chase wages and no one believes it will end.",challenge:"List at least 4 spiral indicators: broad core/services inflation, unit labor costs outrunning productivity, repeated repricing, tight labor, unanchored long-term expectations. Two or fewer = it's a spike, not a spiral.",success:"Specter flees: party immune to Panic in the finale.",fail:"False alarm: party wastes resources fighting a spike like a spiral — lose 1d6 Hope.",lore:"Watch core & services inflation, breadth, wage growth minus productivity, and 5–10yr expectations — not headline alone. (Federal Reserve research)"},
- {n:8,t:"The Record, Not the Label — Boss Gate",loc:"Hall of Two Banners",dc:"CHA / Persuasion DC 14",read:"Two banners hang over the final door, each promising it alone can save you. Beneath them, a quieter desk: voting records, budgets, roll calls. The Fade is terrified of the desk.",challenge:"FINAL DEBATE: Each hero must judge one candidate — any party — against the module's test: predictable trade, alliances, diversified energy, restrained force, credible fiscal math, compromise. Then the door opens.",success:"Party enters finale Blessed (+1d4 to attacks) and The Fade starts at −15 HP.",fail:"Door opens anyway — it always does — but The Fade starts with a Lock on its box.",lore:"Midterms control Congress: purse, oversight, sanctions, trade & war-powers debates. Vote the record in your district — across party lines if that's where the record leads."}
+ {n:8,t:"The Record, Not the Label",loc:"Hall of Two Banners",dc:"CHA / Persuasion DC 14",read:"Two banners hang over the hall, each promising it alone can save you. Beneath them, a quieter desk: voting records, budgets, roll calls. The Fade is terrified of the desk.",challenge:"THE DEBATE: Each hero must judge one candidate — any party — against the module's test: predictable trade, alliances, diversified energy, restrained force, credible fiscal math, compromise. Then the road on opens.",success:"Party earns the Record-Keeper's Blessing (+1d4 to one check at the Boss Gate) and The Fade loses 10 HP now — it hates being read.",fail:"The banners win the room — for now: lose 1d6 Hope, and The Fade notes which slogans worked on you.",lore:"Midterms control Congress: purse, oversight, sanctions, trade & war-powers debates. Vote the record in your district — across party lines if that's where the record leads."},
+ {n:9,t:"Receipts: The Forecasts",loc:"Hall of Dated Warnings",dc:"INT / Investigation DC 14",read:"On a wall hang forecasts with dates stamped on them — written BEFORE the war, not after. June 2025: oil $120–130, gas near $4.50 a gallon if the Strait closed. The room is quiet, because 2026 read the wall and obeyed it.",challenge:"Find the forecast that was written before the event and state its numbers and date. Then answer the DM's question: why does a warning with a date on it weigh more than a warning shouted after the fact?",success:"Party earns the Receipt of Foresight: once in the finale, reroll any one failed check — the party saw this coming, in writing.",fail:"The wall fades: lose 1d6 Hope; Disinfo Imps chant 'nobody could have known' until a hero spends an action reading a date aloud.",lore:"JPMorgan, June 2025: a Hormuz closure scenario put oil at $120–130 and U.S. gas near $4.50/gal. 2026 tracked the forecast closely. A dated, numbered forecast is a receipt, not a vibe."},
+ {n:10,t:"The Invisible Tax",loc:"The Bond Market Depths",dc:"INT DC 15",read:"No missile lands here. No pump runs dry. Yet everything quietly costs more to borrow: the 10-year Treasury at 5.31%, the term premium swollen, mortgages hovering near 7.4%. The war reached this family's kitchen table through the price of money itself.",challenge:"Trace the chain out loud: war risk → investors demand more to lend long → Treasury yields and term premium rise → mortgage rates follow. Name which link touches a first-time buyer's monthly payment.",success:"Party earns the Ledger Lens (+1 to all fiscal/finance checks); each hero marks one thing they would check before believing a rate headline.",fail:"The tax stays invisible: party takes 1d6 Hope damage and the next shop's prices rise — borrowing costs more there too.",lore:"The invisible tax is the cost of capital: 10-year ~5.31%, term premium ~1.07, mortgages ~7.4%. Wars tax families through borrowing costs long after the headlines move on."},
+ {n:11,t:"“Two Weeks Away?”",loc:"The Three Locked Doors",dc:"WIS / Insight DC 15",read:"Three doors stand in a row: ENRICH, WEAPONIZE, DELIVER. Behind the first, a real stockpile — 441 kg of enriched material. A voice beyond the third door shouts 'two weeks!' The DM smiles: 'Which door is he standing behind? Count the doors between.'",challenge:"Decompose the claim: separate (1) the stockpile fact, (2) the weaponization step (1–2+ years by the brief's sourcing), (3) delivery. Explain how 'obliterated' and 'two weeks away' cannot both describe the same program eight months apart without new evidence.",success:"Party earns the Three-Doors Key: The Fade loses 10 HP now — it hates having its claims taken apart into steps.",fail:"The shout wins the room: lose 1d6 Hope and The Fade gains a Lock — one hero's next Informed Strike is muted.",lore:"Enrichment is step one of three. A stockpile is capability, not a weapon; weaponization and a deliverable device are separate, slower steps. Judge claims step by step: capability, imminence, intent."},
+ {n:12,t:"The Empty Cushion",loc:"The Strategic Reserve Vaults",dc:"CON / Survival DC 14",read:"The vaults echo. Inventories sit some 509 million barrels below where they stood before the war, and the spare capacity that once absorbed shocks has already been spent absorbing this one. The next shock, whenever it comes, lands on a system with no slack left.",challenge:"Explain what a 'cushion' is in an oil system (inventories + spare capacity), why spending it changes the NEXT crisis, and name one honest limit of the argument (a cushion can be rebuilt — at a price).",success:"Party earns Allies: The Storekeepers (advantage on one finale check) and +1d8 Hope — someone finally counted what was in the vault.",fail:"Nobody counts: at the start of the Boss Gate, the party takes 1d8 Hope damage when the second shock lands on empty shelves.",lore:"Inventories ~509M barrels below pre-war levels, spare capacity largely spent. Resilience is a stock, not a mood — it is used up by the first shock and must be rebuilt before the second."},
+ {n:13,t:"The Inheritance (Debt, in Context)",loc:"The First Ledger",dc:"INT / Investigation DC 15",read:"One last ledger, opened at the beginning. In 2001, before 9/11, gross federal debt stood at roughly 57% of GDP — and the federal government was running a surplus; the debt was shrinking relative to the economy. Then came two decades of decisions: the post-9/11 wars in Afghanistan and Iraq fought on borrowed money, tax cuts, the 2008 financial crisis, the pandemic — and now the Iran war. The ratio crossed 100% in the early 2010s and stands past 120% of GDP today, the $40 trillion-plus stock refinanced forever. Maya, Dre and Priya didn't sign any of it. They inherited it.",challenge:"Answer the game's question aloud: why does the debt-to-GDP percentage matter more than the $40 trillion headline number?",success:"Read the game's own closing line: 'You didn't run up this bill — you inherited it. The one lever your generation holds over it is who you send to Congress. That's the power card.' Party earns +1 Power Card charge in addition to any encounter reward.",fail:"The headline number is the fog The Fade loves: a debt is only as heavy as the economy carrying it — at ~57% of GDP with a surplus the debt was shrinking on its own; past ~120% with chronic deficits, interest alone eats the next generation's choices first. Party takes 1d6 Hope damage.",lore:"The ratio measures the debt against the economy that has to carry it. Interest claims a growing share of every tax dollar before a single school, ship, or road is funded — so each generation's real choices narrow unless the people sent to Congress bend the line. Source: U.S. Treasury / CBO historical debt and GDP tables, 2001–2026."},
+ {n:14,t:"The War Chest",loc:"The Chest of Paychecks",dc:"WIS / Insight DC 14",read:"The Fade's strongest card isn't a lie — it's a paycheck. War mobilization really does put a nation to work: in World War II the contracts flowed to factories in every corner of the country, and the modern machine is built the same way on purpose. Priya reads the fine print on the chest. The Fade taunts: 'Jobs, kid. Millions of them. You wouldn't vote against jobs, would you?'",challenge:"WWII mobilization cut U.S. unemployment from 14.7% (1940) to 1.2% (1944), almost entirely on federal war contracts. Explain why that makes war spending politically hard to stop — even a war that has lost its reason.",success:"The Sword finds the seam in the chest: contracts are local jobs in nearly every district — the modern F-35 supply chain spans 45+ states — so the machine has a constituency everywhere and defends itself; and Eisenhower, the general who won that war, used his 1961 farewell address to warn against the 'military-industrial complex.' Party earns the Ledger Lens upgrade: advantage on one future fiscal check (DM tracks).",fail:"The chest stays shut: party takes 1d6 Hope damage, and The Fade's next taunt lands unchallenged — jobs rhetoric unanswered is his best armor. DM reads the bad-feedback line: 'Not magic and not law — constituency.'",lore:"The jobs are real — and so is the other half: that boom came with rationing and price controls, and output is not welfare; building things to be destroyed counts as activity while wealth is spent. Source: BLS historical unemployment, 1940–44; F-35 program supply-chain distribution (45+ states); Eisenhower farewell address, Jan 17, 1961."},
+ {n:15,t:"“Freedom Fighters”",loc:"The Hindu Kush, 1980s",dc:"INT / History DC 14",read:"The Soviet Union has invaded Afghanistan, and Washington answers with money, weapons and praise — billions routed to the Afghan mujahideen fighting the occupation. The label on the crate reads 'freedom fighters.' Dre checks what the label became. The Fade taunts: 'Heroes! Freedom fighters! (Read the decade on the label, kid.)'",challenge:"The United States armed, funded, and publicly praised the mujahideen as 'freedom fighters' for fighting the Soviets. State what happened next — and what it proves about weapons and labels.",success:"The Axe splits the label: the networks and commanders formed in that war became al-Qaeda and the Taliban; after 2001 the United States fought them for twenty years — the weapons and expertise outlived the alignment that delivered them. Same fighters, same weapons — renamed by the decade.",fail:"The label wins the room: party takes 1d6 Hope damage. DM reads: 'The weapons remained after the label changed. That's blowback: the past, firing into the present.'",lore:"Arm them today, fight them tomorrow: the alignment expires; the arsenal doesn't. Source: the documented record of Operation Cyclone (1979–89) and the post-2001 war in Afghanistan."},
+ {n:16,t:"The Long Fuse (Final Encounter)",loc:"Tehran, 1953",dc:"WIS DC 16",read:"Iran's elected Prime Minister, Mohammad Mossadegh, has nationalized the oil industry — and the United States and Britain answer with a covert coup that removes him and consolidates the Shah's power. The fuse lit that year burns for three generations. The band stands at the end of it. The Fade taunts: '1953? Ancient history, kid. Nothing that old can touch you.'",challenge:"Trace the fuse aloud, link by link: how does a coup in 1953 explain a war in 2026?",success:"Read the game's final-blow line: 'The fuse was seventy-three years long, and it still reached this generation's door. Decisions made before you were born are not ancient history — they're the board you're playing on. The one move the inheritors hold is the vote. Play it informed.' The Boss Gate opens.",fail:"The fuse stays invisible: party takes 1d8 Hope damage entering the Boss Gate. DM reads: 'Coup (1953) → revolution defined against it (1979) → the Islamic Republic, adversary of 2026 — the longest blowback arc in the file.'",lore:"The 1953 U.S.- and UK-backed coup removed Mossadegh and consolidated the Shah; the 1979 revolution that overthrew the Shah defined itself against that intervention, and the Islamic Republic it created is the adversary of 2026. Source: the declassified record of the 1953 Iran coup (Operation Ajax); the 1979 Iranian Revolution."},
+ {n:17,t:"The Record, Not the Label — Boss Gate",loc:"Hall of Two Banners — The Final Door",dc:"CHA / Persuasion DC 15",read:"The road ends where it was always going to: two banners over the final door, each promising it alone can save you, and beneath them the quieter desk — voting records, budgets, roll calls. The party arrives carrying everything the road taught them: receipts, ledgers, a three-doors key, a counted vault. The Fade is terrified of the desk.",challenge:"FINAL DEBATE AT THE GATE: Each hero must judge one candidate — any party — against the module's test: predictable trade, alliances, diversified energy, restrained force, credible fiscal math, compromise. Facts first, stated out loud — every fact stated at the gate charges the Power Card. Then the door opens, and the finale begins.",success:"Party enters the finale Blessed (+1d4 to attacks) and The Fade starts at −15 HP.",fail:"Door opens anyway — it always does — but The Fade starts with a Lock on its box.",lore:"Midterms control Congress: purse, oversight, sanctions, trade & war-powers debates. Vote the record in your district — across party lines if that's where the record leads."}
 ];
 var wrap=document.getElementById('encounters');
 ENCOUNTERS.forEach(function(e){
@@ -395,6 +508,46 @@ function rollAbility(hero,ab,mod){
   logDice(hero+' '+ab+' check: d20('+r+') + '+mod+' = '+total+(r===20?' ★ CRITICAL TRUTH':r===1?' ✦ Misinformation surge':''));
   document.getElementById('tools').scrollIntoView({behavior:'smooth',block:'center'});
 }
+/* DIFFICULTY DIALS */
+function dialVal(id){var el=document.getElementById(id); return el?parseInt(el.value,10):6;}
+function updateDials(){
+  var drum=dialVal('dialDrum'),spin=dialVal('dialSpin'),creep=dialVal('dialCreep'),blow=dialVal('dialBlow');
+  document.getElementById('dialDrumVal').textContent=drum;
+  document.getElementById('dialSpinVal').textContent=spin;
+  document.getElementById('dialCreepVal').textContent=creep;
+  document.getElementById('dialBlowVal').textContent=blow;
+  var total=drum+spin+creep+blow;
+  var tier=total<=12?'Story':total<=24?'Standard':total<=36?'Hard':'Nightmare';
+  document.getElementById('threatLevel').textContent='Threat Level: '+tier+' — slider total '+total+' / 48';
+  document.getElementById('dialEffects').innerHTML='At these settings: failed checks cost <strong>+'+Math.floor(drum/2)+' extra Hope</strong> (War Drum) • The Fade\'s Defense <strong>+'+Math.floor(spin/4)+'</strong> from Spin'+(spin>=9?' — Spin 9+: name the distortion in his sound bites before striking':'')+' • Mission Creep regains <strong>'+creep+' HP</strong> at each encounter start unless the party stated an exit condition • Blowback Arsenal live at <strong>'+blow+'</strong> (once per encounter, on a party natural 1: 1d8 Hope, DM names the history).';
+}
+function setDials(v){
+  ['dialDrum','dialSpin','dialCreep','dialBlow'].forEach(function(id){document.getElementById(id).value=v;});
+  updateDials();
+  logDice('Difficulty dials set to '+v+' across the board — Threat Level updated on the DM Guide.');
+}
+updateDials();
+/* POWER CARD TRACKER */
+var PC=0;
+function renderPC(){
+  var pips=document.querySelectorAll('#pcPips .pip');
+  for(var i=0;i<pips.length;i++){ pips[i].classList.toggle('on',i<PC); }
+  document.getElementById('pcStatus').textContent= PC>=5 ? 'FULL · 5/5 — THE PARTY MAY PLAY THE CARD ON ANY HERO\u2019S TURN' : 'CHARGING · '+PC+'/5';
+  document.getElementById('pcPlay').disabled = PC<5;
+}
+function chargePC(){
+  if(PC>=5){ logDice('Power Card already full at 5/5 — play it or hold it.'); return; }
+  PC++; renderPC();
+  logDice('Power Card +1 pip — now '+PC+'/5. (A fact was stated first; ignorance charges nothing.)');
+}
+function resetPC(){ PC=0; renderPC(); logDice('Power Card track reset to 0/5.'); }
+function playPC(){
+  if(PC<5) return;
+  PC=0; renderPC();
+  logDice('POWER CARD PLAYED — "Play your power card in hand — cast your vote." The Fade takes exactly 12 damage; his Spin bonus to Defense is 0 for the next two encounters; his current excuse is struck through and its documented correction read aloud.');
+  changeHP('fade',-12,185);
+}
+renderPC();
 function logDice(msg){
   var el=document.getElementById('diceLog'); var time=new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
   el.innerHTML='<div>['+time+'] '+msg+'</div>'+(el.dataset.started?el.innerHTML:'');
