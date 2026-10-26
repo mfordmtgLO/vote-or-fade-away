@@ -439,6 +439,73 @@
   .power-card .power-state{color:#7a4a00}
   @media (prefers-color-scheme: dark){.power-card .power-state{color:var(--amber)}}
   .power-card p{margin:6px 0 0;font-size:.84rem;color:inherit}
+
+  /* ---------- Campaigns of Friends: move scenes & scrolling tales ----------
+     Each hero sheet carries three small square scene tiles — the hero's own
+     attack-stance portrait from ART, animated with CSS only (no new images)
+     plus an effect overlay per move — and one fixed tale panel beneath them.
+     Tapping a tile selects that move's campaign tale: the panel shows its
+     title and auto-scrolls the tale in a smooth vertical loop (content is
+     duplicated so the -50% loop is seamless; the panel clips, the page never
+     scrolls). Tapping the panel pauses / resumes the scroll. Under
+     prefers-reduced-motion nothing animates and the panel scrolls by hand. */
+  .campaigns{margin-top:12px;border-top:1px dashed var(--line);padding-top:12px}
+  .campaigns-head{display:block;font-family:"JetBrains Mono",monospace;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+  .move-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+  .move-tile{display:block;width:100%;padding:0;border:2px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--ink);overflow:hidden;text-align:center}
+  .move-tile .tile-stage{position:relative;display:block;width:100%;aspect-ratio:1/1;overflow:hidden;background:#f4f1ea}
+  .move-tile .tile-stage img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+  .move-tile .tile-name{display:block;padding:6px 3px 7px;font-size:.7rem;font-weight:800;line-height:1.25}
+  .move-tile.sel{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal)}
+  .move-tile .fx{position:absolute;pointer-events:none;display:block}
+  .fx-streak{left:-35%;top:36%;width:55%;height:5px;border-radius:3px;background:linear-gradient(90deg,transparent,#e8a317 55%,#fff3cf);opacity:0;animation:fxStreak 2.6s ease-in infinite}
+  @keyframes fxStreak{0%,32%{transform:translateX(0);opacity:0}40%{opacity:1}60%,100%{transform:translateX(280%);opacity:0}}
+  .fx-sweep{inset:0;background:linear-gradient(115deg,transparent 34%,rgba(255,211,77,.5) 50%,transparent 66%);transform:translateX(-130%);animation:fxSweep 3.4s ease-in-out infinite}
+  @keyframes fxSweep{0%,15%{transform:translateX(-130%)}60%,100%{transform:translateX(130%)}}
+  .fx-arc{left:50%;bottom:-46%;width:118%;aspect-ratio:1;border:4px solid rgba(14,124,116,.85);border-radius:50%;opacity:0;animation:fxArc 2.9s ease-out infinite}
+  .fx-arc.gold{border-color:rgba(232,163,23,.9)}
+  @keyframes fxArc{0%,52%{opacity:0;transform:translateX(-50%) scale(.94)}66%{opacity:.9}88%,100%{opacity:0;transform:translateX(-50%) scale(1.03)}}
+  .fx-ring{left:50%;top:52%;width:32%;aspect-ratio:1;border:3px solid rgba(232,163,23,.9);border-radius:50%;opacity:0;transform:translate(-50%,-50%) scale(.35);animation:fxRing 2.4s ease-out infinite}
+  .fx-ring.r2{animation-delay:1.2s;border-color:rgba(255,255,255,.75)}
+  @keyframes fxRing{0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}16%{opacity:.95}72%,100%{opacity:0;transform:translate(-50%,-50%) scale(2.7)}}
+  .fx-glow{left:50%;bottom:-8%;width:92%;height:58%;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 100%,rgba(255,178,44,.8),rgba(255,122,26,.28) 55%,transparent 76%);opacity:.35;animation:fxGlow 2.8s ease-in-out infinite}
+  @keyframes fxGlow{0%,100%{opacity:.3;transform:translateX(-50%) translateY(7%) scale(.94)}50%{opacity:.9;transform:translateX(-50%) translateY(-5%) scale(1.06)}}
+  .fx-dome{left:50%;bottom:0;width:120%;height:82%;transform:translateX(-50%);border:3px solid rgba(150,225,255,.6);border-bottom:none;border-radius:999px 999px 0 0;background:radial-gradient(ellipse at 50% 108%,transparent 52%,rgba(170,230,255,.3));animation:fxDome 3.1s ease-in-out infinite}
+  @keyframes fxDome{0%,100%{opacity:.4}50%{opacity:1}}
+  .anim-loose img{animation:tileLoose 2.6s ease-in-out infinite}
+  @keyframes tileLoose{0%,100%{transform:translateX(0) scale(1.16)}30%{transform:translateX(-4%) scale(1.16)}44%{transform:translateX(5%) scale(1.19)}62%{transform:translateX(1%) scale(1.16)}}
+  .anim-bob img{animation:tileBob 3.4s ease-in-out infinite}
+  @keyframes tileBob{0%,100%{transform:translateY(0) scale(1.15)}50%{transform:translateY(-3.5%) scale(1.15)}}
+  .anim-brace img{animation:tileBrace 3s ease-in-out infinite}
+  @keyframes tileBrace{0%,100%{transform:translateY(1%) scale(1.17) rotate(0deg)}50%{transform:translateY(4.5%) scale(1.16) rotate(-1.3deg)}}
+  .anim-swing img{transform-origin:50% 92%;animation:tileSwing 2.4s ease-in-out infinite}
+  @keyframes tileSwing{0%,100%{transform:rotate(-7deg) scale(1.19)}36%{transform:rotate(-11deg) scale(1.19)}52%{transform:rotate(9deg) scale(1.21)}70%{transform:rotate(2deg) scale(1.19)}}
+  .anim-pulse img{animation:tilePulse 2.4s ease-in-out infinite}
+  @keyframes tilePulse{0%,100%{transform:scale(1.15)}22%{transform:scale(1.26)}42%{transform:scale(1.17)}}
+  .anim-planted img{animation:tilePlant 3.2s ease-in-out infinite}
+  @keyframes tilePlant{0%,100%{transform:translateY(1.5%) scale(1.17)}50%{transform:translateY(3%) scale(1.16)}}
+  .anim-lunge img{animation:tileLunge 2.5s ease-in-out infinite}
+  @keyframes tileLunge{0%,100%{transform:translateX(-2%) scale(1.16)}30%{transform:translateX(-4.5%) scale(1.16)}46%{transform:translateX(6%) scale(1.21)}64%{transform:translateX(2%) scale(1.16)}}
+  .anim-heal img{animation:tileHeal 2.8s ease-in-out infinite}
+  @keyframes tileHeal{0%,100%{transform:scale(1.15)}50%{transform:scale(1.21)}}
+  .tale-panel{margin-top:10px;border:2px solid var(--line);border-radius:10px;background:var(--panel2);height:176px;display:flex;flex-direction:column;overflow:hidden;cursor:pointer;text-align:left;width:100%}
+  .tale-panel .tale-title{display:none;padding:9px 12px 0;font-family:"Anton",sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.03em;font-size:.95rem;line-height:1.2;color:var(--ink)}
+  .tale-panel.has-tale .tale-title{display:block}
+  .tale-panel .tale-view{flex:1;min-height:0;overflow:hidden;padding:6px 12px 8px}
+  .tale-panel:not(.has-tale) .tale-view{display:flex;align-items:center;justify-content:center}
+  .tale-scroll p{margin:0 0 10px;font-size:.88rem;line-height:1.55;color:var(--ink)}
+  .tale-scroll .tale-prompt{margin:0;text-align:center;font-style:italic;color:var(--muted)}
+  .tale-scroll.playing{animation:taleScroll 42s linear infinite}
+  .tale-panel.paused .tale-scroll{animation-play-state:paused}
+  @keyframes taleScroll{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
+  .tale-state{display:none;padding:0 12px 8px;font-family:"JetBrains Mono",monospace;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .tale-panel.has-tale .tale-state{display:block}
+  @media (prefers-reduced-motion: reduce){
+    .move-tile .tile-stage img,.move-tile .fx{animation:none}
+    .tale-scroll.playing{animation:none}
+    .tale-panel .tale-view{overflow-y:auto}
+    .tale-scroll p[aria-hidden="true"]{display:none}
+  }
   .power-play{margin:12px 16px 0;border:2px solid var(--amber);background:#2a2110;border-radius:10px;padding:14px 16px}
   .power-play[hidden]{display:none}
   .power-play .pp-tag{font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block}
@@ -601,6 +668,28 @@
           <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote.</p>
         </div>
         <p class="cap-note">Ranger caps: strength tops out at 12 and magic stays low — her power is aim, nerve, and knowing the ground.</p>
+        <div class="campaigns">
+          <span class="campaigns-head">Campaigns of Friends</span>
+          <div class="move-tiles" role="group" aria-label="Maya's campaign moves">
+            <button type="button" class="move-tile" data-move-tile="maya" data-move="0" aria-pressed="false">
+              <span class="tile-stage anim-loose"><img data-img="maya" alt="" /><span class="fx fx-streak"></span></span>
+              <span class="tile-name">Voting Arrows</span>
+            </button>
+            <button type="button" class="move-tile" data-move-tile="maya" data-move="1" aria-pressed="false">
+              <span class="tile-stage anim-bob"><img data-img="maya" alt="" /><span class="fx fx-sweep"></span></span>
+              <span class="tile-name">Scout's Omen</span>
+            </button>
+            <button type="button" class="move-tile" data-move-tile="maya" data-move="2" aria-pressed="false">
+              <span class="tile-stage anim-brace"><img data-img="maya" alt="" /><span class="fx fx-arc"></span></span>
+              <span class="tile-name">Swift Brace</span>
+            </button>
+          </div>
+          <div class="tale-panel" data-tale-panel="maya" role="button" tabindex="0" aria-label="Maya's campaign tale panel — tap to pause or resume the scrolling tale">
+            <span class="tale-title" data-tale-title></span>
+            <div class="tale-view"><div class="tale-scroll" data-tale-scroll><p class="tale-prompt">Tap a move to hear its campaign tale.</p></div></div>
+            <span class="tale-state" data-tale-state></span>
+          </div>
+        </div>
         <button class="pick-btn" type="button" aria-pressed="false">Send Maya into battle →</button>
       </div>
       <div class="fighter" data-fighter="dre">
@@ -634,6 +723,28 @@
           <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote.</p>
         </div>
         <p class="cap-note">Warrior caps: strength tops out at 12 and constitution runs highest in the band — books and spells were never his department.</p>
+        <div class="campaigns">
+          <span class="campaigns-head">Campaigns of Friends</span>
+          <div class="move-tiles" role="group" aria-label="Dre's campaign moves">
+            <button type="button" class="move-tile" data-move-tile="dre" data-move="0" aria-pressed="false">
+              <span class="tile-stage anim-swing"><img data-img="dre" alt="" /></span>
+              <span class="tile-name">Axe of Freedom</span>
+            </button>
+            <button type="button" class="move-tile" data-move-tile="dre" data-move="1" aria-pressed="false">
+              <span class="tile-stage anim-pulse"><img data-img="dre" alt="" /><span class="fx fx-ring"></span><span class="fx fx-ring r2"></span></span>
+              <span class="tile-name">Freedom's Shout</span>
+            </button>
+            <button type="button" class="move-tile" data-move-tile="dre" data-move="2" aria-pressed="false">
+              <span class="tile-stage anim-planted"><img data-img="dre" alt="" /><span class="fx fx-arc gold"></span></span>
+              <span class="tile-name">Iron Guard</span>
+            </button>
+          </div>
+          <div class="tale-panel" data-tale-panel="dre" role="button" tabindex="0" aria-label="Dre's campaign tale panel — tap to pause or resume the scrolling tale">
+            <span class="tale-title" data-tale-title></span>
+            <div class="tale-view"><div class="tale-scroll" data-tale-scroll><p class="tale-prompt">Tap a move to hear its campaign tale.</p></div></div>
+            <span class="tale-state" data-tale-state></span>
+          </div>
+        </div>
         <button class="pick-btn" type="button" aria-pressed="false">Send Dre into battle →</button>
       </div>
       <div class="fighter" data-fighter="priya">
@@ -667,6 +778,28 @@
           <p>One shared card on every sheet — the band votes together. Facts charge it; playing it casts the vote.</p>
         </div>
         <p class="cap-note">Healer caps: strength tops out at 8 — but intelligence, magic and healing run higher than anyone else in the band.</p>
+        <div class="campaigns">
+          <span class="campaigns-head">Campaigns of Friends</span>
+          <div class="move-tiles" role="group" aria-label="Priya's campaign moves">
+            <button type="button" class="move-tile" data-move-tile="priya" data-move="0" aria-pressed="false">
+              <span class="tile-stage anim-lunge"><img data-img="priya" alt="" /><span class="fx fx-streak"></span></span>
+              <span class="tile-name">Sword of Youth</span>
+            </button>
+            <button type="button" class="move-tile" data-move-tile="priya" data-move="1" aria-pressed="false">
+              <span class="tile-stage anim-heal"><img data-img="priya" alt="" /><span class="fx fx-glow"></span></span>
+              <span class="tile-name">Healing Hands</span>
+            </button>
+            <button type="button" class="move-tile" data-move-tile="priya" data-move="2" aria-pressed="false">
+              <span class="tile-stage anim-bob"><img data-img="priya" alt="" /><span class="fx fx-dome"></span></span>
+              <span class="tile-name">Ward of Dawn</span>
+            </button>
+          </div>
+          <div class="tale-panel" data-tale-panel="priya" role="button" tabindex="0" aria-label="Priya's campaign tale panel — tap to pause or resume the scrolling tale">
+            <span class="tale-title" data-tale-title></span>
+            <div class="tale-view"><div class="tale-scroll" data-tale-scroll><p class="tale-prompt">Tap a move to hear its campaign tale.</p></div></div>
+            <span class="tale-state" data-tale-state></span>
+          </div>
+        </div>
         <button class="pick-btn" type="button" aria-pressed="false">Send Priya into battle →</button>
       </div>
     </div>
@@ -2877,6 +3010,77 @@
         document.getElementById("arena").scrollIntoView({ behavior:"smooth", block:"start" });
       }
       log(FIGHTERS[state.fighter].line);
+    });
+  });
+
+  /* Campaigns of Friends — the three move-scene tiles and the scrolling tale
+     panel on each hero sheet (static markup above; the sheets are never
+     re-rendered, so the section is present on the opening pick and every
+     between-battles re-pick alike). Tiles are built only from the hero's
+     existing ART portrait with CSS animation; no game state is touched.
+     Tapping a tile highlights it and loads that move's tale into the sheet's
+     panel: the title shows, and the tale auto-scrolls in a seamless loop —
+     the text is duplicated so translateY(-50%) lands exactly on the copy.
+     Scroll speed scales with tale length. Tapping the panel (or pressing
+     Enter/Space on it) pauses and resumes. Each tale is mapped 1:1 to its
+     tile's move, which is the tale's decisive beat. */
+  var TALES = {
+    maya: [
+      { title: "The Ford of Embers", text: "At the Ford of Embers, Maya Reyes stood with Dre Carter and Priya Nair against a river drake burning the toll bridges. Priya's wards held off the flames while Dre waded in, axe swinging, herding it into the shallows. Then Maya loosed her Voting Arrows, one for every broken promise, and the last — bright as a ballot — struck true and ended it. From the drake's lair the band hauled a chest of hoarded toll-coins. Their share bought a cottage in Alder Creek, whose wells their stewardship soon mended, whose granaries they filled. There she helped raise the town's first vote-stone: every soul could vote on the township's next needs and who should lead the work. A vote, she said, is how one person declares the future partly theirs. Don't watch from the bank — play the power card in your hand. Have your voice." },
+      { title: "The Omen at Hollow Keep", text: "In Hollow Keep, a wraith-knight in mail haunted the gatehouse and froze every patrol. Maya Reyes cast Scout's Omen, and golden sight showed the truth: its heart burned in its banner, not its breast. Its glare held the wraith staring one heartbeat too long — long enough for Dre Carter to cleave the banner pole while Priya Nair's light held the dark back. When the cloth fell, so did the knight. Leo the Bard claimed its silver harp-strings; the band took coin and orchard rights below the keep. Their share bought a cottage in Alder Creek, where her maps and watch-fires keep its roads safe. She helped the town set a council bell: ring it, and every person votes on the township's needs and who answers for the work. A vote is standing up in your own story — never a spectator. Play your power card. Have your voice." },
+      { title: "The Siege of Bramble Market", text: "When a siege ogre ringed Bramble Market at harvest, Maya Reyes, Dre Carter, and Priya Nair held its gate alone. The ogre's club crashed down, and Maya dropped into Swift Brace — bow planted, shoulder set — holding the gateway a few breaths while Priya climbed the grain cart. From that height Priya's Sword of Youth flashed down and struck the death blow. The market folk paid in coin and a miller's house deed, carried home to Alder Creek, where they settled for good. Their stewardship rebuilt the mill and fattened its fields yearly. Maya helped Alder Creek hold its first open vote: every person voting on the township's future needs and the stewards chosen to deliver them. A vote is your own hand on the wheel of the world — don't sit it out on the sidelines. Play the power card in your hand. Have your voice." }
+    ],
+    dre: [
+      { title: "The Dragon of Cinder Pass", text: "In Cinder Pass, the red dragon Vargath made every caravan pay in gold or ash. Dre Carter climbed with Maya Reyes and Priya Nair at his back. Maya's Voting Arrows worried its eyes; Priya's ward turned its first breath of fire. Then Dre swung the Axe of Freedom overhead and split the scale over Vargath's heart — the death blow that freed the pass. From the hoard they took one fair share: three coin chests. It bought a timber house in Alder Creek; Dre's arms raised half its new roofs, and its folk lived fuller, warmer lives. He helped found the tally-board, where every person votes on the township's needs and who shall be trusted to build them. A vote is how a free person steers the future — their town's and the world's. Don't sit it out. Play the power card in your hand. Have your voice." },
+      { title: "The Shout at Gallows Bridge", text: "A bridge troll named Old Marrow held Gallows Bridge, charging one memory per crossing, and Sam the Rogue was in its clutches when Dre Carter arrived with Maya Reyes and Priya Nair. The troll raised its club for the final blow — and Dre let loose Freedom's Shout, a roar that shook the timbers and froze it mid-swing. In that stolen breath Maya's Voting Arrow took it through the eye, and Sam slipped free, grinning. Its toll chest held years of coin; the band's share bought a house by the green in Alder Creek. Dre's shout still gathers the town: at every meeting, every person casts a vote on the township's next needs and who leads the doing of them. Your vote is your voice made real — who you are, and what comes next. Never leave it silent on the sidelines. Play your power card. Have your voice." },
+      { title: "The Gate That Held", text: "At the gate of Blackpine Keep, a manticore with a scorpion's tail had the garrison pinned, its spikes falling like rain. Dre Carter planted in the gateway in Iron Guard — boots set, shield high — and refused to move. Spike after spike shattered on his guard while Priya Nair circled through smoke and Maya Reyes kept its eyes busy. When it lunged at Dre's stance, Priya struck from its blind side: the Sword of Youth, clean and final. The keep paid coin and a grant of farmland; the band's share settled them in Alder Creek, where Dre keeps the gate and stores, and no family goes hungry. He helped raise its muster-and-vote: every person votes on the township's needs and chooses who answers for the work. A vote is your grip on tomorrow — never stand aside. Play the power card in your hand. Have your voice." }
+    ],
+    priya: [
+      { title: "The Wyrm of the Sunken Chapel", text: "Below the Sunken Chapel, in black water, a marsh wyrm with teeth like broken glass coiled round the drowned altar. Priya Nair led Maya Reyes and Dre Carter down the flooded steps. Maya's arrows pinned its thrashing tail; Dre's axe held its jaws at bay. Then Priya lunged through the spray, Sword of Youth driving under its jaw — the death blow, struck clean. Its vault gave up chests of coin and a silver seal; the band's share bought a house on Alder Creek's high street. Priya's healing and fair dealing help its townsfolk thrive, season upon season. She helped write its charter of choosing: every person casts a vote on the township's needs and who shall carry them out. A vote is your individuality, exercised — your hand shaping what society becomes. Don't sit it out on the sidelines. Play the power card in your hand. Have your voice." },
+      { title: "Hands of the Barrow-Fields", text: "In the Dunmore barrow-fields, a bone golem built of fallen soldiers rose against Priya Nair, Maya Reyes, and Dre Carter — Leo the Bard singing war-songs from behind a tombstone. Its fist came down on Maya and would have ended her, but Priya's Healing Hands poured dawn into the wound, knitting it shut, blazing so bright the golem reeled back blinded. In that bought moment Maya rolled free, and her Voting Arrow shattered the skull-heart at its core. The wardens paid in coin and a herb-garden deed; the band's share settled them in Alder Creek, where her garden keeps every family hale. She helped begin its dawn assembly: every person votes on the township's needs and names the hands trusted to do the work. A vote is your control over what happens next — never surrender it to the sidelines. Play the power card in your hand. Have your voice." },
+      { title: "The Treaty of the High Peaks", text: "Above Alder Creek, the dragon Aurelith burned the barns below over a stolen egg-hoard. Priya Nair climbed to parley, with Maya Reyes and Dre Carter — but dragonfire answered first. Priya raised the Ward of Dawn, a dome of light holding the flames off long enough for words. Inside, the treaty was earned: Aurelith keeps the high peaks; the town keeps the low road. A feast and a signed scroll sealed it. The dragon gifted a share of her hoard — coin and orchard rights — settling them in Alder Creek beneath her sworn peace; the town prospered. She made it a practice: every person casts a vote on the township's needs and who leads the work. A vote is individuality, exercised — a say over the state of affairs, in your town and in society at large. Don't sit it out. Play your power card. Have your voice." }
+    ]
+  };
+
+  function taleEscape(s){
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function selectTale(hero, idx){
+    var tale = TALES[hero] && TALES[hero][idx];
+    var panel = document.querySelector('[data-tale-panel="' + hero + '"]');
+    if (!tale || !panel) return;
+    document.querySelectorAll('[data-move-tile="' + hero + '"]').forEach(function(t){
+      var on = parseInt(t.getAttribute("data-move"), 10) === idx;
+      t.classList.toggle("sel", on);
+      t.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    panel.querySelector("[data-tale-title]").textContent = tale.title;
+    var scroll = panel.querySelector("[data-tale-scroll]");
+    var words = tale.text.split(/\s+/).length;
+    scroll.classList.remove("playing");
+    scroll.innerHTML = "<p>" + taleEscape(tale.text) + "</p><p aria-hidden=\"true\">" + taleEscape(tale.text) + "</p>";
+    scroll.style.animationDuration = Math.max(26, Math.round(words * 0.34)) + "s";
+    void scroll.offsetWidth; /* restart the loop from the top */
+    scroll.classList.add("playing");
+    panel.classList.add("has-tale");
+    panel.classList.remove("paused");
+    panel.querySelector("[data-tale-state]").textContent = "Tap the panel to pause";
+  }
+  function toggleTalePause(panel){
+    if (!panel.classList.contains("has-tale")) return;
+    panel.classList.toggle("paused");
+    panel.querySelector("[data-tale-state]").textContent =
+      panel.classList.contains("paused") ? "Paused — tap to resume" : "Tap the panel to pause";
+  }
+  document.querySelectorAll("[data-move-tile]").forEach(function(tile){
+    tile.addEventListener("click", function(){
+      selectTale(tile.getAttribute("data-move-tile"), parseInt(tile.getAttribute("data-move"), 10));
+    });
+  });
+  document.querySelectorAll("[data-tale-panel]").forEach(function(panel){
+    panel.addEventListener("click", function(){ toggleTalePause(panel); });
+    panel.addEventListener("keydown", function(e){
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleTalePause(panel); }
     });
   });
 
