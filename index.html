@@ -325,6 +325,17 @@
   .sunrise .walkers{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
   .sunrise .walkers span{font-family:"JetBrains Mono",monospace;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(0,0,0,.68);color:#ffe9a8;padding:5px 9px;border-radius:999px}
   .sunrise p{color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.5);max-width:62ch}
+  /* Bold lead-ins inside the sunrise: the endings' amber <b> color washes
+     out to ~1:1 on the gradient's own gold band (#e8a317 at 58%, #f7d774
+     at 72%), so the fill is dark ink #10181d — 8.27:1 on #e8a317, 12.75:1
+     on #f7d774, 7.11:1 on the #7fb069 bottom stop. But ink alone fails at
+     the panel's dark top stops (1.23:1 on #1b2a3a at 0%, 2.43:1 on
+     #7a4a2b at 34%), where the first bold lines sit — so, like the dawn
+     panel, the ink carries a pale halo: composited at 95% behind the
+     glyphs, the halo holds the ink at 13.6:1–14.8:1 against EVERY stop
+     (0% / 34% / 58% / 72% / bottom), and the gold-band fill ratios above
+     are untouched. */
+  .sunrise p b{color:#10181d;text-shadow:0 0 6px rgba(255,233,168,.95),0 0 2px rgba(255,233,168,.95),1px 1px 0 rgba(0,0,0,.25)}
   .finale-btn{background:#fff3c4;color:#10181d;border:2px solid #10181d;box-shadow:4px 4px 0 #000}
   /* First light, not full sunrise: the distance ending's scene panel — the
      same family as .sunrise, but the sky only reaches a pale dawn band
@@ -332,7 +343,16 @@
   .dawn{margin:18px 0;border-radius:12px;overflow:hidden;border:2px solid #000;background:linear-gradient(180deg,#1d2836 0%,#46506b 34%,#8a5f4c 58%,#d99e5f 76%,#e9c184 88%,#5c6650 100%);color:#fff;position:relative}
   .dawn-inner{padding:24px 20px 20px;background:linear-gradient(180deg,rgba(13,18,22,.28),rgba(255,255,255,.04) 55%,rgba(20,34,22,.25))}
   .dawn p{color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.5);max-width:62ch}
-  .dawn p b{color:#ffe1a1}
+  /* Same gold-on-gradient failure as .sunrise, one shade paler: #ffe1a1
+     computes to 1.33:1 on the #e9c184 stop and 1.84:1 on #d99e5f, where the
+     closing lines of this panel sit. Dark ink holds on the light stops
+     (10.62:1 / 7.69:1); the pale halo keeps the early bold lines legible
+     where the panel's sky is still dark (halo-composited: 12.9:1–13.9:1
+     against every stop). The selector carries .ending because the plainer
+     .dawn p b lost the cascade to .ending.distance p b (#ffc46b — itself
+     1.08:1 on #e9c184), which still styles the distance ending's bold
+     outside this panel, on the dark page ground where it belongs. */
+  .ending .dawn p b{color:#10181d;text-shadow:0 0 6px rgba(255,225,161,.95),0 0 2px rgba(255,225,161,.95),1px 1px 0 rgba(0,0,0,.25)}
   .dawn blockquote{margin:16px 0;font-family:Georgia,serif;font-style:italic;font-size:clamp(1.12rem,4vw,1.45rem);line-height:1.35;max-width:30ch;color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,.45)}
   .dawn .his-line-tag{display:block;font-family:"JetBrains Mono",monospace;font-style:normal;font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ffd98a;margin-bottom:7px;text-shadow:1px 1px 0 rgba(0,0,0,.5)}
   .credits-overlay{position:fixed;inset:0;background:#050807;z-index:80;display:none;flex-direction:column}
@@ -2119,7 +2139,7 @@
     <button class="credits-close" id="creditsClose" type="button">Close ✕</button>
   </div>
   <div class="video-wrap">
-    <div class="video-box" id="videoBox"><!-- YouTube iframe injected on play, for autoplay-with-sound on tap --></div>
+    <div class="video-box" id="videoBox"><!-- YouTube player created here through the IFrame API on the finale tap --></div>
   </div>
   <div class="credits-viewport" aria-label="Scrolling credits">
     <div class="credits-scroll" id="creditsScroll">
@@ -7589,7 +7609,15 @@
   /* Fallback roll length (the "Return of the Prince" closing section); the moment the
      YouTube player reports its true duration, the roll re-times itself to the real song. */
   var FALLBACK_SONG_SECONDS = 236;
-  var creditsRAF = null, creditsStart = 0, ytPlayer = null, ytApiLoading = false;
+  var creditsRAF = null, creditsStart = 0;
+  /* YouTube player lifecycle for the finale. ytWantPlayer: a finale is open
+     and wants its player. ytReady: the player fired onReady. ytFailed: the
+     player GENUINELY failed (API script error, player error, or never
+     became ready) — the only state in which the 236-second fallback clock
+     may run. A loaded player that is merely unstarted (iOS holding
+     autoplay) is never "failed": the roll holds at the top for it. */
+  var ytPlayer = null, ytApiLoading = false, ytApiReady = false, ytApiFailed = false;
+  var ytWantPlayer = false, ytReady = false, ytFailed = false, ytWatchdog = null;
 
   function shuffleArr(a){
     for (var i = a.length - 1; i > 0; i--) {
@@ -7624,13 +7652,21 @@
     }
   }
 
+  /* The roll is married to the song. While a player exists — or is still
+     on its way — the roll's position IS the player's position: before the
+     player reports PLAYING its clock reads 0, so the roll holds at the
+     top, and a tap on the player's own button starts song and roll
+     together. Only a genuinely failed player (ytFailed) releases the
+     roll to the 236-second fallback clock. */
   function songPosition(){
-    if (ytPlayer && ytPlayer.getDuration && ytPlayer.getCurrentTime) {
+    if (!ytFailed && ytPlayer && ytPlayer.getDuration && ytPlayer.getCurrentTime) {
       try {
         var d = ytPlayer.getDuration(), t = ytPlayer.getCurrentTime();
         if (d > 10 && t >= 0) return { elapsed: t, total: d };
       } catch(e){}
+      return { elapsed: 0, total: FALLBACK_SONG_SECONDS };
     }
+    if (!ytFailed && ytWantPlayer) return { elapsed: 0, total: FALLBACK_SONG_SECONDS };
     return { elapsed: (performance.now() - creditsStart) / 1000, total: FALLBACK_SONG_SECONDS };
   }
 
@@ -7663,21 +7699,61 @@
     creditsRAF = requestAnimationFrame(creditsTick);
   }
 
-  function attachYtPlayer(){
-    if (!document.getElementById("finalePlayer")) return;
+  /* Genuine failure, and only that: the API script errored, the player
+     errored, or the player never became ready (watchdog in openFinale).
+     The fallback clock starts at the moment of failure, and a plain
+     manual-play embed takes the player's place so the song stays one
+     tap away even then. */
+  function failYt(){
+    if (ytFailed) return;
+    ytFailed = true;
+    if (ytWatchdog) { clearTimeout(ytWatchdog); ytWatchdog = null; }
+    if (ytPlayer && ytPlayer.destroy) { try { ytPlayer.destroy(); } catch(e){} }
+    ytPlayer = null;
+    creditsStart = performance.now();
+    videoBox.innerHTML = '<iframe id="finalePlayer" src="https://www.youtube.com/embed/AdakBIwpYcw?rel=0&playsinline=1" title="Closing song — Vote or Fade Away finale" allow="encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+  }
+
+  /* Create the player through the IFrame API and drive playback with it.
+     Called from inside the finale tap handler whenever the API is already
+     loaded (it is preloaded at startup, below), so the chain stays
+     tap -> new YT.Player -> onReady -> seekTo(0) + playVideo(). If iOS
+     still holds that play request, the player sits visible and cued at
+     0:00 with its own play button, the roll held at the top by
+     songPosition() until the player's clock moves. */
+  function createYtPlayer(){
+    if (ytPlayer || ytFailed || !ytWantPlayer) return;
     if (!(window.YT && YT.Player)) return;
-    try { ytPlayer = new YT.Player("finalePlayer", { events: {} }); } catch(e){ ytPlayer = null; }
+    try {
+      ytPlayer = new YT.Player("finalePlayer", {
+        videoId: "AdakBIwpYcw",
+        playerVars: { autoplay: 1, rel: 0, playsinline: 1 },
+        events: {
+          onReady: function(e){
+            ytReady = true;
+            if (ytWatchdog) { clearTimeout(ytWatchdog); ytWatchdog = null; }
+            try { e.target.seekTo(0); e.target.playVideo(); } catch(err){}
+          },
+          onError: function(){ failYt(); }
+        }
+      });
+    } catch(e){ failYt(); }
   }
   function loadYtApi(){
-    if (window.YT && YT.Player) { attachYtPlayer(); return; }
+    if (window.YT && YT.Player) { ytApiReady = true; createYtPlayer(); return; }
     if (ytApiLoading) return;
     ytApiLoading = true;
     var prev = window.onYouTubeIframeAPIReady;
-    window.onYouTubeIframeAPIReady = function(){ if (prev) prev(); attachYtPlayer(); };
+    window.onYouTubeIframeAPIReady = function(){ if (prev) prev(); ytApiReady = true; createYtPlayer(); };
     var tag = document.createElement("script");
     tag.src = "https://www.youtube.com/iframe_api";
+    tag.onerror = function(){ ytApiFailed = true; if (ytWantPlayer) failYt(); };
     document.head.appendChild(tag);
   }
+  /* Preload the API script (no player) so that, by the time a finale
+     button is tapped, YT.Player is ready and the player can be created
+     synchronously inside the tap itself. */
+  loadYtApi();
 
   /* ============ The run reel: the credits' true replay ============
      One figure per recorded highlight, in the order the run produced them.
@@ -7811,10 +7887,21 @@
     }
     buildRunReel();
     buildVignettes();
-    videoBox.innerHTML = '<iframe id="finalePlayer" src="https://www.youtube.com/embed/AdakBIwpYcw?autoplay=1&rel=0&playsinline=1&enablejsapi=1" title="Closing song — Vote or Fade Away finale" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+    /* Fresh player state for every opening (first play and replay alike):
+       the API replaces this placeholder with its iframe, and onReady
+       seeks to 0 and plays — the same rules on every run. */
+    ytFailed = false; ytReady = false; ytPlayer = null; ytWantPlayer = true;
+    videoBox.innerHTML = '<div id="finalePlayer"></div>';
     overlay.classList.add("show");
     document.body.style.overflow = "hidden";
-    loadYtApi();
+    if (ytApiFailed) { failYt(); }
+    else if (window.YT && YT.Player) { ytApiReady = true; createYtPlayer(); }
+    else { loadYtApi(); }
+    /* Watchdog: only a player that NEVER becomes ready counts as failed.
+       A ready player that iOS leaves unstarted is not failed — it holds
+       the roll at the top until its own button is tapped. */
+    if (ytWatchdog) clearTimeout(ytWatchdog);
+    ytWatchdog = setTimeout(function(){ if (ytWantPlayer && !ytReady && !ytFailed) failYt(); }, 15000);
     startCreditsRoll();
     document.getElementById("creditsClose").focus();
   }
@@ -7822,6 +7909,8 @@
     overlay.classList.remove("show");
     if (creditsRAF) cancelAnimationFrame(creditsRAF);
     creditsRAF = null;
+    if (ytWatchdog) { clearTimeout(ytWatchdog); ytWatchdog = null; }
+    ytWantPlayer = false; ytReady = false; ytFailed = false;
     if (ytPlayer && ytPlayer.destroy) { try { ytPlayer.destroy(); } catch(e){} }
     ytPlayer = null;
     videoBox.innerHTML = "";
