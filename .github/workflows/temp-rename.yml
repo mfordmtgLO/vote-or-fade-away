@@ -1,0 +1,17 @@
+name: Temp rename to index
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rename file to index.html
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git mv -f vote-or-fade-away.html index.html
+          git commit -m "Rename vote-or-fade-away.html to index.html"
+          git push
