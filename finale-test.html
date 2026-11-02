@@ -389,12 +389,6 @@
   .credits-scroll .closing-card p{font-family:"Anton",sans-serif;font-size:clamp(1.5rem,5.5vw,2.2rem);line-height:1.3;color:#fff;margin:0;text-transform:uppercase;letter-spacing:.01em}
   .credits-scroll .closing-card p+p{margin-top:12px;color:var(--amber)}
   .credits-hint{margin:10px 16px 0;text-align:center;font-size:.8rem;color:#9db3ad}
-  .song-fail{width:min(920px,calc(100% - 24px));margin:10px auto 0;border:1px solid var(--amber);border-radius:10px;background:#171208;padding:12px 14px;color:#f3e9c8}
-  .song-fail[hidden]{display:none}
-  .song-fail p{margin:0;font-size:.92rem;line-height:1.5}
-  .song-fail-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
-  .song-retry-btn{background:var(--amber);border:none;border-radius:8px;padding:10px 16px;font-weight:800;color:#10181d;cursor:pointer}
-  .song-fail-actions a{color:#e8a317;font-weight:700}
   .credits-viewport{-webkit-touch-callout:none}
   @media (prefers-reduced-motion: no-preference){.credits-viewport{touch-action:none}}
   @media (prefers-reduced-motion: reduce){.credits-viewport{touch-action:pan-y}}
@@ -495,14 +489,20 @@
   .die-scene{width:124px;height:124px;margin:8px auto 4px;perspective:640px;cursor:pointer;border-radius:12px;touch-action:none;background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.09),transparent 68%)}
   .camp .die-scene{background:radial-gradient(circle at 50% 42%,rgba(14,124,116,.14),transparent 68%)}
   .die-scene:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
-  .die{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:transform 1.45s cubic-bezier(.12,.72,.16,1)}
-  /* Real dice, drawn as dice: one solid, shaded polyhedron per die —
-     a tetrahedron (d4), a pip cube (d6), an octahedron (d8) and an
-     icosahedron (d20) — with the rolled value printed on its face. */
-  .die-art{width:108px;height:108px;flex:none;filter:drop-shadow(0 10px 12px rgba(0,0,0,.45))}
-  .camp .die-art{filter:drop-shadow(0 8px 10px rgba(16,24,29,.28))}
-  .die-art svg{width:100%;height:100%;display:block;overflow:visible}
-  .die-art text{font-family:"Anton",sans-serif}
+  .die{position:relative;width:100%;height:100%;transform-style:preserve-3d}
+  /* Real dice, built as dice: true CSS 3D solids with translucent faces —
+     a tetrahedron (d4), a cube (d6), an octahedron (d8) and an
+     icosahedron (d20). Every face carries its own number plus exactly
+     one symbol from the chosen graphics set, beside the number. The
+     solids tumble in full 360° turns and settle on the rolled face. */
+  .die-face{position:absolute;left:50%;top:50%;display:flex;align-items:center;justify-content:center;pointer-events:none;border:1px solid var(--df-edge,rgba(0,0,0,.55));box-shadow:inset 0 0 14px rgba(255,255,255,.10)}
+  .die-face-sq{border-radius:9px}
+  .die-face-tri{clip-path:polygon(50% 0,100% 100%,0 100%);border:none;box-shadow:none}
+  .die-face-in{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1}
+  .die-num{font-family:"Anton",sans-serif;color:var(--df-num,#fff);text-shadow:0 1px 2px rgba(0,0,0,.35)}
+  .die-glyph{display:block;color:var(--df-num,#fff);flex:none}
+  .die-glyph svg{width:100%;height:100%;display:block}
+  .die-glyph-txt{font-family:"JetBrains Mono",monospace;font-weight:700;text-align:center;line-height:1}
   .die-result{font-family:"JetBrains Mono",monospace;font-size:.8rem;font-weight:700;min-height:1.2em}
   .die-result b{color:var(--amber)}
   .camp .die-result b{color:var(--teal)}
@@ -1040,10 +1040,10 @@
 
   /* ---------- Gear Up Part B: Pack, Look & Dice stations ----------
      Same card language as Weapon/Spells. Look adds sub-group headings,
-     tint swatches and the auto shoes line; the portrait's skin and hair
-     color is composited only through per-portrait region masks (the
-     .look-layer spans on the sheet's .sketch portrait) — nothing tints
-     the whole card. Dice cards carry a body swatch and a sample row
+     tint swatches and the auto shoes line; on forged sheets the
+     portrait's skin and hair color is composited only through
+     per-portrait region masks (the .look-layer spans on the sheet's
+     .sketch portrait) — nothing tints the whole card. Dice cards carry a body swatch and a sample row
      of the graphics family; the thrown dice themselves are re-skinned
      by the artwork palette on .die plus the glyph printed on
      each die's face. */
@@ -2177,13 +2177,6 @@
   <div class="video-wrap">
     <div class="video-box" id="videoBox"><!-- YouTube player created here through the IFrame API on the finale tap --></div>
   </div>
-  <div class="song-fail" id="songFail" hidden role="alert">
-    <p><b>The closing song isn't playing.</b> <span id="songFailText"></span></p>
-    <div class="song-fail-actions">
-      <button class="song-retry-btn" id="songRetryBtn" type="button">Try the song again</button>
-      <a href="https://youtu.be/AdakBIwpYcw" target="_blank" rel="noopener">Hear it on YouTube</a>
-    </div>
-  </div>
   <p class="credits-hint">Press and hold the credits to pause and re-read.</p>
   <div class="credits-viewport" aria-label="Scrolling credits">
     <div class="credits-scroll" id="creditsScroll">
@@ -3171,11 +3164,18 @@
   function packItem(id){ for (var i = 0; i < PACK_ITEMS.length; i++) if (PACK_ITEMS[i].id === id) return PACK_ITEMS[i]; return PACK_ITEMS[0]; }
   function packHas(id){ return state.gearPack.indexOf(id) >= 0; }
 
-  /* LOOK — per hero, story only: skin and hair color is composited
-     into the sheet portrait through region masks derived from the
-     artwork (exposed skin in one mask, hair in the other), so a pick
-     colors only that region and the graphite shading shows through;
-     clothes, props and paper are never tinted. Attire is one named
+  /* LOOK — per hero, story only. Built-in heroes are never tinted by
+     the picks: Maya's Trail Set alone colorizes, by swapping in one of
+     her sixteen finished portraits per hair x skin pairing (the
+     exception at the end of this note); every other built-in set —
+     Maya's Market Day and Night Watch included — always shows its
+     native default sketch, plain, whatever hair or skin buttons are
+     pressed. The mask compositing described in the rest of this note
+     (skin and hair color laid into the portrait through region masks
+     derived from the artwork — exposed skin in one mask, hair in the
+     other — so a pick colors only that region and the graphite
+     shading shows through; clothes, props and paper are never tinted)
+     now serves imported forged characters only. Attire is one named
      set (top + bottom), and the shoes are never chosen — they
      auto-fill from the bottom piece. Default: the first set listed,
      Natural hair, Fair skin.
@@ -3208,8 +3208,10 @@
      EXCEPTION — MAYA, TRAIL SET ONLY: her sixteen hair x skin
      combinations are finished rendered portraits, not tints, so the
      Trail set bypasses both ramps entirely and selects the finished
-     file directly (see MAYA_TRAIL_HAIR_SLUG / mayaTrailArtKey). Her
-     other two sets keep the ramps. */
+     file directly (see MAYA_TRAIL_HAIR_SLUG / mayaTrailArtKey). It is
+     the only built-in set that colorizes — see nativePlain in
+     renderLookPortrait for the plain-sketch rule covering every
+     other built-in set. */
   var LOOK_SKINS = [
     { name:"Fair",   sw:"#f2d7bd", tone:"#f7e3cb", op:.92 },
     { name:"Warm",   sw:"#dfa06b", tone:"#e0a068", op:.95 },
@@ -3436,8 +3438,11 @@
      Index 0 is the hero's existing portrait — the default set's art,
      unchanged. Picking a set swaps the src of the hero's one existing
      sheet portrait (the same box, in the sheet and the fighter picker
-     alike); the skin and hair masks for that portrait carry the color,
-     so every skin × hair × outfit combination renders. */
+     alike). For built-in heroes the swapped-in portrait is shown
+     plain, exactly as drawn (Maya's Trail Set excepted — see below);
+     for forged characters the skin and hair masks for that portrait
+     carry the color, so every skin × hair × outfit combination
+     renders. */
   var LOOK_ART = {
     maya: ["maya", "maya2", "maya3"],
     dre: ["dre", "dre2", "dre3"],
@@ -3456,8 +3461,10 @@
      the arrays' display order never matters): LOOK_HAIRS is
      [Natural, Auburn, Silver, Teal] and LOOK_SKINS is
      [Fair, Warm, Deep, Golden]. Maya's Natural is the finished set's
-     Natural Brown. Every other hero, and Maya's Market Day and Night
-     Watch sets, keep the mask ramp path exactly as before. */
+     Natural Brown. Every other built-in set — Maya's Market Day and
+     Night Watch included — shows its native sketch plain (see
+     nativePlain in renderLookPortrait); only forged characters keep
+     the mask ramp path. */
   var MAYA_TRAIL_HAIR_SLUG = ["natural_brown", "auburn", "silver", "teal"];
   var MAYA_TRAIL_SKIN_SLUG = ["fair", "warm", "deep", "golden"];
   function mayaTrailArtKey(lk){
@@ -3708,7 +3715,7 @@
     voice:    { t:"Your Voice — the Voice Power Meter", b:"One shared meter for the whole band. It starts at 0 and only grows: it rises when the band speaks with facts — fact-checking his lines, ruling his gambits, banishing his minions, playing the Power Card, canvassing, and the band's Voice-raising moves, spells and camp crafts. It never shrinks, for any reason: wrong answers, his counterattacks, Blowback and his minions' powers cost no Voice. There is no failure state tied to it — it only records how loudly the band spoke, and it shades the win endings." },
     power:    { t:"The Power Card — your vote", b:"One card, shared by the whole band. It charges only through informed play: +1 for each battle question answered correctly, +1 for catching a Fake News gambit, +1 when a fighter Canvasses at camp; a landed Death Blow fills it. At 5 charges you can PLAY it: a full 12 damage, his Spin Defense gone for the next two battles, his current excuse struck through with its documented correction, and he does not heal at the end of the battle you play it. Then it can charge again." },
     readied:  { t:"Readied moves", b:"The move you tap is readied for that hero's next battle — one themed bonus, spent when that battle ends. Attack moves strike harder, guard moves blunt his first counter, and Freedom's Shout stops it cold." },
-    gearup:   { t:"Gear Up", b:"Swipe the carousel (or tap a station chip) to change what the band carries. Weapon sets the hero's damage die on every attack, plus any modifiers on its card. Spells picks the two spells the hero carries into battle — in the arena each is a button, castable once per battle and back the next. Pack is the band's shared kit: pick 2 of 5, the same on every sheet, and each item fires once at its stated moment. Look is story only — skin and hair are colored in the portrait itself, only on the skin and the hair, and one attire set per hero, with the shoes following the bottom piece on their own. One exception: on Maya's Trail Set, her hair color and skin tone together pick a finished portrait — every pairing is its own drawing, and her portrait changes as soon as you tap either one. Her Back to default look button (Trail Set, under Hair) brings back her original uncolored pencil sketch, and tapping any hair color or skin tone brings the finished color portraits back. Dice picks your set's body and graphics: looks only, the same dice, faces and odds always. The first option in each station is the signature default — skip Gear Up entirely and you play the build exactly as designed. Picks hold for the whole run." },
+    gearup:   { t:"Gear Up", b:"Swipe the carousel (or tap a station chip) to change what the band carries. Weapon sets the hero's damage die on every attack, plus any modifiers on its card. Spells picks the two spells the hero carries into battle — in the arena each is a button, castable once per battle and back the next. Pack is the band's shared kit: pick 2 of 5, the same on every sheet, and each item fires once at its stated moment. Look is story only — one attire set per hero, with the shoes following the bottom piece on their own. Only Maya's Trail Set colors: on it, her hair color and skin tone together pick a finished portrait — every pairing is its own drawing, and her portrait changes as soon as you tap either one. Every other set — Maya's Market Day and Night Watch, and every set of the other five heroes — always shows its plain pencil sketch exactly as drawn, whatever hair color or skin tone you tap; the taps are still remembered, so Maya's Trail portrait keeps the pairing you picked. Her Back to default look button (Trail Set, under Hair) brings back her original uncolored pencil sketch, and tapping any hair color or skin tone brings the finished color portraits back. Dice picks your set's body and graphics: looks only, the same dice, faces and odds always. The first option in each station is the signature default — skip Gear Up entirely and you play the build exactly as designed. Picks hold for the whole run." },
     spells:   { t:"Spells in battle", b:"The active fighter's two carried spells, chosen on their character sheet in Gear Up. Tap one to cast it — each casts once per battle, then returns next battle. Attack spells ride on the fighter's next attack this battle; heals, Voice, pips and counter-wards take effect the moment they are cast." },
     /* Per-move help for the Campaigns of Friends tiles: the bonus in
        plain words plus when to pick it — shown BEFORE the player commits. */
@@ -4691,21 +4698,26 @@
        d6  — a cube, thrown for the Death Blow;
        d8  — an octahedron, the street's answer on a Canvass;
        d20 — an icosahedron, the attack die.
-     Each die is drawn as its actual polyhedron (see the artwork builder
-     below). The random result is drawn first, the die tumbles, and the
-     face it settles showing is the number the game uses. No faked rolls. */
+     Each die is built as its actual polyhedron — a true CSS 3D solid
+     (see the geometry builder below). The random result is drawn first,
+     the die tumbles in full 360° turns, and the face it settles showing
+     is the number the game uses. No faked rolls. */
   var REDUCED_MOTION = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  /* ============ Real dice artwork ============
-     Every die is drawn as the die it is — a solid, shaded polyhedron
-     with its edges, facets and the rolled value on its face:
-       d4  — a tetrahedron (triangular pyramid, value on the base face)
-       d6  — a rounded cube showing real pips for the value
-       d8  — an octahedron (diamond, value on the upper face)
-       d20 — an icosahedron (faceted hexagon, value on the centre face)
-     The Gear Up body (amber / glass tints / gunmetal) recolours the
-     artwork; the graphics set prints as a small glyph on the die.
-     The value lives in data-die-value and setDieFace() repaints it —
-     a roll changes the face the die shows, never the odds. */
+  /* ============ Real dice: true 3D translucent solids ============
+     Every die is built as the die it is — a genuine CSS 3D solid with
+     translucent faces, assembled face by face with preserve-3d:
+       d4  — a tetrahedron (4 triangular faces)
+       d6  — a cube (6 square faces, numerals — never pips)
+       d8  — an octahedron (8 triangular faces)
+       d20 — an icosahedron (20 triangular faces)
+     Every face carries exactly two marks: its own number, and exactly
+     one symbol from the chosen graphics set beside it. The Gear Up body
+     (amber / glass tints / gunmetal) recolours the faces. Orientation
+     is quaternion math throughout: the result is drawn first, the die
+     tumbles through full 360° turns, and settleQuat() lands it on
+     exactly the rolled face. The value lives in data-die-value and
+     setDieFace() turns the solid to that face — a roll changes the
+     face the die shows, never the odds. */
   function diePaletteFor(kind){
     var b = skinBody();
     if (b === "gunmetal") return { light:"#7d8590", mid:"#4c525a", dark:"#24272c", edge:"#0e1013", num:"#ff4fd8", pip:"#ff4fd8" };
@@ -4717,63 +4729,162 @@
     if (kind === "d6") return { light:"#d99a26", mid:"#a86e00", dark:"#7a4a12", edge:"#5e430a", num:"#fff7e0", pip:"#fff7e0" };
     return { light:"#3a5f68", mid:"#284650", dark:"#131f26", edge:"#060d10", num:"#ffe9a8", pip:"#ffe9a8" };
   }
-  /* The graphics-set glyph, placed on the die at box (x, y, size). */
-  function glyphOnDie(idx, x, y, size, ink){
-    var g = diceGlyph(idx);
-    if (g.indexOf("<svg") === 0) return g.replace("<svg ", '<svg x="' + x + '" y="' + y + '" width="' + size + '" height="' + size + '" style="color:' + ink + '" ');
-    return '<text x="' + (x + size / 2) + '" y="' + (y + size * 0.82) + '" font-size="' + size + '" text-anchor="middle" fill="' + ink + '">' + g + "</text>";
+  /* ---------- 3D math: vectors + quaternions (CSS coords: x right,
+     y down, z toward the viewer) ---------- */
+  function vNorm(a){ var l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / l, a[1] / l, a[2] / l]; }
+  function vCross(a, b){ return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]; }
+  function vDot(a, b){ return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+  function qAxis(ax, ay, az, deg){ var h = deg * Math.PI / 360, s = Math.sin(h), l = Math.hypot(ax, ay, az) || 1; return [ax / l * s, ay / l * s, az / l * s, Math.cos(h)]; }
+  function qMul(a, b){ return [a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1], a[3] * b[1] - a[0] * b[2] + a[1] * b[3] + a[2] * b[0], a[3] * b[2] + a[0] * b[1] - a[1] * b[0] + a[2] * b[3], a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2]]; }
+  function qConj(q){ return [-q[0], -q[1], -q[2], q[3]]; }
+  function qNorm(q){ var l = Math.hypot(q[0], q[1], q[2], q[3]) || 1; return [q[0] / l, q[1] / l, q[2] / l, q[3] / l]; }
+  function qSlerp(a, b, t){
+    var d = a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3], bb = b;
+    if (d < 0) { bb = [-b[0], -b[1], -b[2], -b[3]]; d = -d; }
+    if (d > 0.9995) return qNorm([a[0] + (bb[0] - a[0]) * t, a[1] + (bb[1] - a[1]) * t, a[2] + (bb[2] - a[2]) * t, a[3] + (bb[3] - a[3]) * t]);
+    var th = Math.acos(Math.min(1, d)), s = Math.sin(th) || 1;
+    var wa = Math.sin((1 - t) * th) / s, wb = Math.sin(t * th) / s;
+    return [a[0] * wa + bb[0] * wb, a[1] * wa + bb[1] * wb, a[2] * wa + bb[2] * wb, a[3] * wa + bb[3] * wb];
   }
-  function dieArtSVG(kind, value){
-    var P = diePaletteFor(kind);
-    var edge = 'stroke="' + P.edge + '" stroke-linejoin="round"';
-    var facet = 'stroke="' + P.edge + '" stroke-width="1.6" stroke-opacity=".55" stroke-linejoin="round"';
-    var gi = value - 1;
+  function qToAxisAngle(q){
+    q = qNorm(q);
+    var w = Math.max(-1, Math.min(1, q[3])), ang = 2 * Math.acos(w) * 180 / Math.PI;
+    var s = Math.sqrt(Math.max(0, 1 - w * w));
+    if (s < 1e-4 || ang < 0.01) return { axis: [0, 1, 0], angle: 0 };
+    if (ang > 180) { ang = 360 - ang; return { axis: [-q[0] / s, -q[1] / s, -q[2] / s], angle: ang }; }
+    return { axis: [q[0] / s, q[1] / s, q[2] / s], angle: ang };
+  }
+  function qMatrix(q){
+    var x = q[0], y = q[1], z = q[2], w = q[3];
+    var m = [1 - 2 * (y * y + z * z), 2 * (x * y + z * w), 2 * (x * z - y * w), 0,
+             2 * (x * y - z * w), 1 - 2 * (x * x + z * z), 2 * (y * z + x * w), 0,
+             2 * (x * z + y * w), 2 * (y * z - x * w), 1 - 2 * (x * x + y * y), 0, 0, 0, 0, 1];
+    return "matrix3d(" + m.map(function(n){ return +n.toFixed(5); }).join(",") + ")";
+  }
+  function basisQuat(xA, yA, zA){
+    var m00 = xA[0], m10 = xA[1], m20 = xA[2], m01 = yA[0], m11 = yA[1], m21 = yA[2], m02 = zA[0], m12 = zA[1], m22 = zA[2];
+    var tr = m00 + m11 + m22, q, s;
+    if (tr > 0) { s = Math.sqrt(tr + 1) * 2; q = [(m21 - m12) / s, (m02 - m20) / s, (m10 - m01) / s, 0.25 * s]; }
+    else if (m00 > m11 && m00 > m22) { s = Math.sqrt(1 + m00 - m11 - m22) * 2; q = [0.25 * s, (m01 + m10) / s, (m02 + m20) / s, (m21 - m12) / s]; }
+    else if (m11 > m22) { s = Math.sqrt(1 + m11 - m00 - m22) * 2; q = [(m01 + m10) / s, 0.25 * s, (m12 + m21) / s, (m02 - m20) / s]; }
+    else { s = Math.sqrt(1 + m22 - m00 - m11) * 2; q = [(m02 + m20) / s, (m12 + m21) / s, 0.25 * s, (m10 - m01) / s]; }
+    return qNorm(q);
+  }
+  /* The placement rotation for one face: the face's local +z points
+     along its outward normal, and the face's visual top (local -y)
+     points along upDir, so the number reads upright on its face. */
+  function faceQuat(normal, upDir){
+    var z = vNorm(normal);
+    var up = [upDir[0] - vDot(upDir, z) * z[0], upDir[1] - vDot(upDir, z) * z[1], upDir[2] - vDot(upDir, z) * z[2]];
+    var yUp = vNorm(up);
+    var yCol = [-yUp[0], -yUp[1], -yUp[2]];
+    var xCol = vCross(yCol, z);
+    return basisQuat(xCol, yCol, z);
+  }
+  /* Build a triangular-faced solid (tetrahedron / octahedron /
+     icosahedron) from raw face vertex triples: normals are forced
+     outward, each face's top vertex aims its number, and the solid is
+     scaled so its circumradius is targetCR px. Faces come back in the
+     order given — face i carries the number i + 1. */
+  function triSolid(rawFaces, targetCR, num, gly){
+    var crRaw = 0;
+    rawFaces.forEach(function(f){ f.forEach(function(p){ crRaw = Math.max(crRaw, Math.hypot(p[0], p[1], p[2])); }); });
+    var sc = targetCR / (crRaw || 1);
+    var probe = rawFaces.map(function(f){
+      var a = f[0], b = f[1], c = f[2];
+      var cen = [(a[0] + b[0] + c[0]) / 3, (a[1] + b[1] + c[1]) / 3, (a[2] + b[2] + c[2]) / 3];
+      var n = vCross([b[0] - a[0], b[1] - a[1], b[2] - a[2]], [c[0] - a[0], c[1] - a[1], c[2] - a[2]]);
+      if (vDot(n, cen) < 0) { var t = b; b = c; c = t; n = [-n[0], -n[1], -n[2]]; }
+      var top = a;
+      [b, c].forEach(function(p){ if (p[1] < top[1]) top = p; });
+      var up = [top[0] - cen[0], top[1] - cen[1], top[2] - cen[2]];
+      return { q: faceQuat(n, up), dist: Math.hypot(cen[0], cen[1], cen[2]) * sc, edge: Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]) * sc };
+    });
+    var w = probe[0].edge, h = w * 0.8660254;
+    return { tri: true, w: w, h: h, yOff: -h / 6, num: num, gly: gly,
+             faces: probe.map(function(f){ return { q: f.q, dist: f.dist }; }) };
+  }
+  var DIE_SOLIDS = {};
+  function solidDef(kind){
+    if (DIE_SOLIDS[kind]) return DIE_SOLIDS[kind];
+    var def;
     if (kind === "d6") {
-      var pos = { tl:[38,38], tr:[82,38], ml:[38,60], c:[60,60], mr:[82,60], bl:[38,82], br:[82,82] };
-      var layouts = { 1:["c"], 2:["tl","br"], 3:["tl","c","br"], 4:["tl","tr","bl","br"], 5:["tl","tr","c","bl","br"], 6:["tl","tr","ml","mr","bl","br"] };
-      var pips = (layouts[value] || layouts[6]).map(function(k){ return '<circle cx="' + pos[k][0] + '" cy="' + pos[k][1] + '" r="8.5" fill="' + P.pip + '" stroke="' + P.edge + '" stroke-width="1.2"/>'; }).join("");
-      return '<svg viewBox="0 0 120 120" role="img" aria-label="Six-sided die showing ' + value + '">' +
-        '<rect x="15" y="15" width="90" height="90" rx="17" fill="' + P.mid + '" ' + edge + ' stroke-width="3.5"/>' +
-        '<path d="M15 32a17 17 0 0 1 17-17h56a17 17 0 0 1 17 17v14H15z" fill="' + P.light + '" opacity=".65"/>' +
-        '<ellipse cx="60" cy="33" rx="32" ry="10" fill="#ffffff" opacity=".16"/>' +
-        '<g opacity=".30">' + glyphOnDie(gi, 47, 47, 26, P.edge) + "</g>" + pips + "</svg>";
+      /* A true cube: opposite faces sum to 7 (1–6, 2–5, 3–4). */
+      var mk = function(n, up){ return { q: faceQuat(n, up), dist: 39 }; };
+      def = { tri: false, w: 78, h: 78, yOff: 0, num: 30, gly: 16, faces: [
+        mk([0, 0, 1], [0, -1, 0]),   /* 1 — front */
+        mk([0, -1, 0], [0, 0, -1]),  /* 2 — top */
+        mk([1, 0, 0], [0, -1, 0]),   /* 3 — right */
+        mk([-1, 0, 0], [0, -1, 0]),  /* 4 — left */
+        mk([0, 1, 0], [0, 0, 1]),    /* 5 — bottom */
+        mk([0, 0, -1], [0, -1, 0])   /* 6 — back */
+      ] };
+    } else if (kind === "d4") {
+      /* A true tetrahedron: each face is the triangle opposite one vertex. */
+      var tv = [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]];
+      def = triSolid(tv.map(function(v, i){ return tv.filter(function(_, j){ return j !== i; }); }), 53, 21, 13);
+    } else if (kind === "d8") {
+      /* A true octahedron: one face per sign triple — opposite faces
+         sum to 9 by construction. */
+      var rf8 = [];
+      [1, -1].forEach(function(sx){ [1, -1].forEach(function(sy){ [1, -1].forEach(function(sz){ rf8.push([[sx, 0, 0], [0, sy, 0], [0, 0, sz]]); }); }); });
+      def = triSolid(rf8, 55, 20, 12);
+    } else {
+      /* A true icosahedron: the 20 vertex triples whose sides are all
+         one edge long, found from the 12 golden-ratio vertices. */
+      var t = (1 + Math.sqrt(5)) / 2;
+      var verts = [[-1, t, 0], [1, t, 0], [-1, -t, 0], [1, -t, 0], [0, -1, t], [0, 1, t], [0, -1, -t], [0, 1, -t], [t, 0, -1], [t, 0, 1], [-t, 0, -1], [-t, 0, 1]];
+      var d2 = function(a, b){ return (a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]) + (a[2] - b[2]) * (a[2] - b[2]); };
+      var rf20 = [];
+      for (var i = 0; i < 12; i++) for (var j = i + 1; j < 12; j++) for (var k = j + 1; k < 12; k++) {
+        if (Math.abs(d2(verts[i], verts[j]) - 4) < 0.05 && Math.abs(d2(verts[j], verts[k]) - 4) < 0.05 && Math.abs(d2(verts[i], verts[k]) - 4) < 0.05) rf20.push([verts[i], verts[j], verts[k]]);
+      }
+      def = triSolid(rf20, 55, 14, 10);
     }
-    if (kind === "d4") {
-      return '<svg viewBox="0 0 120 120" role="img" aria-label="Four-sided die showing ' + value + '">' +
-        '<polygon points="60,7 113,101 7,101" fill="' + P.mid + '" ' + edge + ' stroke-width="3.5"/>' +
-        '<polygon points="60,7 60,68 7,101" fill="' + P.light + '" ' + facet + '/>' +
-        '<polygon points="60,7 113,101 60,68" fill="' + P.mid + '" ' + facet + '/>' +
-        '<polygon points="7,101 113,101 60,68" fill="' + P.dark + '" ' + facet + '/>' +
-        glyphOnDie(gi, 52, 20, 16, P.num) +
-        '<text x="60" y="94" font-size="23" text-anchor="middle" fill="' + P.num + '">' + value + "</text></svg>";
-    }
-    if (kind === "d8") {
-      return '<svg viewBox="0 0 120 120" role="img" aria-label="Eight-sided die showing ' + value + '">' +
-        '<polygon points="60,5 111,60 60,115 9,60" fill="' + P.mid + '" ' + edge + ' stroke-width="3.5"/>' +
-        '<polygon points="60,5 9,60 60,60" fill="' + P.light + '" ' + facet + '/>' +
-        '<polygon points="60,5 111,60 60,60" fill="' + P.mid + '" ' + facet + '/>' +
-        '<polygon points="9,60 60,115 60,60" fill="' + P.dark + '" ' + facet + '/>' +
-        '<polygon points="111,60 60,115 60,60" fill="' + P.dark + '" opacity=".72" ' + facet + '/>' +
-        '<text x="60" y="49" font-size="25" text-anchor="middle" fill="' + P.num + '">' + value + "</text>" +
-        glyphOnDie(gi, 52, 76, 16, P.num) + "</svg>";
-    }
-    /* d20 */
-    return '<svg viewBox="0 0 120 120" role="img" aria-label="Twenty-sided die showing ' + value + '">' +
-      '<polygon points="60,4 108,32 108,88 60,116 12,88 12,32" fill="' + P.mid + '" ' + edge + ' stroke-width="3.5"/>' +
-      '<polygon points="12,32 34,80 60,36" fill="' + P.dark + '" opacity=".5" ' + facet + '/>' +
-      '<polygon points="108,32 86,80 60,36" fill="#ffffff" opacity=".10" ' + facet + '/>' +
-      '<polygon points="34,80 86,80 60,116" fill="' + P.dark + '" opacity=".62" ' + facet + '/>' +
-      '<path d="M60 36 60 4M60 36 12 32M60 36 108 32M86 80 108 32M86 80 108 88M86 80 60 116M34 80 12 32M34 80 12 88M34 80 60 116" fill="none" ' + facet + '/>' +
-      '<polygon points="60,36 86,80 34,80" fill="' + P.light + '" ' + edge + ' stroke-width="2.4"/>' +
-      '<text x="60" y="73" font-size="' + (value > 9 ? 21 : 26) + '" text-anchor="middle" fill="' + P.num + '">' + value + "</text>" +
-      glyphOnDie(gi, 52, 90, 15, P.num) + "</svg>";
+    DIE_SOLIDS[kind] = def;
+    return def;
   }
-  /* Repaint a die in place so it shows a new face value. */
+  /* The settled orientation: the rolled face square to the viewer,
+     tipped 16° so the solid's depth reads. The drag/spin layer works
+     in these quaternions, so the settled face is ALWAYS the rolled
+     value — the gesture only decides how the die gets there. */
+  var DIE_TILT = null;
+  function settleQuat(kind, v){
+    if (!DIE_TILT) DIE_TILT = qAxis(1, 0, 0, 16);
+    var S = solidDef(kind);
+    var f = S.faces[v - 1] || S.faces[0];
+    return qNorm(qMul(DIE_TILT, qConj(f.q)));
+  }
+  function settleTransform(kind, v){
+    return qMatrix(settleQuat(kind, v));
+  }
+  /* A palette colour as a translucent face fill: glass bodies already
+     carry their own alpha; solid bodies are opened up so light reads
+     through every face of the set, the original translucent look. */
+  function translucent(color, alpha){
+    if (color.indexOf("#") === 0 && color.length === 7) {
+      return "rgba(" + parseInt(color.slice(1, 3), 16) + "," + parseInt(color.slice(3, 5), 16) + "," + parseInt(color.slice(5, 7), 16) + "," + alpha + ")";
+    }
+    return color;
+  }
+  /* The one symbol that stands beside a face's number: the chosen
+     graphics set's glyph for that face — the game's existing artwork,
+     cycling across the faces exactly as the set defines. */
+  function faceGlyphHTML(value, glyPx){
+    var g = diceGlyph(value - 1);
+    if (g.indexOf("<svg") === 0) return '<span class="die-glyph" style="width:' + glyPx + 'px;height:' + glyPx + 'px" aria-hidden="true">' + g + "</span>";
+    return '<span class="die-glyph die-glyph-txt" style="width:' + glyPx + 'px;height:' + glyPx + 'px;font-size:' + glyPx + 'px" aria-hidden="true">' + g + "</span>";
+  }
+  /* Turn a die in place so it shows a new face value: the solid
+     rotates to that face's settled orientation. While a tray has the
+     die in hand (dragging or tumbling) the tray owns the orientation
+     and setDieFace only records the value. */
   function setDieFace(die, value){
     die.setAttribute("data-die-value", value);
     var kind = die.getAttribute("data-die-kind") || die.getAttribute("data-preview-die");
-    var art = die.querySelector(".die-art");
-    if (art && kind) art.innerHTML = dieArtSVG(kind, value);
+    if (!kind || die._busy) return;
+    die._q = settleQuat(kind, value);
+    die.style.transform = qMatrix(die._q);
   }
   function buildDie(kind, die){
     die.setAttribute("data-die-kind", kind);
@@ -4784,12 +4895,28 @@
     var v = parseInt(die.getAttribute("data-die-value"), 10);
     if (!(v >= 1 && v <= max)) v = max;
     die.setAttribute("data-die-value", v);
-    var art = document.createElement("div");
-    art.className = "die-art die-art-" + kind;
-    art.setAttribute("aria-hidden", "true");
-    art.innerHTML = dieArtSVG(kind, v);
-    die.appendChild(art);
-    die.style.transform = "rotate(-4deg)";
+    var P = diePaletteFor(kind);
+    var S = solidDef(kind);
+    var fills = [P.light, P.mid, P.dark];
+    die.style.setProperty("--df-num", P.num);
+    die.style.setProperty("--df-edge", P.edge);
+    die.innerHTML = "";
+    S.faces.forEach(function(f, i){
+      var el = document.createElement("div");
+      el.className = "die-face " + (S.tri ? "die-face-tri" : "die-face-sq");
+      el.style.width = S.w.toFixed(1) + "px";
+      el.style.height = S.h.toFixed(1) + "px";
+      el.style.background = "linear-gradient(155deg," + translucent(fills[i % 3], .88) + "," + translucent(fills[(i + 1) % 3], .70) + ")";
+      el.style.transform = "translate(-50%,-50%) " + qMatrix(f.q) + " translateZ(" + f.dist.toFixed(1) + "px)" + (S.yOff ? " translateY(" + S.yOff.toFixed(1) + "px)" : "");
+      var inner = document.createElement("div");
+      inner.className = "die-face-in";
+      if (S.yOff) inner.style.transform = "translateY(" + (-S.yOff).toFixed(1) + "px)";
+      inner.innerHTML = '<span class="die-num" style="font-size:' + S.num + 'px">' + (i + 1) + "</span>" + faceGlyphHTML(i + 1, S.gly);
+      el.appendChild(inner);
+      die.appendChild(el);
+    });
+    if (!die._q) die._q = settleQuat(kind, v);
+    die.style.transform = qMatrix(die._q);
   }
   /* Re-skin every die currently on the page after a Dice pick: faces are
      rebuilt in the new body + graphics, orientation preserved — the
@@ -4797,11 +4924,11 @@
   function reskinDice(){
     document.querySelectorAll(".die[data-die-kind]").forEach(function(die){
       var kind = die.getAttribute("data-die-kind");
-      var tf = die.style.transform;
+      var q = die._q;
       die.innerHTML = "";
       die.className = "die";
       buildDie(kind, die);
-      if (tf) die.style.transform = tf;
+      if (q) { die._q = q; die.style.transform = qMatrix(q); }
     });
   }
   /* The Dice station's preview set: the same four dice, built by the
@@ -4811,7 +4938,7 @@
      and they never touch the committed set until "Let's Roll". */
   function buildPreviewDie(die){
     var kind = die.getAttribute("data-preview-die");
-    var tf = die.style.transform;
+    var q = die._q;
     dieSkinOverride = { body: state.dicePreviewBody, gfx: state.dicePreviewGfx };
     die.innerHTML = "";
     die.className = "die";
@@ -4820,40 +4947,37 @@
     die.removeAttribute("data-die-kind");
     die.setAttribute("data-preview-die", kind);
     die.style.transition = "none";
-    if (tf) die.style.transform = tf;
+    if (q) { die._q = q; die.style.transform = qMatrix(q); }
   }
   function restyleDicePreviews(){
     document.querySelectorAll(".die[data-preview-die]").forEach(buildPreviewDie);
   }
-  /* A preview die spins in hand with the same press-drag feel as the
-     thrown dice — trackball drag (horizontal around the vertical axis,
-     vertical around the horizontal, tilt clamped) with the same damped
-     rAF follow — but it is for looking: releasing it leaves it where it
-     was turned, no throw, no drawn value, no roll resolved. Arrow keys
-     turn a focused preview die. */
+  /* A preview die turns in hand with the same press-drag feel as the
+     thrown dice — a true trackball: dragging rotates the solid itself
+     in 3D (horizontal around the vertical axis, vertical around the
+     horizontal) with the same damped rAF slerp follow — but it is for
+     looking: releasing it leaves it where it was turned, no throw, no
+     drawn value, no roll resolved. Arrow keys turn a focused preview
+     die. */
   function makePreviewSpinnable(scene, die, kind){
-    var home = { rx: 0, ry: 0 };
-    var cur = { rx: home.rx, ry: home.ry }, goal = { rx: home.rx, ry: home.ry };
+    var Qcur = die._q ? die._q.slice() : settleQuat(kind, parseInt(die.getAttribute("data-die-value"), 10) || 1);
+    var Qgoal = Qcur.slice();
     var dragging = false, rafId = null, lastT = 0, dragStart = null;
     die.style.transition = "none";
-    function applyRot(){
-      var tiltX = Math.sin(cur.rx * Math.PI / 180) * 16;
-      var tiltY = Math.sin(cur.ry * Math.PI / 180) * 10;
-      die.style.transform = "rotateX(" + tiltX.toFixed(2) + "deg) rotateY(" + tiltY.toFixed(2) + "deg) rotateZ(" + cur.ry.toFixed(2) + "deg)";
-    }
+    function applyRot(){ die.style.transform = qMatrix(Qcur); die._q = Qcur; }
+    applyRot();
     function loop(t){
       if (!dragging) { rafId = null; return; }
       var dt = Math.max(1, t - lastT); lastT = t;
       var k = 1 - Math.exp(-dt / 42); /* same damped follow as the thrown dice */
-      cur.rx += (goal.rx - cur.rx) * k;
-      cur.ry += (goal.ry - cur.ry) * k;
+      Qcur = qSlerp(Qcur, Qgoal, k);
       applyRot();
       rafId = requestAnimationFrame(loop);
     }
     scene.addEventListener("pointerdown", function(e){
       if (dragging) return;
       dragging = true;
-      dragStart = { x: e.clientX, y: e.clientY, rx: goal.rx, ry: goal.ry };
+      dragStart = { x: e.clientX, y: e.clientY, Q: Qgoal.slice() };
       try { scene.setPointerCapture(e.pointerId); } catch(err){}
       lastT = performance.now();
       if (!REDUCED_MOTION && rafId === null) rafId = requestAnimationFrame(loop);
@@ -4861,26 +4985,26 @@
     });
     scene.addEventListener("pointermove", function(e){
       if (!dragging) return;
-      goal.ry = dragStart.ry + (e.clientX - dragStart.x) * 0.5;
-      goal.rx = Math.max(-78, Math.min(78, dragStart.rx - (e.clientY - dragStart.y) * 0.5));
-      if (REDUCED_MOTION) { cur.rx = goal.rx; cur.ry = goal.ry; applyRot(); }
+      var dx = e.clientX - dragStart.x, dy = e.clientY - dragStart.y;
+      Qgoal = qMul(qAxis(0, 1, 0, dx * 0.55), qMul(qAxis(1, 0, 0, -dy * 0.55), dragStart.Q));
+      if (REDUCED_MOTION) { Qcur = Qgoal.slice(); applyRot(); }
     });
     function endDrag(){
       if (!dragging) return;
       dragging = false;
       if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
-      cur.rx = goal.rx; cur.ry = goal.ry; applyRot();
+      Qcur = Qgoal.slice(); applyRot();
     }
     scene.addEventListener("pointerup", endDrag);
     scene.addEventListener("pointercancel", endDrag);
     scene.addEventListener("keydown", function(e){
       var step = 18, used = true;
-      if (e.key === "ArrowLeft") goal.ry -= step;
-      else if (e.key === "ArrowRight") goal.ry += step;
-      else if (e.key === "ArrowUp") goal.rx = Math.max(-78, goal.rx - step);
-      else if (e.key === "ArrowDown") goal.rx = Math.min(78, goal.rx + step);
+      if (e.key === "ArrowLeft") Qgoal = qMul(qAxis(0, 1, 0, -step), Qgoal);
+      else if (e.key === "ArrowRight") Qgoal = qMul(qAxis(0, 1, 0, step), Qgoal);
+      else if (e.key === "ArrowUp") Qgoal = qMul(qAxis(1, 0, 0, -step), Qgoal);
+      else if (e.key === "ArrowDown") Qgoal = qMul(qAxis(1, 0, 0, step), Qgoal);
       else used = false;
-      if (used) { e.preventDefault(); cur.rx = goal.rx; cur.ry = goal.ry; applyRot(); }
+      if (used) { e.preventDefault(); Qcur = Qgoal.slice(); applyRot(); }
     });
   }
   function initDicePreview(host){
@@ -4890,20 +5014,6 @@
       buildPreviewDie(die);
       makePreviewSpinnable(scene, die, die.getAttribute("data-preview-die"));
     });
-  }
-  function settleTransform(kind, v){
-    return "rotate(0deg)";
-  }
-  /* Numeric twin of settleTransform: the orientation that presents face v.
-     The drag/spin layer works in these numbers, so the settled face is
-     ALWAYS the rolled value — the gesture only decides how the die gets
-     there, never what it shows. */
-  /* The die artwork is one solid die per kind: it settles flat and
-     setDieFace() paints the rolled value onto it, so the settled face
-     is ALWAYS the rolled value — the gesture only decides how the die
-     gets there, never what it shows. */
-  function settleAngles(kind, v){
-    return { rx: 0, ry: 0 };
   }
   function makeTray(kind, label){
     var sides = kind === "d20" ? 20 : kind === "d6" ? 6 : kind === "d8" ? 8 : 4;
@@ -4952,43 +5062,37 @@
       return tray;
     }
 
-    /* Full-motion dice. Press-and-hold grabs the die: dragging turns it
-       trackball-style (horizontal drag around the vertical axis, vertical
-       drag around the horizontal axis) with a requestAnimationFrame loop
-       and damped, lerped follow — no steps, no jitter. Releasing after a
-       flick throws it: the die keeps the flick's angular velocity,
-       tumbles with inertia for roughly 1.2–1.8s, then eases into the
-       rolled face with a small settle snap. A plain tap (or Enter/Space)
-       throws it with a default flick. Input locks while it spins: the die
-       cannot be grabbed mid-roll. The .die-scene CSS already sets
-       touch-action:none, so dragging the die never scrolls the page. */
+    /* Full-motion dice. Press-and-hold grabs the die: dragging turns the
+       solid itself trackball-style (horizontal drag around the vertical
+       axis, vertical drag around the horizontal axis) with a
+       requestAnimationFrame loop and damped, slerped follow — no steps,
+       no jitter. Releasing after a flick throws it: the solid tumbles
+       through full 360° turns with inertia for roughly 1.2–1.8s, then
+       eases into the rolled face with a small settle snap. A plain tap
+       (or Enter/Space) throws it with a default flick. Input locks while
+       it spins: the die cannot be grabbed mid-roll. The .die-scene CSS
+       already sets touch-action:none, so dragging the die never scrolls
+       the page. */
     die.style.transition = "none";
-    var home = { rx: 0, ry: 0 };
-    var cur = { rx: home.rx, ry: home.ry };   /* rotation actually rendered */
-    var goal = { rx: home.rx, ry: home.ry };  /* drag target the render chases */
+    var Qcur = die._q ? die._q.slice() : settleQuat(kind, parseInt(die.getAttribute("data-die-value"), 10) || 1);
+    var Qgoal = Qcur.slice();  /* drag target the render chases */
     var dragging = false, rafId = null, lastT = 0;
     var dragStart = null, lastMove = null, vel = { x:0, y:0 }, moved = 0, downT = 0;
 
-    /* The artwork tumbles in plane (rotateZ from ry) with a gentle
-       tilt wobble — the printed face never mirrors or turns away. */
-    function applyRot(){
-      var tiltX = Math.sin(cur.rx * Math.PI / 180) * 16;
-      var tiltY = Math.sin(cur.ry * Math.PI / 180) * 10;
-      die.style.transform = "rotateX(" + tiltX.toFixed(2) + "deg) rotateY(" + tiltY.toFixed(2) + "deg) rotateZ(" + cur.ry.toFixed(2) + "deg)";
-    }
+    function applyRot(){ die.style.transform = qMatrix(Qcur); die._q = Qcur; }
+    applyRot();
     function dragLoop(t){
       if (!dragging) { rafId = null; return; }
       var dt = Math.max(1, t - lastT); lastT = t;
       var k = 1 - Math.exp(-dt / 42); /* damped follow: quick catch-up, smooth tail */
-      cur.rx += (goal.rx - cur.rx) * k;
-      cur.ry += (goal.ry - cur.ry) * k;
+      Qcur = qSlerp(Qcur, Qgoal, k);
       applyRot();
       rafId = requestAnimationFrame(dragLoop);
     }
     scene.addEventListener("pointerdown", function(e){
       if (!armed || rolling || dragging) return;
-      dragging = true; moved = 0; downT = performance.now();
-      dragStart = { x: e.clientX, y: e.clientY, rx: goal.rx, ry: goal.ry };
+      dragging = true; die._busy = true; moved = 0; downT = performance.now();
+      dragStart = { x: e.clientX, y: e.clientY, Q: Qgoal.slice() };
       lastMove = { x: e.clientX, y: e.clientY, t: downT };
       vel = { x:0, y:0 };
       try { scene.setPointerCapture(e.pointerId); } catch(err){}
@@ -5000,62 +5104,57 @@
       if (!dragging) return;
       var dx = e.clientX - dragStart.x, dy = e.clientY - dragStart.y;
       moved = Math.max(moved, Math.sqrt(dx * dx + dy * dy));
-      goal.ry = dragStart.ry + dx * 0.5;
-      goal.rx = Math.max(-78, Math.min(78, dragStart.rx - dy * 0.5));
+      Qgoal = qMul(qAxis(0, 1, 0, dx * 0.55), qMul(qAxis(1, 0, 0, -dy * 0.55), dragStart.Q));
       var now = performance.now(), dt = Math.max(1, now - lastMove.t);
-      vel.x = vel.x * 0.65 + (-(e.clientY - lastMove.y) * 0.5 / dt) * 0.35;
-      vel.y = vel.y * 0.65 + ((e.clientX - lastMove.x) * 0.5 / dt) * 0.35;
+      vel.y = vel.y * 0.65 + ((e.clientX - lastMove.x) * 0.55 / dt) * 0.35;
+      vel.x = vel.x * 0.65 + (-(e.clientY - lastMove.y) * 0.55 / dt) * 0.35;
       lastMove = { x: e.clientX, y: e.clientY, t: now };
     });
     function endDrag(){
       if (!dragging) return;
       dragging = false;
       if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+      Qcur = Qgoal.slice(); applyRot();
       if (moved < 7 && performance.now() - downT < 350) { startSpin(0.55, 1.15); return; } /* plain tap */
       var stale = performance.now() - lastMove.t > 90; /* finger paused before release: no flick left */
       var vx = stale ? 0 : vel.x, vy = stale ? 0 : vel.y;
-      if (Math.abs(vx) < 0.12 && Math.abs(vy) < 0.12) { vx = 0.35; vy = 0.6; } /* gentle release still throws */
+      if (Math.hypot(vx, vy) < 0.12) { vx = 0.35; vy = 0.6; } /* gentle release still throws */
       startSpin(vx, vy);
     }
     scene.addEventListener("pointerup", endDrag);
     scene.addEventListener("pointercancel", endDrag);
     scene.addEventListener("keydown", function(e){ if (e.key === "Enter" || e.key === " ") { e.preventDefault(); startSpin(0.55, 1.15); } });
 
-    /* Plan one axis of the throw: a signed travel (degrees) that starts at
-       roughly the flick's angular velocity under the ease curve, covers at
-       least two full turns, and lands exactly on the settled orientation. */
-    function planAxis(curA, settleA, v0, T){
-      var sign = v0 < 0 ? -1 : 1;
-      var base = ((settleA - curA) % 360 + 360) % 360;
-      var dist = sign > 0 ? base : base - 360;
-      var want = Math.abs(v0) * T / 4;
-      var turns = Math.max(2, Math.round((want - Math.abs(dist)) / 360));
-      return dist + sign * 360 * turns;
-    }
+    /* The throw: the result is drawn first, then the solid rotates about
+       the one axis that carries its current orientation onto the rolled
+       face's settled orientation — travelling that axis's own angle plus
+       at least two full 360° turns (more for a harder flick), eased out
+       hard so it decelerates like a real thrown die, and landing EXACTLY
+       on the settled orientation: the face showing is the rolled value. */
     function startSpin(vx, vy){
       if (!armed || rolling) return;
-      rolling = true;
+      rolling = true; die._busy = true;
       var value = 1 + Math.floor(Math.random() * sides);
-      var settle = settleAngles(kind, value);
-      var speed = Math.max(Math.abs(vx), Math.abs(vy));
+      var Qe = settleQuat(kind, value);
+      var Qs = Qcur.slice();
+      var aa = qToAxisAngle(qNorm(qMul(Qe, qConj(Qs))));
+      var speed = Math.hypot(vx, vy);
       var T = Math.max(1200, Math.min(1800, 750 + speed * 620));
-      var travel = { rx: planAxis(cur.rx, settle.rx, vx, T), ry: planAxis(cur.ry, settle.ry, vy, T) };
-      var from = { rx: cur.rx, ry: cur.ry };
+      var turns = 2 + Math.min(2, Math.round(speed * 1.5));
+      var total = aa.angle + 360 * turns;
       res.textContent = "Rolling the " + kind + "…";
       var cb = armed; armed = null;
       var t0 = performance.now();
-      var lastCyc = 0;
       function frame(t){
         var p = Math.min(1, (t - t0) / T);
         var e = 1 - Math.pow(1 - p, 4); /* easeOutQuart: hard throw, long decelerating tumble */
         if (p > 0.9) { var q = (p - 0.9) / 0.1; e += Math.sin(q * Math.PI) * 0.003; } /* the settle snap */
-        cur.rx = from.rx + travel.rx * e;
-        cur.ry = from.ry + travel.ry * e;
+        Qcur = qMul(qAxis(aa.axis[0], aa.axis[1], aa.axis[2], total * e), Qs);
         applyRot();
-        if (p < 0.92 && t - lastCyc > 95) { lastCyc = t; setDieFace(die, 1 + Math.floor(Math.random() * sides)); }
         if (p < 1) { requestAnimationFrame(frame); return; }
-        cur.rx = from.rx + travel.rx; cur.ry = from.ry + travel.ry; applyRot();
+        Qcur = Qe.slice(); Qgoal = Qe.slice(); applyRot();
         setDieFace(die, value);
+        die._busy = false;
         setTimeout(function(){
           res.innerHTML = "The " + kind + " settles on <b>" + value + "</b>";
           rolling = false;
@@ -5483,8 +5582,8 @@
         '<span class="gc-fx">' + a.top + " + " + a.bottom + " — worn together. The shoes are never chosen: " + a.shoes + " auto-fill from the " + a.bottom + ".</span></button>";
     }).join("");
     var note = hero === "maya"
-      ? '<p class="gear-station-note"><b>Look is story only — it changes how your traveler looks, never the math.</b> On Maya\'s <b>Trail Set</b>, hair color and skin tone work <b>together</b>: every pairing of the four hair colors and four skin tones below is its own finished portrait, and the portrait at the top of her sheet changes the moment you tap either one — try it and watch. Her Market Day and Night Watch sets color the portrait the usual way, skin on the skin and hair on the hair; attire is one set, top and bottom named together. <b>Back to default look</b> (under Hair, on the Trail Set) brings back her original uncolored pencil sketch — and tapping any hair color or skin tone brings the finished color portraits straight back.</p>'
-      : '<p class="gear-station-note"><b>Look is story only — it changes how your traveler looks, never the math.</b> Skin color lands only on ' + FIGHTERS[hero].name + '\'s skin and hair color only on the hair, inside the portrait itself; attire is one set, top and bottom named together.</p>';
+      ? '<p class="gear-station-note"><b>Look is story only — it changes how your traveler looks, never the math.</b> On Maya\'s <b>Trail Set</b>, hair color and skin tone work <b>together</b>: every pairing of the four hair colors and four skin tones below is its own finished portrait, and the portrait at the top of her sheet changes the moment you tap either one — try it and watch. Her Market Day and Night Watch sets always show her plain pencil sketch exactly as drawn — the hair and skin buttons never color them; they only pick her Trail Set portrait. Attire is one set, top and bottom named together. <b>Back to default look</b> (under Hair, on the Trail Set) brings back her original uncolored pencil sketch — and tapping any hair color or skin tone brings the finished color portraits straight back.</p>'
+      : '<p class="gear-station-note"><b>Look is story only — it changes how your traveler looks, never the math.</b> ' + FIGHTERS[hero].name + '\'s portrait is the pencil sketch exactly as drawn in every set — hair color and skin tone buttons never color it (finished color portraits exist only for Maya\'s Trail Set). Attire is one set, top and bottom named together.</p>';
     /* Canonical Maya only (forged sheets never build this): her way back
        to the original uncolored sketch. It is a Trail-set control —
        renderGear shows it only while her Trail Set is picked, and marks
@@ -5709,19 +5808,26 @@
   }
   /* The Look, applied: the attire pick swaps the sheet portrait's src
      to that set's own portrait (same box, same size — a swap, never an
-     added box); skin and hair color is then composited into that
-     portrait through its two region masks — skin laid by its own
-     luminance ramp (see LOOK_SKINS / skinRampURL), hair by the
-     three-stop luminance ramp (see LOOK_HAIRS / hairRampURL), the
-     Maya Teal standard for hair — so the color sits in the drawing
-     with its shading intact and everything else stays pure graphite.
+     added box). What happens next depends on the set:
+     Maya's Trail Set takes the direct path (see the MAYA TRAIL note
+     at LOOK_ART): src becomes the finished portrait for the picked
+     combination, the frame fits its 2:3 drawing, and no layer is
+     laid. Her original-sketch state (see isMayaOriginalSketch) takes
+     the plainest path of all: src is the base sketch itself, in its
+     own 1:2 frame, with no layer laid.
+     Every OTHER built-in set is NATIVE PLAIN: the swapped-in sketch
+     is shown exactly as drawn and no tint layer is ever laid, whatever
+     hair or skin picks are recorded — the picks still register (so
+     Maya's Trail pairing is restored when she returns to the Trail
+     Set), they just never colorize these sets.
+     Only forged/imported heroes still composite: skin and hair color
+     is laid into their portrait through its two region masks — skin
+     by its own luminance ramp (see LOOK_SKINS / skinRampURL), hair
+     by the three-stop luminance ramp (see LOOK_HAIRS / hairRampURL),
+     the Maya Teal standard for hair — so the color sits in the
+     drawing with its shading intact and everything else stays pure
+     graphite.
      Cosmetic only — nothing here is read by any math.
-     Maya's Trail Set takes the direct path instead (see the MAYA
-     TRAIL note at LOOK_ART): src becomes the finished portrait for
-     the picked combination, the frame fits its 2:3 drawing, and no
-     layer is laid. Her original-sketch state (see
-     isMayaOriginalSketch) takes the plainest path of all: src is the
-     base sketch itself, in its own 1:2 frame, with no layer laid.
      This sheet portrait is the game's one Look-driven
      portrait — the same element stays on show through battle and
      camp — so every phase shows the picked combination. */
@@ -5736,6 +5842,16 @@
     var sketchOn = isMayaOriginalSketch(hero, lk);
     var direct = !sketchOn && isMayaTrailDirect(hero, lk);
     var directKey = direct ? mayaTrailArtKey(lk) : null;
+    /* NATIVE PLAIN (Mike's ruling, 2026-11-02): Maya's Trail Set is the
+       ONLY built-in look set whose hair/skin picks change the portrait.
+       Every other built-in set — Maya's Market Day and Night Watch, and
+       every attire set of Dre, Priya, Marc, Sana and Eli — always shows
+       that attire's native default sketch, plain: the picks are still
+       recorded in state.gearLook (so Maya's Trail selections are intact
+       when she returns to the Trail Set) but no tint layer is ever laid
+       for them. Forged/imported heroes (keys outside HERO_KEYS) are
+       untouched by this rule and keep the mask ramp path below. */
+    var nativePlain = !direct && !sketchOn && HERO_KEYS.indexOf(hero) >= 0;
     if (img) {
       var art = ART[direct ? directKey : artKey];
       if (art && img.getAttribute("src") !== art) img.src = art;
@@ -5763,10 +5879,12 @@
       if (frame.getAttribute("data-look-sig") !== sig) {
         frame.setAttribute("data-look-sig", sig);
         frame.querySelectorAll(".look-layer").forEach(function(n){ n.remove(); });
-        /* Finished Trail portrait and original sketch alike lay NO
-           layer: the finished drawing carries its own color, and the
-           sketch is shown plain, exactly as drawn. */
-        if (direct || sketchOn) return;
+        /* Finished Trail portrait, original sketch and every native
+           plain built-in set alike lay NO layer: the finished drawing
+           carries its own color, and the native sketches are shown
+           plain, exactly as drawn. Only forged heroes fall through to
+           the mask ramps below. */
+        if (direct || sketchOn || nativePlain) return;
         /* Skin first: the finished ramp layer when it is cached; until
            then (or if canvas failed) a multiply + color approximation
            through the skin mask, swapped for the ramp when it lands. */
@@ -7665,14 +7783,6 @@
      holding autoplay) is never "failed": the roll holds at the top for it. */
   var ytPlayer = null, ytApiLoading = false, ytApiReady = false, ytApiFailed = false;
   var ytWantPlayer = false, ytReady = false, ytFailed = false, ytWatchdog = null;
-  /* Song-start verification: a few seconds after every start attempt the
-     game checks that the song is genuinely playing WITH sound; if it is
-     not, the failure note beside the player says so in plain words
-     instead of letting the credits roll (or hold) in unexplained
-     silence. */
-  var songFailEl = document.getElementById("songFail");
-  var songFailTextEl = document.getElementById("songFailText");
-  var songCheckTimer = null;
   /* The page origin, handed to the player so YouTube can validate the
      embed — a missing or blank origin is one road to its "video player
      configuration error" (153). Only a real http(s) page has one to
@@ -7724,7 +7834,7 @@
      ever flies past unread. The roll runs once, stops at the end, and
      never loops or restarts. Only a genuinely failed player (ytFailed)
      releases the roll to run on its own clock from the start. */
-  var ROLL_PX_PER_SEC = 50;
+  var ROLL_PX_PER_SEC = 25;
   var creditsElapsed = 0, creditsLastTick = 0, lastSongT = 0;
   /* Scrub state for press-and-hold re-reading (the scrub block sits below
      startCreditsRoll): while scrubActive, the roll is frozen at scrubY and
@@ -7999,41 +8109,6 @@
      From the moment of failure the roll runs on its own clock, and a
      plain manual-play embed takes the player's place so the song stays
      one tap away even then. */
-  /* "Playing" is only true when the song is genuinely audible: state
-     PLAYING, not muted, volume above zero. Anything less is the silent
-     failure this check exists to catch. */
-  function songAudiblyPlaying(){
-    if (!ytPlayer) return false;
-    try {
-      if (ytPlayer.getPlayerState && ytPlayer.getPlayerState() !== 1) return false;
-      if (ytPlayer.isMuted && ytPlayer.isMuted()) return false;
-      if (ytPlayer.getVolume && ytPlayer.getVolume() <= 0) return false;
-      return true;
-    } catch(e){ return false; }
-  }
-  function showSongFail(mode){
-    if (!songFailEl) return;
-    if (songFailTextEl) songFailTextEl.textContent = mode === "failed"
-      ? "YouTube couldn't play it inside the game on this device, so the credits are rolling without it. You can still tap play on the player above, or hear the song on YouTube."
-      : "Your browser is holding it back — sound can only start from a tap. Tap \u201cTry the song again\u201d, or press play on the player above, and the credits will roll with it.";
-    songFailEl.hidden = false;
-  }
-  function hideSongFail(){
-    if (songCheckTimer) { clearTimeout(songCheckTimer); songCheckTimer = null; }
-    if (songFailEl) songFailEl.hidden = true;
-  }
-  /* Verify a start attempt a few seconds on. A reader mid-scrub has
-     paused the song on purpose — that is never reported as a failure. */
-  function scheduleSongCheck(ms){
-    if (songCheckTimer) clearTimeout(songCheckTimer);
-    songCheckTimer = setTimeout(function(){
-      songCheckTimer = null;
-      if (!ytWantPlayer || !overlay.classList.contains("show")) return;
-      if (ytFailed) { showSongFail("failed"); return; }
-      if (scrubActive) return;
-      if (!songAudiblyPlaying()) showSongFail("held");
-    }, ms || 4000);
-  }
   /* The full start, always together: unmute, full volume, play. A bare
      playVideo() can leave the player running muted — a song that looks
      started and sounds like nothing. */
@@ -8048,7 +8123,7 @@
      iframe itself vanished while the reader was away. It carries the
      autoplay permission, so when the swap descends from the reader's own
      finale tap it may start on its own; when it cannot, its own play
-     button is right there and the failure note beside it says why. */
+     button is right there. */
   function showFallbackEmbed(){
     videoBox.innerHTML = '<iframe id="finalePlayer" src="https://www.youtube.com/embed/AdakBIwpYcw?rel=0&playsinline=1&autoplay=1" title="Closing song — Vote or Fade Away finale" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
   }
@@ -8059,9 +8134,6 @@
     if (ytPlayer && ytPlayer.destroy) { try { ytPlayer.destroy(); } catch(e){} }
     ytPlayer = null;
     showFallbackEmbed();
-    /* Never a silent swap: the note says the song did not start and
-       what the reader can do about it. */
-    showSongFail("failed");
   }
 
   /* Create the player through the IFrame API and drive playback with it.
@@ -8070,9 +8142,7 @@
      tap -> new YT.Player -> onReady -> seekTo(0) + unmute + full volume
      + playVideo(). If iOS still holds that play request, the player sits
      visible and cued at 0:00 with its own play button, the roll held at
-     the top until the player's clock moves — and the verification check
-     says so beside the player instead of leaving the silence
-     unexplained. */
+     the top until the player's clock moves. */
   function createYtPlayer(){
     if (ytPlayer || ytFailed || !ytWantPlayer) return;
     if (!(window.YT && YT.Player)) return;
@@ -8088,13 +8158,10 @@
             if (ytWatchdog) { clearTimeout(ytWatchdog); ytWatchdog = null; }
             try { e.target.seekTo(0); } catch(err){}
             startSongAudibly(e.target);
-            scheduleSongCheck(4000);
           },
           onStateChange: function(e){
             if (e.data !== 1) return; /* only PLAYING matters here */
             try { if (e.target.isMuted()) e.target.unMute(); e.target.setVolume(100); } catch(err){}
-            if (songAudiblyPlaying()) hideSongFail();
-            else scheduleSongCheck(2000);
           },
           onError: function(){ failYt(); }
         }
@@ -8261,7 +8328,6 @@
        the API replaces this placeholder with its iframe, and onReady
        seeks to 0 and plays — the same rules on every run. */
     ytFailed = false; ytReady = false; ytPlayer = null; ytWantPlayer = true;
-    hideSongFail();
     videoBox.innerHTML = '<div id="finalePlayer"></div>';
     overlay.classList.add("show");
     document.body.style.overflow = "hidden";
@@ -8278,7 +8344,6 @@
   }
   function closeFinale(){
     overlay.classList.remove("show");
-    hideSongFail();
     if (creditsRAF) cancelAnimationFrame(creditsRAF);
     creditsRAF = null;
     resetScrub();
@@ -8296,29 +8361,6 @@
   if (distFinaleBtn) distFinaleBtn.addEventListener("click", openFinale);
   var walkFinaleBtn = document.getElementById("playFinaleBtnWalk");
   if (walkFinaleBtn) walkFinaleBtn.addEventListener("click", openFinale);
-  /* The failure note's retry. Everything it does runs inside this tap —
-     the one context where browsers reliably let sound start. Against a
-     live player it is the full start (unmute, full volume, play) issued
-     synchronously from the tap; against a failed one it rebuilds the API
-     player from scratch. Either way the verification check re-arms, so
-     a retry that still does not produce sound says so again. */
-  var songRetryBtn = document.getElementById("songRetryBtn");
-  if (songRetryBtn) songRetryBtn.addEventListener("click", function(){
-    hideSongFail();
-    if (ytFailed) {
-      ytFailed = false; ytReady = false; ytPlayer = null; ytWantPlayer = true;
-      videoBox.innerHTML = '<div id="finalePlayer"></div>';
-      if (ytApiFailed) { failYt(); return; }
-      if (window.YT && YT.Player) { ytApiReady = true; createYtPlayer(); }
-      else { loadYtApi(); }
-      if (ytWatchdog) clearTimeout(ytWatchdog);
-      ytWatchdog = setTimeout(function(){ if (ytWantPlayer && !ytReady && !ytFailed) failYt(); }, 15000);
-      scheduleSongCheck(6000);
-    } else if (ytPlayer) {
-      startSongAudibly(ytPlayer);
-      scheduleSongCheck(3500);
-    }
-  });
   document.getElementById("creditsClose").addEventListener("click", closeFinale);
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && overlay.classList.contains("show")) closeFinale(); });
 
@@ -8945,7 +8987,7 @@
 <script>
   if ('serviceWorker' in navigator) { try { navigator.serviceWorker.register('sw.js').catch(function(){}); } catch(e){} }
 </script>
-<div style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#7b1d1d;color:#fff;font:700 14px/1.35 system-ui,sans-serif;text-align:center;padding:8px 10px">TEST PAGE — SONG FIX CHECK: this page opens on the win screen. Tap “Play the closing song &amp; roll credits” — the song should play.</div>
+<div style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#7b1d1d;color:#fff;font:700 14px/1.35 system-ui,sans-serif;text-align:center;padding:8px 10px">TEST PAGE — FINAL BUILD: this page opens on the win screen. Tap “Play the closing song &amp; roll credits” — the song should play, the credits roll at the slower pace and then hold on the last card.</div>
 <script>
 window.addEventListener('load', function(){ setTimeout(function(){ var w = document.getElementById('winEnding'); if (w){ w.classList.add('show'); w.scrollIntoView(); } }, 400); });
 </script>
