@@ -364,6 +364,10 @@
   .video-wrap{width:min(920px,100%);margin:0 auto;padding:0 12px}
   .video-box{position:relative;padding-top:56.25%;background:#000;border:1px solid #33413a;border-radius:10px;overflow:hidden}
   .video-box iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  /* Return-recovery repaint flush: toggled on for a frame or two when the
+     page comes back from YouTube / fullscreen with the finale open, so a
+     leftover fullscreen poster layer is composited away. Visually a no-op. */
+  .credits-overlay.repaint-flush,.video-box.repaint-flush{transform:translate3d(0,0,0)}
   .credits-viewport{flex:1;overflow:hidden;position:relative;margin-top:8px;-webkit-mask-image:linear-gradient(180deg,transparent,#000 12%,#000 82%,transparent);mask-image:linear-gradient(180deg,transparent,#000 12%,#000 82%,transparent)}
   .credits-scroll{position:absolute;left:0;right:0;top:0;text-align:center;color:#f3e9c8;padding:0 20px 60px;will-change:transform}
   .credits-scroll h3{font-size:clamp(1.6rem,6vw,2.4rem);color:#fff;margin:0 0 10px}
@@ -7967,13 +7971,19 @@
      From the moment of failure the roll runs on its own clock, and a
      plain manual-play embed takes the player's place so the song stays
      one tap away even then. */
+  /* The plain manual-play embed that stands in for the API player after a
+     genuine failure — also what return-recovery restores if that fallback
+     iframe itself vanished while the reader was away. */
+  function showFallbackEmbed(){
+    videoBox.innerHTML = '<iframe id="finalePlayer" src="https://www.youtube.com/embed/AdakBIwpYcw?rel=0&playsinline=1" title="Closing song — Vote or Fade Away finale" allow="encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+  }
   function failYt(){
     if (ytFailed) return;
     ytFailed = true;
     if (ytWatchdog) { clearTimeout(ytWatchdog); ytWatchdog = null; }
     if (ytPlayer && ytPlayer.destroy) { try { ytPlayer.destroy(); } catch(e){} }
     ytPlayer = null;
-    videoBox.innerHTML = '<iframe id="finalePlayer" src="https://www.youtube.com/embed/AdakBIwpYcw?rel=0&playsinline=1" title="Closing song — Vote or Fade Away finale" allow="encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+    showFallbackEmbed();
   }
 
   /* Create the player through the IFrame API and drive playback with it.
@@ -8196,6 +8206,89 @@
   if (walkFinaleBtn) walkFinaleBtn.addEventListener("click", openFinale);
   document.getElementById("creditsClose").addEventListener("click", closeFinale);
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && overlay.classList.contains("show")) closeFinale(); });
+
+  /* ============ Finale return-recovery ============
+     On phones, tapping play can hand the song to YouTube's fullscreen /
+     native player (or to the YouTube app itself) even with playsinline
+     set. When the reader comes back, the embed underneath restores
+     itself — but the fullscreen player's poster (for this art-track
+     upload, the square album cover) can stay painted over the top of the
+     page as a ghost layer, and the iframe the API was driving can be
+     gone entirely. Nothing used to run on that return. Now: going away
+     while the finale is open arms the recovery, and coming back —
+     visible again, pageshow, window focus, or a fullscreen exit — runs
+     it once. It sweeps any stray YouTube player node living outside the
+     video box, keeps exactly one player inside the box, rebuilds the
+     player in place if it died while away (the credits roll is NOT
+     restarted: creditsElapsed and the frame loop are left exactly as
+     they were — only openFinale ever starts a roll), restores the
+     fallback embed if that is what vanished, and forces a repaint so a
+     ghost poster layer flushes away. When nothing went wrong while
+     away, every step is a no-op. */
+  var finaleAway = false;
+  function armFinaleReturn(){
+    if (overlay.classList.contains("show")) finaleAway = true;
+  }
+  function ytPlayerFrame(){
+    if (!ytPlayer || !ytPlayer.getIframe) return null;
+    try { return ytPlayer.getIframe(); } catch(e){ return null; }
+  }
+  function flushFinaleRepaint(){
+    overlay.classList.add("repaint-flush");
+    videoBox.classList.add("repaint-flush");
+    void overlay.offsetHeight; /* force the reflow that makes it a repaint */
+    function unflush(){
+      overlay.classList.remove("repaint-flush");
+      videoBox.classList.remove("repaint-flush");
+    }
+    requestAnimationFrame(function(){ requestAnimationFrame(unflush); });
+    setTimeout(unflush, 400); /* in case rAF is starved on the way back in */
+  }
+  function recoverFinaleOnReturn(){
+    if (!finaleAway) return;
+    finaleAway = false;
+    if (!overlay.classList.contains("show")) return;
+    /* Exactly one player, and only inside the video box: drop any
+       YouTube embed node that ended up anywhere else in the document. */
+    Array.prototype.slice.call(document.querySelectorAll('iframe[src*="youtube.com/embed"], iframe[src*="youtube-nocookie.com/embed"]')).forEach(function(f){
+      if (!videoBox.contains(f)) f.remove();
+    });
+    var frames = videoBox.querySelectorAll("iframe");
+    for (var i = 1; i < frames.length; i++) frames[i].remove();
+    if (ytFailed) {
+      /* The fallback is a plain iframe; if it vanished while away, put
+         it back so the song stays one tap away. */
+      if (!videoBox.querySelector("iframe")) showFallbackEmbed();
+    } else if (ytWantPlayer) {
+      var frame = ytPlayerFrame();
+      var alive = !!(ytPlayer && frame && videoBox.contains(frame));
+      if (!alive) {
+        if (ytPlayer && ytPlayer.destroy) { try { ytPlayer.destroy(); } catch(e){} }
+        ytPlayer = null; ytReady = false;
+        videoBox.innerHTML = '<div id="finalePlayer"></div>';
+        if (ytApiFailed) { failYt(); }
+        else if (window.YT && YT.Player) { ytApiReady = true; createYtPlayer(); }
+        else { loadYtApi(); }
+        if (ytWatchdog) clearTimeout(ytWatchdog);
+        ytWatchdog = setTimeout(function(){ if (ytWantPlayer && !ytReady && !ytFailed) failYt(); }, 15000);
+      }
+    }
+    flushFinaleRepaint();
+  }
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden) armFinaleReturn();
+    else recoverFinaleOnReturn();
+  });
+  window.addEventListener("pagehide", armFinaleReturn);
+  window.addEventListener("pageshow", recoverFinaleOnReturn);
+  window.addEventListener("blur", armFinaleReturn);
+  window.addEventListener("focus", recoverFinaleOnReturn);
+  function onFinaleFsChange(){
+    if (document.fullscreenElement || document.webkitFullscreenElement) armFinaleReturn();
+    else recoverFinaleOnReturn();
+  }
+  document.addEventListener("fullscreenchange", onFinaleFsChange);
+  document.addEventListener("webkitfullscreenchange", onFinaleFsChange);
 
   ["winScore", "loseScore"].forEach(function(id){
     var scoreEl = document.getElementById(id);
