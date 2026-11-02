@@ -389,12 +389,6 @@
   .credits-scroll .closing-card p{font-family:"Anton",sans-serif;font-size:clamp(1.5rem,5.5vw,2.2rem);line-height:1.3;color:#fff;margin:0;text-transform:uppercase;letter-spacing:.01em}
   .credits-scroll .closing-card p+p{margin-top:12px;color:var(--amber)}
   .credits-hint{margin:10px 16px 0;text-align:center;font-size:.8rem;color:#9db3ad}
-  .song-fail{width:min(920px,calc(100% - 24px));margin:10px auto 0;border:1px solid var(--amber);border-radius:10px;background:#171208;padding:12px 14px;color:#f3e9c8}
-  .song-fail[hidden]{display:none}
-  .song-fail p{margin:0;font-size:.92rem;line-height:1.5}
-  .song-fail-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
-  .song-retry-btn{background:var(--amber);border:none;border-radius:8px;padding:10px 16px;font-weight:800;color:#10181d;cursor:pointer}
-  .song-fail-actions a{color:#e8a317;font-weight:700}
   .credits-viewport{-webkit-touch-callout:none}
   @media (prefers-reduced-motion: no-preference){.credits-viewport{touch-action:none}}
   @media (prefers-reduced-motion: reduce){.credits-viewport{touch-action:pan-y}}
@@ -2176,13 +2170,6 @@
   </div>
   <div class="video-wrap">
     <div class="video-box" id="videoBox"><!-- YouTube player created here through the IFrame API on the finale tap --></div>
-  </div>
-  <div class="song-fail" id="songFail" hidden role="alert">
-    <p><b>The closing song isn't playing.</b> <span id="songFailText"></span></p>
-    <div class="song-fail-actions">
-      <button class="song-retry-btn" id="songRetryBtn" type="button">Try the song again</button>
-      <a href="https://youtu.be/AdakBIwpYcw" target="_blank" rel="noopener">Hear it on YouTube</a>
-    </div>
   </div>
   <p class="credits-hint">Press and hold the credits to pause and re-read.</p>
   <div class="credits-viewport" aria-label="Scrolling credits">
@@ -7665,14 +7652,6 @@
      holding autoplay) is never "failed": the roll holds at the top for it. */
   var ytPlayer = null, ytApiLoading = false, ytApiReady = false, ytApiFailed = false;
   var ytWantPlayer = false, ytReady = false, ytFailed = false, ytWatchdog = null;
-  /* Song-start verification: a few seconds after every start attempt the
-     game checks that the song is genuinely playing WITH sound; if it is
-     not, the failure note beside the player says so in plain words
-     instead of letting the credits roll (or hold) in unexplained
-     silence. */
-  var songFailEl = document.getElementById("songFail");
-  var songFailTextEl = document.getElementById("songFailText");
-  var songCheckTimer = null;
   /* The page origin, handed to the player so YouTube can validate the
      embed — a missing or blank origin is one road to its "video player
      configuration error" (153). Only a real http(s) page has one to
@@ -7999,41 +7978,6 @@
      From the moment of failure the roll runs on its own clock, and a
      plain manual-play embed takes the player's place so the song stays
      one tap away even then. */
-  /* "Playing" is only true when the song is genuinely audible: state
-     PLAYING, not muted, volume above zero. Anything less is the silent
-     failure this check exists to catch. */
-  function songAudiblyPlaying(){
-    if (!ytPlayer) return false;
-    try {
-      if (ytPlayer.getPlayerState && ytPlayer.getPlayerState() !== 1) return false;
-      if (ytPlayer.isMuted && ytPlayer.isMuted()) return false;
-      if (ytPlayer.getVolume && ytPlayer.getVolume() <= 0) return false;
-      return true;
-    } catch(e){ return false; }
-  }
-  function showSongFail(mode){
-    if (!songFailEl) return;
-    if (songFailTextEl) songFailTextEl.textContent = mode === "failed"
-      ? "YouTube couldn't play it inside the game on this device, so the credits are rolling without it. You can still tap play on the player above, or hear the song on YouTube."
-      : "Your browser is holding it back — sound can only start from a tap. Tap \u201cTry the song again\u201d, or press play on the player above, and the credits will roll with it.";
-    songFailEl.hidden = false;
-  }
-  function hideSongFail(){
-    if (songCheckTimer) { clearTimeout(songCheckTimer); songCheckTimer = null; }
-    if (songFailEl) songFailEl.hidden = true;
-  }
-  /* Verify a start attempt a few seconds on. A reader mid-scrub has
-     paused the song on purpose — that is never reported as a failure. */
-  function scheduleSongCheck(ms){
-    if (songCheckTimer) clearTimeout(songCheckTimer);
-    songCheckTimer = setTimeout(function(){
-      songCheckTimer = null;
-      if (!ytWantPlayer || !overlay.classList.contains("show")) return;
-      if (ytFailed) { showSongFail("failed"); return; }
-      if (scrubActive) return;
-      if (!songAudiblyPlaying()) showSongFail("held");
-    }, ms || 4000);
-  }
   /* The full start, always together: unmute, full volume, play. A bare
      playVideo() can leave the player running muted — a song that looks
      started and sounds like nothing. */
@@ -8048,7 +7992,7 @@
      iframe itself vanished while the reader was away. It carries the
      autoplay permission, so when the swap descends from the reader's own
      finale tap it may start on its own; when it cannot, its own play
-     button is right there and the failure note beside it says why. */
+     button is right there. */
   function showFallbackEmbed(){
     videoBox.innerHTML = '<iframe id="finalePlayer" src="https://www.youtube.com/embed/AdakBIwpYcw?rel=0&playsinline=1&autoplay=1" title="Closing song — Vote or Fade Away finale" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
   }
@@ -8059,9 +8003,6 @@
     if (ytPlayer && ytPlayer.destroy) { try { ytPlayer.destroy(); } catch(e){} }
     ytPlayer = null;
     showFallbackEmbed();
-    /* Never a silent swap: the note says the song did not start and
-       what the reader can do about it. */
-    showSongFail("failed");
   }
 
   /* Create the player through the IFrame API and drive playback with it.
@@ -8070,9 +8011,7 @@
      tap -> new YT.Player -> onReady -> seekTo(0) + unmute + full volume
      + playVideo(). If iOS still holds that play request, the player sits
      visible and cued at 0:00 with its own play button, the roll held at
-     the top until the player's clock moves — and the verification check
-     says so beside the player instead of leaving the silence
-     unexplained. */
+     the top until the player's clock moves. */
   function createYtPlayer(){
     if (ytPlayer || ytFailed || !ytWantPlayer) return;
     if (!(window.YT && YT.Player)) return;
@@ -8088,13 +8027,10 @@
             if (ytWatchdog) { clearTimeout(ytWatchdog); ytWatchdog = null; }
             try { e.target.seekTo(0); } catch(err){}
             startSongAudibly(e.target);
-            scheduleSongCheck(4000);
           },
           onStateChange: function(e){
             if (e.data !== 1) return; /* only PLAYING matters here */
             try { if (e.target.isMuted()) e.target.unMute(); e.target.setVolume(100); } catch(err){}
-            if (songAudiblyPlaying()) hideSongFail();
-            else scheduleSongCheck(2000);
           },
           onError: function(){ failYt(); }
         }
@@ -8261,7 +8197,6 @@
        the API replaces this placeholder with its iframe, and onReady
        seeks to 0 and plays — the same rules on every run. */
     ytFailed = false; ytReady = false; ytPlayer = null; ytWantPlayer = true;
-    hideSongFail();
     videoBox.innerHTML = '<div id="finalePlayer"></div>';
     overlay.classList.add("show");
     document.body.style.overflow = "hidden";
@@ -8278,7 +8213,6 @@
   }
   function closeFinale(){
     overlay.classList.remove("show");
-    hideSongFail();
     if (creditsRAF) cancelAnimationFrame(creditsRAF);
     creditsRAF = null;
     resetScrub();
@@ -8296,29 +8230,6 @@
   if (distFinaleBtn) distFinaleBtn.addEventListener("click", openFinale);
   var walkFinaleBtn = document.getElementById("playFinaleBtnWalk");
   if (walkFinaleBtn) walkFinaleBtn.addEventListener("click", openFinale);
-  /* The failure note's retry. Everything it does runs inside this tap —
-     the one context where browsers reliably let sound start. Against a
-     live player it is the full start (unmute, full volume, play) issued
-     synchronously from the tap; against a failed one it rebuilds the API
-     player from scratch. Either way the verification check re-arms, so
-     a retry that still does not produce sound says so again. */
-  var songRetryBtn = document.getElementById("songRetryBtn");
-  if (songRetryBtn) songRetryBtn.addEventListener("click", function(){
-    hideSongFail();
-    if (ytFailed) {
-      ytFailed = false; ytReady = false; ytPlayer = null; ytWantPlayer = true;
-      videoBox.innerHTML = '<div id="finalePlayer"></div>';
-      if (ytApiFailed) { failYt(); return; }
-      if (window.YT && YT.Player) { ytApiReady = true; createYtPlayer(); }
-      else { loadYtApi(); }
-      if (ytWatchdog) clearTimeout(ytWatchdog);
-      ytWatchdog = setTimeout(function(){ if (ytWantPlayer && !ytReady && !ytFailed) failYt(); }, 15000);
-      scheduleSongCheck(6000);
-    } else if (ytPlayer) {
-      startSongAudibly(ytPlayer);
-      scheduleSongCheck(3500);
-    }
-  });
   document.getElementById("creditsClose").addEventListener("click", closeFinale);
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && overlay.classList.contains("show")) closeFinale(); });
 
