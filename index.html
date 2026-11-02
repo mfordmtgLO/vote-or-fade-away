@@ -1034,10 +1034,10 @@
 
   /* ---------- Gear Up Part B: Pack, Look & Dice stations ----------
      Same card language as Weapon/Spells. Look adds sub-group headings,
-     tint swatches and the auto shoes line; the portrait's skin and hair
-     color is composited only through per-portrait region masks (the
-     .look-layer spans on the sheet's .sketch portrait) — nothing tints
-     the whole card. Dice cards carry a body swatch and a sample row
+     tint swatches and the auto shoes line; on forged sheets the
+     portrait's skin and hair color is composited only through
+     per-portrait region masks (the .look-layer spans on the sheet's
+     .sketch portrait) — nothing tints the whole card. Dice cards carry a body swatch and a sample row
      of the graphics family; the thrown dice themselves are re-skinned
      by the artwork palette on .die plus the glyph printed on
      each die's face. */
@@ -3158,11 +3158,18 @@
   function packItem(id){ for (var i = 0; i < PACK_ITEMS.length; i++) if (PACK_ITEMS[i].id === id) return PACK_ITEMS[i]; return PACK_ITEMS[0]; }
   function packHas(id){ return state.gearPack.indexOf(id) >= 0; }
 
-  /* LOOK — per hero, story only: skin and hair color is composited
-     into the sheet portrait through region masks derived from the
-     artwork (exposed skin in one mask, hair in the other), so a pick
-     colors only that region and the graphite shading shows through;
-     clothes, props and paper are never tinted. Attire is one named
+  /* LOOK — per hero, story only. Built-in heroes are never tinted by
+     the picks: Maya's Trail Set alone colorizes, by swapping in one of
+     her sixteen finished portraits per hair x skin pairing (the
+     exception at the end of this note); every other built-in set —
+     Maya's Market Day and Night Watch included — always shows its
+     native default sketch, plain, whatever hair or skin buttons are
+     pressed. The mask compositing described in the rest of this note
+     (skin and hair color laid into the portrait through region masks
+     derived from the artwork — exposed skin in one mask, hair in the
+     other — so a pick colors only that region and the graphite
+     shading shows through; clothes, props and paper are never tinted)
+     now serves imported forged characters only. Attire is one named
      set (top + bottom), and the shoes are never chosen — they
      auto-fill from the bottom piece. Default: the first set listed,
      Natural hair, Fair skin.
@@ -3195,8 +3202,10 @@
      EXCEPTION — MAYA, TRAIL SET ONLY: her sixteen hair x skin
      combinations are finished rendered portraits, not tints, so the
      Trail set bypasses both ramps entirely and selects the finished
-     file directly (see MAYA_TRAIL_HAIR_SLUG / mayaTrailArtKey). Her
-     other two sets keep the ramps. */
+     file directly (see MAYA_TRAIL_HAIR_SLUG / mayaTrailArtKey). It is
+     the only built-in set that colorizes — see nativePlain in
+     renderLookPortrait for the plain-sketch rule covering every
+     other built-in set. */
   var LOOK_SKINS = [
     { name:"Fair",   sw:"#f2d7bd", tone:"#f7e3cb", op:.92 },
     { name:"Warm",   sw:"#dfa06b", tone:"#e0a068", op:.95 },
@@ -3423,8 +3432,11 @@
      Index 0 is the hero's existing portrait — the default set's art,
      unchanged. Picking a set swaps the src of the hero's one existing
      sheet portrait (the same box, in the sheet and the fighter picker
-     alike); the skin and hair masks for that portrait carry the color,
-     so every skin × hair × outfit combination renders. */
+     alike). For built-in heroes the swapped-in portrait is shown
+     plain, exactly as drawn (Maya's Trail Set excepted — see below);
+     for forged characters the skin and hair masks for that portrait
+     carry the color, so every skin × hair × outfit combination
+     renders. */
   var LOOK_ART = {
     maya: ["maya", "maya2", "maya3"],
     dre: ["dre", "dre2", "dre3"],
@@ -3443,8 +3455,10 @@
      the arrays' display order never matters): LOOK_HAIRS is
      [Natural, Auburn, Silver, Teal] and LOOK_SKINS is
      [Fair, Warm, Deep, Golden]. Maya's Natural is the finished set's
-     Natural Brown. Every other hero, and Maya's Market Day and Night
-     Watch sets, keep the mask ramp path exactly as before. */
+     Natural Brown. Every other built-in set — Maya's Market Day and
+     Night Watch included — shows its native sketch plain (see
+     nativePlain in renderLookPortrait); only forged characters keep
+     the mask ramp path. */
   var MAYA_TRAIL_HAIR_SLUG = ["natural_brown", "auburn", "silver", "teal"];
   var MAYA_TRAIL_SKIN_SLUG = ["fair", "warm", "deep", "golden"];
   function mayaTrailArtKey(lk){
@@ -3695,7 +3709,7 @@
     voice:    { t:"Your Voice — the Voice Power Meter", b:"One shared meter for the whole band. It starts at 0 and only grows: it rises when the band speaks with facts — fact-checking his lines, ruling his gambits, banishing his minions, playing the Power Card, canvassing, and the band's Voice-raising moves, spells and camp crafts. It never shrinks, for any reason: wrong answers, his counterattacks, Blowback and his minions' powers cost no Voice. There is no failure state tied to it — it only records how loudly the band spoke, and it shades the win endings." },
     power:    { t:"The Power Card — your vote", b:"One card, shared by the whole band. It charges only through informed play: +1 for each battle question answered correctly, +1 for catching a Fake News gambit, +1 when a fighter Canvasses at camp; a landed Death Blow fills it. At 5 charges you can PLAY it: a full 12 damage, his Spin Defense gone for the next two battles, his current excuse struck through with its documented correction, and he does not heal at the end of the battle you play it. Then it can charge again." },
     readied:  { t:"Readied moves", b:"The move you tap is readied for that hero's next battle — one themed bonus, spent when that battle ends. Attack moves strike harder, guard moves blunt his first counter, and Freedom's Shout stops it cold." },
-    gearup:   { t:"Gear Up", b:"Swipe the carousel (or tap a station chip) to change what the band carries. Weapon sets the hero's damage die on every attack, plus any modifiers on its card. Spells picks the two spells the hero carries into battle — in the arena each is a button, castable once per battle and back the next. Pack is the band's shared kit: pick 2 of 5, the same on every sheet, and each item fires once at its stated moment. Look is story only — skin and hair are colored in the portrait itself, only on the skin and the hair, and one attire set per hero, with the shoes following the bottom piece on their own. One exception: on Maya's Trail Set, her hair color and skin tone together pick a finished portrait — every pairing is its own drawing, and her portrait changes as soon as you tap either one. Her Back to default look button (Trail Set, under Hair) brings back her original uncolored pencil sketch, and tapping any hair color or skin tone brings the finished color portraits back. Dice picks your set's body and graphics: looks only, the same dice, faces and odds always. The first option in each station is the signature default — skip Gear Up entirely and you play the build exactly as designed. Picks hold for the whole run." },
+    gearup:   { t:"Gear Up", b:"Swipe the carousel (or tap a station chip) to change what the band carries. Weapon sets the hero's damage die on every attack, plus any modifiers on its card. Spells picks the two spells the hero carries into battle — in the arena each is a button, castable once per battle and back the next. Pack is the band's shared kit: pick 2 of 5, the same on every sheet, and each item fires once at its stated moment. Look is story only — one attire set per hero, with the shoes following the bottom piece on their own. Only Maya's Trail Set colors: on it, her hair color and skin tone together pick a finished portrait — every pairing is its own drawing, and her portrait changes as soon as you tap either one. Every other set — Maya's Market Day and Night Watch, and every set of the other five heroes — always shows its plain pencil sketch exactly as drawn, whatever hair color or skin tone you tap; the taps are still remembered, so Maya's Trail portrait keeps the pairing you picked. Her Back to default look button (Trail Set, under Hair) brings back her original uncolored pencil sketch, and tapping any hair color or skin tone brings the finished color portraits back. Dice picks your set's body and graphics: looks only, the same dice, faces and odds always. The first option in each station is the signature default — skip Gear Up entirely and you play the build exactly as designed. Picks hold for the whole run." },
     spells:   { t:"Spells in battle", b:"The active fighter's two carried spells, chosen on their character sheet in Gear Up. Tap one to cast it — each casts once per battle, then returns next battle. Attack spells ride on the fighter's next attack this battle; heals, Voice, pips and counter-wards take effect the moment they are cast." },
     /* Per-move help for the Campaigns of Friends tiles: the bonus in
        plain words plus when to pick it — shown BEFORE the player commits. */
@@ -5470,8 +5484,8 @@
         '<span class="gc-fx">' + a.top + " + " + a.bottom + " — worn together. The shoes are never chosen: " + a.shoes + " auto-fill from the " + a.bottom + ".</span></button>";
     }).join("");
     var note = hero === "maya"
-      ? '<p class="gear-station-note"><b>Look is story only — it changes how your traveler looks, never the math.</b> On Maya\'s <b>Trail Set</b>, hair color and skin tone work <b>together</b>: every pairing of the four hair colors and four skin tones below is its own finished portrait, and the portrait at the top of her sheet changes the moment you tap either one — try it and watch. Her Market Day and Night Watch sets color the portrait the usual way, skin on the skin and hair on the hair; attire is one set, top and bottom named together. <b>Back to default look</b> (under Hair, on the Trail Set) brings back her original uncolored pencil sketch — and tapping any hair color or skin tone brings the finished color portraits straight back.</p>'
-      : '<p class="gear-station-note"><b>Look is story only — it changes how your traveler looks, never the math.</b> Skin color lands only on ' + FIGHTERS[hero].name + '\'s skin and hair color only on the hair, inside the portrait itself; attire is one set, top and bottom named together.</p>';
+      ? '<p class="gear-station-note"><b>Look is story only — it changes how your traveler looks, never the math.</b> On Maya\'s <b>Trail Set</b>, hair color and skin tone work <b>together</b>: every pairing of the four hair colors and four skin tones below is its own finished portrait, and the portrait at the top of her sheet changes the moment you tap either one — try it and watch. Her Market Day and Night Watch sets always show her plain pencil sketch exactly as drawn — the hair and skin buttons never color them; they only pick her Trail Set portrait. Attire is one set, top and bottom named together. <b>Back to default look</b> (under Hair, on the Trail Set) brings back her original uncolored pencil sketch — and tapping any hair color or skin tone brings the finished color portraits straight back.</p>'
+      : '<p class="gear-station-note"><b>Look is story only — it changes how your traveler looks, never the math.</b> ' + FIGHTERS[hero].name + '\'s portrait is the pencil sketch exactly as drawn in every set — hair color and skin tone buttons never color it (finished color portraits exist only for Maya\'s Trail Set). Attire is one set, top and bottom named together.</p>';
     /* Canonical Maya only (forged sheets never build this): her way back
        to the original uncolored sketch. It is a Trail-set control —
        renderGear shows it only while her Trail Set is picked, and marks
@@ -5696,19 +5710,26 @@
   }
   /* The Look, applied: the attire pick swaps the sheet portrait's src
      to that set's own portrait (same box, same size — a swap, never an
-     added box); skin and hair color is then composited into that
-     portrait through its two region masks — skin laid by its own
-     luminance ramp (see LOOK_SKINS / skinRampURL), hair by the
-     three-stop luminance ramp (see LOOK_HAIRS / hairRampURL), the
-     Maya Teal standard for hair — so the color sits in the drawing
-     with its shading intact and everything else stays pure graphite.
+     added box). What happens next depends on the set:
+     Maya's Trail Set takes the direct path (see the MAYA TRAIL note
+     at LOOK_ART): src becomes the finished portrait for the picked
+     combination, the frame fits its 2:3 drawing, and no layer is
+     laid. Her original-sketch state (see isMayaOriginalSketch) takes
+     the plainest path of all: src is the base sketch itself, in its
+     own 1:2 frame, with no layer laid.
+     Every OTHER built-in set is NATIVE PLAIN: the swapped-in sketch
+     is shown exactly as drawn and no tint layer is ever laid, whatever
+     hair or skin picks are recorded — the picks still register (so
+     Maya's Trail pairing is restored when she returns to the Trail
+     Set), they just never colorize these sets.
+     Only forged/imported heroes still composite: skin and hair color
+     is laid into their portrait through its two region masks — skin
+     by its own luminance ramp (see LOOK_SKINS / skinRampURL), hair
+     by the three-stop luminance ramp (see LOOK_HAIRS / hairRampURL),
+     the Maya Teal standard for hair — so the color sits in the
+     drawing with its shading intact and everything else stays pure
+     graphite.
      Cosmetic only — nothing here is read by any math.
-     Maya's Trail Set takes the direct path instead (see the MAYA
-     TRAIL note at LOOK_ART): src becomes the finished portrait for
-     the picked combination, the frame fits its 2:3 drawing, and no
-     layer is laid. Her original-sketch state (see
-     isMayaOriginalSketch) takes the plainest path of all: src is the
-     base sketch itself, in its own 1:2 frame, with no layer laid.
      This sheet portrait is the game's one Look-driven
      portrait — the same element stays on show through battle and
      camp — so every phase shows the picked combination. */
@@ -5723,6 +5744,16 @@
     var sketchOn = isMayaOriginalSketch(hero, lk);
     var direct = !sketchOn && isMayaTrailDirect(hero, lk);
     var directKey = direct ? mayaTrailArtKey(lk) : null;
+    /* NATIVE PLAIN (Mike's ruling, 2026-11-02): Maya's Trail Set is the
+       ONLY built-in look set whose hair/skin picks change the portrait.
+       Every other built-in set — Maya's Market Day and Night Watch, and
+       every attire set of Dre, Priya, Marc, Sana and Eli — always shows
+       that attire's native default sketch, plain: the picks are still
+       recorded in state.gearLook (so Maya's Trail selections are intact
+       when she returns to the Trail Set) but no tint layer is ever laid
+       for them. Forged/imported heroes (keys outside HERO_KEYS) are
+       untouched by this rule and keep the mask ramp path below. */
+    var nativePlain = !direct && !sketchOn && HERO_KEYS.indexOf(hero) >= 0;
     if (img) {
       var art = ART[direct ? directKey : artKey];
       if (art && img.getAttribute("src") !== art) img.src = art;
@@ -5750,10 +5781,12 @@
       if (frame.getAttribute("data-look-sig") !== sig) {
         frame.setAttribute("data-look-sig", sig);
         frame.querySelectorAll(".look-layer").forEach(function(n){ n.remove(); });
-        /* Finished Trail portrait and original sketch alike lay NO
-           layer: the finished drawing carries its own color, and the
-           sketch is shown plain, exactly as drawn. */
-        if (direct || sketchOn) return;
+        /* Finished Trail portrait, original sketch and every native
+           plain built-in set alike lay NO layer: the finished drawing
+           carries its own color, and the native sketches are shown
+           plain, exactly as drawn. Only forged heroes fall through to
+           the mask ramps below. */
+        if (direct || sketchOn || nativePlain) return;
         /* Skin first: the finished ramp layer when it is cached; until
            then (or if canvas failed) a multiply + color approximation
            through the skin mask, swapped for the ramp when it lands. */
