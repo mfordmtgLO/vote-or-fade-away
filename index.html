@@ -486,7 +486,7 @@
   .camp .dice-tray{background:var(--panel2);border-color:var(--line);color:var(--ink)}
   .dice-tray .dt-label{font-family:"JetBrains Mono",monospace;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);display:block}
   .camp .dice-tray .dt-label{color:var(--teal)}
-  .die-scene{width:124px;height:124px;margin:8px auto 4px;perspective:640px;cursor:pointer;border-radius:12px;touch-action:none;background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.09),transparent 68%)}
+  .die-scene{width:124px;height:124px;margin:8px auto 4px;perspective:640px;cursor:pointer;border-radius:12px;touch-action:pinch-zoom;background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.09),transparent 68%)}
   .camp .die-scene{background:radial-gradient(circle at 50% 42%,rgba(14,124,116,.14),transparent 68%)}
   .die-scene:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
   .die{position:relative;width:100%;height:100%;transform-style:preserve-3d}
@@ -4975,7 +4975,7 @@
       rafId = requestAnimationFrame(loop);
     }
     scene.addEventListener("pointerdown", function(e){
-      if (dragging) return;
+      if (dragging) { endDrag(); return; } /* a second finger is a pinch starting: end the turn where it is and let the browser take the zoom */
       dragging = true;
       dragStart = { x: e.clientX, y: e.clientY, Q: Qgoal.slice() };
       try { scene.setPointerCapture(e.pointerId); } catch(err){}
@@ -5056,7 +5056,17 @@
           if (cb) cb(value);
         }, 90);
       }
-      scene.addEventListener("pointerup", doRollSimple);
+      /* A two-finger pinch is a zoom, not a tap: if a second pointer
+         went down during the gesture, the release does not roll. A
+         plain single-finger tap rolls exactly as before. */
+      var rmPointers = 0, rmPinch = false;
+      scene.addEventListener("pointerdown", function(){ rmPointers++; if (rmPointers > 1) rmPinch = true; });
+      scene.addEventListener("pointerup", function(){
+        if (rmPointers > 0) rmPointers--;
+        if (rmPinch) { if (rmPointers === 0) rmPinch = false; return; }
+        doRollSimple();
+      });
+      scene.addEventListener("pointercancel", function(){ if (rmPointers > 0) rmPointers--; if (rmPointers === 0) rmPinch = false; });
       scene.addEventListener("keydown", function(e){ if (e.key === "Enter" || e.key === " ") { e.preventDefault(); doRollSimple(); } });
       tray.arm = function(cb){ armed = cb; res.textContent = "Swipe or tap the die to roll"; };
       return tray;
@@ -5071,8 +5081,10 @@
        eases into the rolled face with a small settle snap. A plain tap
        (or Enter/Space) throws it with a default flick. Input locks while
        it spins: the die cannot be grabbed mid-roll. The .die-scene CSS
-       already sets touch-action:none, so dragging the die never scrolls
-       the page. */
+       sets touch-action:pinch-zoom, so a single-finger drag turns the
+       die (and never scrolls the page) while a two-finger pinch stays
+       the browser's own zoom — a pinch cancels the drag cleanly (see
+       abortDrag below) instead of throwing the die. */
     die.style.transition = "none";
     var Qcur = die._q ? die._q.slice() : settleQuat(kind, parseInt(die.getAttribute("data-die-value"), 10) || 1);
     var Qgoal = Qcur.slice();  /* drag target the render chases */
@@ -5090,7 +5102,8 @@
       rafId = requestAnimationFrame(dragLoop);
     }
     scene.addEventListener("pointerdown", function(e){
-      if (!armed || rolling || dragging) return;
+      if (dragging) { abortDrag(); return; } /* a second finger is a pinch starting: abort the drag cleanly and let the browser take the zoom */
+      if (!armed || rolling) return;
       dragging = true; die._busy = true; moved = 0; downT = performance.now();
       dragStart = { x: e.clientX, y: e.clientY, Q: Qgoal.slice() };
       lastMove = { x: e.clientX, y: e.clientY, t: downT };
@@ -5121,8 +5134,22 @@
       if (Math.hypot(vx, vy) < 0.12) { vx = 0.35; vy = 0.6; } /* gentle release still throws */
       startSpin(vx, vy);
     }
+    /* A pinch zoom claims the gesture two ways — a second pointer goes
+       down mid-drag (handled in pointerdown above), or the browser
+       takes the gesture and cancels the pointer. Both end the drag as
+       a clean abort: no tap counted, no flick velocity applied, no
+       roll — the die stays where it was turned, still armed, and the
+       input lock is released, so no stale flick survives the zoom. */
+    function abortDrag(){
+      if (!dragging) return;
+      dragging = false;
+      if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+      Qcur = Qgoal.slice(); applyRot();
+      vel = { x:0, y:0 }; lastMove = null;
+      die._busy = false;
+    }
     scene.addEventListener("pointerup", endDrag);
-    scene.addEventListener("pointercancel", endDrag);
+    scene.addEventListener("pointercancel", abortDrag);
     scene.addEventListener("keydown", function(e){ if (e.key === "Enter" || e.key === " ") { e.preventDefault(); startSpin(0.55, 1.15); } });
 
     /* The throw: the result is drawn first, then the solid rotates about
@@ -8249,7 +8276,13 @@
     fig.innerHTML = '<span class="v-head">' + head + '</span>' +
       '<div class="v-stage">' + (fade ? bossImg + heroImg : heroImg + bossImg) +
       '<span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">' + dmg + '</span>' +
-      "</div><figcaption>" + caption + "</figcaption>";
+      "</div>";
+    /* The caption is emitted exactly once: a dedicated figcaption
+       element whose text is the caption string, appended after the
+       stage — never a second copy folded into the markup string. */
+    var capEl = document.createElement("figcaption");
+    capEl.textContent = caption;
+    fig.appendChild(capEl);
     return fig;
   }
   function buildRunReel(){
