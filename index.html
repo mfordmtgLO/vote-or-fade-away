@@ -384,6 +384,15 @@
   .credits-scroll .closing-card{margin:150px auto 40px;max-width:640px;border:2px solid var(--amber);border-radius:12px;background:#10181d;padding:36px 26px}
   .credits-scroll .closing-card p{font-family:"Anton",sans-serif;font-size:clamp(1.5rem,5.5vw,2.2rem);line-height:1.3;color:#fff;margin:0;text-transform:uppercase;letter-spacing:.01em}
   .credits-scroll .closing-card p+p{margin-top:12px;color:var(--amber)}
+  .credits-hint{margin:10px 16px 0;text-align:center;font-size:.8rem;color:#9db3ad}
+  .credits-viewport{-webkit-touch-callout:none}
+  @media (prefers-reduced-motion: no-preference){.credits-viewport{touch-action:none}}
+  @media (prefers-reduced-motion: reduce){.credits-viewport{touch-action:pan-y}}
+  .credits-viewport.scrubbing{cursor:grabbing}
+  .credits-viewport.scrubbing .credits-scroll{user-select:none;-webkit-user-select:none}
+  .credits-resume{position:absolute;left:0;right:0;bottom:calc(20px + env(safe-area-inset-bottom, 0px));display:flex;justify-content:center;z-index:6;pointer-events:none}
+  .credits-resume[hidden]{display:none}
+  .credits-resume-btn{pointer-events:auto;background:var(--amber);border:none;border-radius:999px;padding:14px 24px;font-weight:800;font-size:1rem;color:#10181d;box-shadow:0 8px 28px rgba(0,0,0,.55);cursor:pointer}
   @media (prefers-reduced-motion: reduce){.credits-scroll{animation:none;top:0;position:relative}}
   .song-note{font-size:.85rem;color:var(--stage-muted);margin-top:10px}
 
@@ -391,10 +400,17 @@
   .vignette{--loop:3.6s;--delay:0s;margin:26px auto;max-width:560px;background:#10181d;border:1px solid #33413a;border-radius:12px;overflow:hidden;text-align:center}
   .vignette .v-head{font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;padding:9px 12px 0}
   .vignette.fadehit .v-head{color:#ff9d94}
-  .v-stage{position:relative;display:flex;height:150px;overflow:hidden;background:#0d1216;margin-top:8px}
-  .v-stage img{width:50%;height:100%;object-fit:cover;display:block;flex:none}
-  .v-stage .v-hero{object-position:top center}
-  .v-stage .v-boss{object-position:center 30%}
+  /* Portraits in the credits have differing native aspects — hero
+     sketches are 1000×2000 (1:2), minion / Fade sketches are 512×768
+     (2:3), and The Fade / band art is 3:2 — so the stage is tall
+     enough for the portrait art and every image is fitted with
+     object-fit:contain, centred in its half. Each sketch is shown
+     whole, never cropped at the top or anywhere else; the slack is
+     letterboxed against the stage's own dark background. */
+  .v-stage{position:relative;display:flex;height:300px;overflow:hidden;background:#0d1216;margin-top:8px}
+  .v-stage img{width:50%;height:100%;object-fit:contain;object-position:center;display:block;flex:none}
+  .v-stage .v-hero{object-position:center}
+  .v-stage .v-boss{object-position:center}
   .vignette figcaption{padding:10px 14px 13px;font-size:.9rem;line-height:1.5;color:#e8e2cd;margin:0}
   .vignette figcaption b{color:#fff}
   .v-burst{position:absolute;left:50%;top:44%;width:76px;height:76px;background:var(--amber);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);opacity:0;pointer-events:none}
@@ -423,7 +439,7 @@
   @keyframes burstPop{0%,26%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(0deg)}36%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(12deg)}54%{opacity:1;transform:translate(-50%,-62%) scale(1)}70%,100%{opacity:0;transform:translate(-50%,-84%) scale(.9)}}
   @keyframes fadeLunge{0%,100%{transform:scale(1) translateX(0)}18%{transform:scale(.95)}34%{transform:scale(1.13) translateX(12px)}55%{transform:scale(1.05) translateX(5px)}78%{transform:scale(1) translateX(0)}}
   @keyframes heroHurt{0%,32%,100%{transform:translateX(0)}40%{transform:translateX(8px);filter:sepia(1) hue-rotate(-45deg) saturate(3.2) brightness(.75)}48%{transform:translateX(-5px)}56%{transform:translateX(3px)}64%{transform:translateX(0)}}
-  @media (max-width:560px){.v-stage{height:118px}.v-burst{width:58px;height:58px}}
+  @media (max-width:560px){.v-stage{height:264px}.v-burst{width:58px;height:58px}}
   @media (prefers-reduced-motion: reduce){.vignette .v-hero,.vignette .v-boss,.vignette .v-burst,.vignette .v-dmg{animation:none}.vignette .v-burst,.vignette .v-dmg{opacity:.9}}
 
   /* ---------- Derived stats, hero HP, camp & dice ---------- */
@@ -2151,6 +2167,7 @@
   <div class="video-wrap">
     <div class="video-box" id="videoBox"><!-- YouTube player created here through the IFrame API on the finale tap --></div>
   </div>
+  <p class="credits-hint">Press and hold the credits to pause and re-read.</p>
   <div class="credits-viewport" aria-label="Scrolling credits">
     <div class="credits-scroll" id="creditsScroll">
       <div class="song-card" id="songCard">
@@ -2422,6 +2439,9 @@
         <p>Play your power card in hand — cast your vote.</p>
       </div>
     </div>
+  </div>
+  <div class="credits-resume" id="creditsResume" hidden>
+    <button class="credits-resume-btn" id="creditsResumeBtn" type="button">▶ Play — resume the song and credits</button>
   </div>
 </div>
 
@@ -7675,6 +7695,11 @@
      releases the roll to run on its own clock from the start. */
   var ROLL_PX_PER_SEC = 50;
   var creditsElapsed = 0, creditsLastTick = 0, lastSongT = 0;
+  /* Scrub state for press-and-hold re-reading (the scrub block sits below
+     startCreditsRoll): while scrubActive, the roll is frozen at scrubY and
+     the song is paused; creditsCurY mirrors the last offset the roll drew,
+     so a hold can pick the column up exactly where it is. */
+  var scrubActive = false, scrubY = 0, creditsCurY = 0, creditsRM = false;
 
   function songTotal(){
     if (!ytFailed && ytPlayer && ytPlayer.getDuration) {
@@ -7710,6 +7735,19 @@
     var now = performance.now();
     var dt = creditsLastTick ? Math.min(0.1, (now - creditsLastTick) / 1000) : 0;
     creditsLastTick = now;
+    if (scrubActive) {
+      /* Frozen for re-reading: hold the column at the scrubbed offset and
+         keep the frame loop alive so the freeze holds until resume. The
+         elapsed clock does not advance here. */
+      creditsScroll.style.transform = "translateY(" + scrubY + "px)";
+      creditsCurY = scrubY;
+      if (overlay.classList.contains("show")) {
+        creditsRAF = requestAnimationFrame(creditsTick);
+      } else {
+        creditsRAF = null;
+      }
+      return;
+    }
     if (songAdvancing()) creditsElapsed += dt;
     var vh = creditsViewport.clientHeight;
     var ch = creditsScroll.offsetHeight;
@@ -7718,7 +7756,8 @@
     var distance = startY - endY;
     var total = distance > 0 ? Math.max(songTotal(), distance / ROLL_PX_PER_SEC) : 0;
     var p = total > 0 ? Math.min(1, creditsElapsed / total) : 1;
-    creditsScroll.style.transform = "translateY(" + (startY + (endY - startY) * p) + "px)";
+    creditsCurY = startY + (endY - startY) * p;
+    creditsScroll.style.transform = "translateY(" + creditsCurY + "px)";
     if (p < 1 && overlay.classList.contains("show")) {
       creditsRAF = requestAnimationFrame(creditsTick);
     } else {
@@ -7728,15 +7767,200 @@
 
   function startCreditsRoll(){
     creditsElapsed = 0; creditsLastTick = 0; lastSongT = 0;
+    resetScrub();
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      creditsRM = true;
       creditsViewport.style.overflowY = "auto";
       creditsScroll.style.transform = "none";
       return;
     }
+    creditsRM = false;
     creditsViewport.style.overflowY = "hidden";
     if (creditsRAF) cancelAnimationFrame(creditsRAF);
     creditsRAF = requestAnimationFrame(creditsTick);
   }
+
+  /* ============ Credits scrub: press-and-hold to pause & re-read ============
+     A press held ~300 ms on the credits viewport pauses the closing song
+     (the YouTube player's own pause) and freezes the roll where it is.
+     Dragging then moves the column with the finger, clamped to the roll's
+     own travel range, so any scene can be re-read. The freeze lasts until
+     the reader resumes — with the "▶ Play" button under the credits, or
+     with the player's own play button — and either way the engine's
+     accumulated position is re-anchored to the scrubbed offset first, so
+     the roll continues from exactly what is on screen and never snaps
+     back. A short tap is not a hold and changes nothing; the Close button
+     and the video box sit outside the viewport, so they never see this
+     gesture. In reduced-motion mode the column is already natively
+     scrollable: the hold still pauses the song and offers the same resume
+     button, but dragging is left to the native scroll. */
+  var creditsResumeEl = document.getElementById("creditsResume");
+  var scrubSawPaused = false, scrubPoll = null;
+  var holdTimer = null, holdPointerId = null;
+  var holdStartX = 0, holdStartY = 0, holdLastY = 0;
+  var scrubDragging = false, pressConsumed = false, suppressClick = false;
+  var HOLD_MS = 300, HOLD_SLOP = 12;
+
+  /* The same geometry the roll's own frame math runs on, recomputed on
+     demand so a scrubbed offset can be turned back into engine time. */
+  function creditsGeom(){
+    var vh = creditsViewport.clientHeight;
+    var ch = creditsScroll.offsetHeight;
+    var startY = vh * 0.92;
+    var endY = vh - ch - 16;
+    var distance = startY - endY;
+    var total = distance > 0 ? Math.max(songTotal(), distance / ROLL_PX_PER_SEC) : 0;
+    return { startY: startY, endY: endY, distance: distance, total: total };
+  }
+
+  function playerState(){
+    if (!ytPlayer || !ytPlayer.getPlayerState) return null;
+    try { return ytPlayer.getPlayerState(); } catch(e){ return null; }
+  }
+
+  function enterScrub(){
+    if (scrubActive || !overlay.classList.contains("show")) return;
+    scrubActive = true;
+    pressConsumed = true;
+    scrubSawPaused = (playerState() !== 1);
+    scrubY = creditsCurY;
+    if (ytPlayer && ytPlayer.pauseVideo) { try { ytPlayer.pauseVideo(); } catch(e){} }
+    creditsViewport.classList.add("scrubbing");
+    if (creditsResumeEl) creditsResumeEl.hidden = false;
+    scrubWatchStart();
+  }
+
+  /* Re-anchor the engine to the scrubbed offset: the progress fraction the
+     offset represents, times the roll's total time, becomes the new
+     accumulated position. */
+  function adoptScrubbedPosition(){
+    var g = creditsGeom();
+    var p = g.distance > 0 ? (g.startY - scrubY) / g.distance : 1;
+    if (p < 0) p = 0;
+    if (p > 1) p = 1;
+    creditsElapsed = p * g.total;
+    creditsLastTick = 0;
+  }
+
+  function exitScrub(resumeSong){
+    if (!scrubActive) return;
+    scrubActive = false;
+    scrubDragging = false;
+    scrubWatchStop();
+    creditsViewport.classList.remove("scrubbing");
+    if (creditsResumeEl) creditsResumeEl.hidden = true;
+    if (!creditsRM) adoptScrubbedPosition();
+    if (resumeSong && ytPlayer && ytPlayer.playVideo && playerState() !== 0) {
+      try { ytPlayer.playVideo(); } catch(e){}
+    }
+    /* If the roll had already run to its end before the hold, its frame
+       loop is stopped; restart it so the adopted position can play out. */
+    if (!creditsRM && overlay.classList.contains("show") && !creditsRAF) {
+      creditsRAF = requestAnimationFrame(creditsTick);
+    }
+  }
+
+  function resetScrub(){
+    if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+    holdPointerId = null;
+    scrubDragging = false;
+    pressConsumed = false;
+    if (scrubActive) {
+      scrubActive = false;
+      scrubWatchStop();
+      creditsViewport.classList.remove("scrubbing");
+      if (creditsResumeEl) creditsResumeEl.hidden = true;
+    }
+  }
+
+  /* If the reader resumes from the player's own play button instead of
+     ours, adopt the scrubbed position the same way. Watched on a timer
+     because in reduced-motion mode (and once a finished roll has stopped)
+     no frame loop is running to notice. */
+  function scrubWatchStart(){
+    if (scrubPoll) return;
+    scrubPoll = setInterval(function(){
+      if (!scrubActive) { scrubWatchStop(); return; }
+      var st = playerState();
+      if (st === 2 || st === 0) scrubSawPaused = true;
+      if (scrubSawPaused && st === 1) exitScrub(false);
+    }, 250);
+  }
+  function scrubWatchStop(){
+    if (scrubPoll) { clearInterval(scrubPoll); scrubPoll = null; }
+  }
+
+  creditsViewport.addEventListener("pointerdown", function(e){
+    if (!overlay.classList.contains("show")) return;
+    if (holdPointerId !== null || e.isPrimary === false) return;
+    holdPointerId = e.pointerId;
+    holdStartX = e.clientX; holdStartY = e.clientY; holdLastY = e.clientY;
+    try { creditsViewport.setPointerCapture(e.pointerId); } catch(err){}
+    if (scrubActive) {
+      /* Already scrubbed: a fresh press drags straight away, no second hold. */
+      if (!creditsRM) scrubDragging = true;
+      return;
+    }
+    if (holdTimer) clearTimeout(holdTimer);
+    holdTimer = setTimeout(function(){
+      holdTimer = null;
+      enterScrub();
+      if (!creditsRM) scrubDragging = true;
+    }, HOLD_MS);
+  });
+  creditsViewport.addEventListener("pointermove", function(e){
+    if (holdPointerId === null || e.pointerId !== holdPointerId) return;
+    if (holdTimer) {
+      /* Moved before the hold landed: this press is a swipe or a scroll,
+         not a hold — leave everything exactly as it was. */
+      if (Math.abs(e.clientX - holdStartX) > HOLD_SLOP || Math.abs(e.clientY - holdStartY) > HOLD_SLOP) {
+        clearTimeout(holdTimer); holdTimer = null;
+      }
+      return;
+    }
+    if (scrubDragging && scrubActive && !creditsRM) {
+      var g = creditsGeom();
+      scrubY += e.clientY - holdLastY;
+      holdLastY = e.clientY;
+      if (scrubY > g.startY) scrubY = g.startY;
+      if (scrubY < g.endY) scrubY = g.endY;
+      creditsScroll.style.transform = "translateY(" + scrubY + "px)";
+      creditsCurY = scrubY;
+    }
+  });
+  function endScrubPress(e){
+    if (holdPointerId === null) return;
+    if (e && e.pointerId !== undefined && e.pointerId !== holdPointerId) return;
+    if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+    holdPointerId = null;
+    scrubDragging = false;
+    if (pressConsumed) {
+      /* The press became a hold: swallow the click it would otherwise
+         deliver (e.g. to the song link under the finger). */
+      pressConsumed = false;
+      suppressClick = true;
+      setTimeout(function(){ suppressClick = false; }, 400);
+    }
+  }
+  creditsViewport.addEventListener("pointerup", endScrubPress);
+  creditsViewport.addEventListener("pointercancel", endScrubPress);
+  window.addEventListener("pointerup", endScrubPress);
+  window.addEventListener("pointercancel", endScrubPress);
+  /* While scrubbed, taps on the column itself do nothing (the resume
+     button is the way out); this also keeps the song-card link from
+     firing under a re-reading finger. */
+  creditsViewport.addEventListener("click", function(e){
+    if (scrubActive || suppressClick) {
+      e.preventDefault();
+      e.stopPropagation();
+      suppressClick = false;
+    }
+  }, true);
+  creditsViewport.addEventListener("contextmenu", function(e){
+    if (holdTimer || scrubActive) e.preventDefault();
+  });
+  var creditsResumeBtn = document.getElementById("creditsResumeBtn");
+  if (creditsResumeBtn) creditsResumeBtn.addEventListener("click", function(){ exitScrub(true); });
 
   /* Genuine failure, and only that: the API script errored, the player
      errored, or the player never became ready (watchdog in openFinale).
@@ -7955,6 +8179,7 @@
     overlay.classList.remove("show");
     if (creditsRAF) cancelAnimationFrame(creditsRAF);
     creditsRAF = null;
+    resetScrub();
     if (ytWatchdog) { clearTimeout(ytWatchdog); ytWatchdog = null; }
     ytWantPlayer = false; ytReady = false; ytFailed = false;
     if (ytPlayer && ytPlayer.destroy) { try { ytPlayer.destroy(); } catch(e){} }
