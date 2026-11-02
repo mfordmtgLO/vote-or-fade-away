@@ -1023,7 +1023,7 @@
   .gear-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
   .gear-chip{border:2px solid var(--line);background:var(--panel2);color:var(--muted);font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 11px;border-radius:999px}
   .gear-chip.on{border-color:var(--teal);background:var(--teal);color:#fff}
-  .gear-track{display:flex;align-items:flex-start;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;overscroll-behavior-x:contain;margin-top:10px;border:2px solid var(--line);border-radius:10px;background:var(--panel2);max-width:100%;transition:height .22s ease}
+  .gear-track{display:flex;align-items:flex-start;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom;overscroll-behavior-x:contain;margin-top:10px;border:2px solid var(--line);border-radius:10px;background:var(--panel2);max-width:100%;transition:height .22s ease}
   .gear-track::-webkit-scrollbar{display:none}
   @media (prefers-reduced-motion: reduce){.gear-track{transition:none}}
   .gear-station{flex:0 0 100%;min-width:0;align-self:flex-start;scroll-snap-align:start;scroll-snap-stop:always;padding:12px}
