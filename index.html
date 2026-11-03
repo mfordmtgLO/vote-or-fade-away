@@ -69,6 +69,17 @@
 
   /* ---------- Sections ---------- */
   section.block{margin-top:34px}
+  /* Safe-area clearance for the screens the game jumps to: a block:"start"
+     scroll would otherwise park the screen's first line at the very top of
+     the viewport, under the status bar / notch on home-screen phones, so
+     jump targets stop below the top inset. Screens that already pad their
+     own tops with the inset (the top strip, the battle HUD inside #arena,
+     the fixed sheets, the credits top bar) are deliberately not listed —
+     no double padding. The fixed sheets pair this with card max-heights
+     that subtract both insets (see .sheet-card / .scene-card / .minion-card),
+     so a tall card can never overflow the sheet's inset-aware padding and
+     slide its title under the clock. */
+  section.block,.ending,.fighter{scroll-margin-top:calc(12px + env(safe-area-inset-top, 0px))}
   .block h2{font-size:clamp(1.5rem,5vw,2.1rem)}
   .block .lede{color:var(--muted);margin:8px 0 0;max-width:62ch}
   .block .lede b{color:var(--ink)}
@@ -622,7 +633,7 @@
      when The Fade is reeling he throws one defender in the band's way and the
      battle pauses until the band lands — or misses — its one correction. */
   .minion-sheet{z-index:60}
-  .minion-card{background:#221318;color:var(--stage-ink);border:2px solid #b3543f;border-radius:12px;max-width:560px;width:100%;padding:18px;max-height:88vh;overflow-y:auto;box-shadow:6px 6px 0 rgba(0,0,0,.5)}
+  .minion-card{background:#221318;color:var(--stage-ink);border:2px solid #b3543f;border-radius:12px;max-width:560px;width:100%;padding:18px;max-height:calc(100dvh - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));overflow-y:auto;box-shadow:6px 6px 0 rgba(0,0,0,.5)}
   .minion-card .m-tag{font-family:"JetBrains Mono",monospace;font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ff9d94}
   .minion-card .m-head{margin:8px 0 4px;font-family:"Anton",sans-serif;font-size:1.45rem;letter-spacing:.03em;text-transform:uppercase;color:#fff;line-height:1.15}
   .minion-card .m-intro{margin:6px 0;font-size:.95rem;color:var(--stage-ink)}
@@ -1142,7 +1153,7 @@
   .scene-btn{display:inline-block;margin-top:14px;border:2px solid #43565f;border-radius:8px;padding:10px 16px;font-weight:700;font-size:.95rem;color:var(--stage-ink);background:transparent}
   .scene-btn:active{transform:translate(1px,1px)}
   .scene-sheet{align-items:center}
-  .scene-card{background:#1d180b;color:var(--stage-ink);border:2px solid var(--amber);border-radius:14px;max-width:560px;width:100%;padding:26px 24px 22px;box-shadow:5px 5px 0 rgba(0,0,0,.55);max-height:calc(100dvh - 48px);overflow-y:auto}
+  .scene-card{background:#1d180b;color:var(--stage-ink);border:2px solid var(--amber);border-radius:14px;max-width:560px;width:100%;padding:26px 24px 22px;box-shadow:5px 5px 0 rgba(0,0,0,.55);max-height:calc(100dvh - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));overflow-y:auto}
   .scene-card h3{font-size:clamp(1.45rem,6vw,2rem);color:#ffd34d;text-align:center;margin:0}
   .scene-card .scene-rule{border:0;border-top:1px dashed #8a6d1b;margin:16px auto 4px;max-width:180px}
   .scene-card p{margin:14px 0 0;font-size:1rem;line-height:1.65}
@@ -1173,6 +1184,22 @@
   .prologue-voice-note{margin:10px auto 0;max-width:440px;text-align:center;font-size:.88rem;font-weight:700;line-height:1.5;color:var(--red)}
   .prologue-voice-note[hidden]{display:none}
   @media (prefers-color-scheme: dark){.prologue-voice-note{color:#ffd34d}}
+  /* Prologue contrast on the light card: the sheet card follows var(--panel),
+     which is white in the light scheme, so the panel's dark-card yellows and
+     pale teal wash out there (quotes 1.2:1, title 1.4:1, voice button 1.8:1).
+     These light-scheme treatments keep the same voices — bronze-gold title,
+     deep-sepia whispers (still italic), the site's deep teal on the voice
+     button — at readable contrast. The dark scheme keeps the original
+     pale-on-dark styling, which already passes there (9.7:1 and up). The
+     closing kicker's green is its own background in both schemes, and white
+     on it was 2.3:1 in each, so its green deepens in both. Colors only —
+     no wording changes. */
+  .prologue-card p.scene-kicker{background:#15803d}
+  @media (prefers-color-scheme: light){
+    .prologue-card h3{color:#8a5a00}
+    .prologue-card p.prologue-quote{color:#5c4033}
+    .prologue-voice{color:#0e7c74;border-color:#0e7c74}
+  }
   .dm-card{margin-top:18px;border:1px solid #3a4a52;border-radius:10px;padding:14px 16px}
   .dm-card h2{font-size:1.05rem;color:var(--stage-ink);margin:0}
   .dm-link{display:inline-block;margin-top:10px;border:2px solid #43565f;border-radius:8px;padding:10px 16px;font-weight:700;font-size:.95rem;color:var(--stage-ink);text-decoration:none}
@@ -1216,7 +1243,7 @@
   /* ---------- Install sheet ---------- */
   .sheet{position:fixed;inset:0;background:rgba(5,8,10,.66);display:none;align-items:flex-end;justify-content:center;z-index:50;padding:calc(16px + env(safe-area-inset-top, 0px)) calc(16px + env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) calc(16px + env(safe-area-inset-left, 0px))}
   .sheet.show{display:flex}
-  .sheet-card{background:var(--panel);color:var(--ink);border-radius:14px;max-width:520px;width:100%;padding:20px;border:2px solid var(--line)}
+  .sheet-card{background:var(--panel);color:var(--ink);border-radius:14px;max-width:520px;width:100%;padding:20px;border:2px solid var(--line);max-height:calc(100dvh - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));overflow-y:auto}
   .sheet-card h3{font-size:1.3rem;margin:0 0 8px}
   .sheet-card ol{margin:8px 0;padding-left:20px;font-size:.94rem;color:var(--muted)}
   .sheet-card ol b{color:var(--ink)}
@@ -2637,6 +2664,7 @@
      plain-words note under the button, and closing the panel
      mid-narration stops and resets it. */
   var prologueSheet = document.getElementById("prologueSheet");
+  var prologueCard = prologueSheet.querySelector(".prologue-card");
   var prologueBtn = document.getElementById("prologueBtn");
   var prologueContinue = document.getElementById("prologueContinue");
   var prologueVoiceBtn = document.getElementById("prologueVoiceBtn");
@@ -2746,15 +2774,41 @@
     prologueScrubbing = false;
     paintPrologueSeek();
   });
+  /* The Prologue always opens at its very top — the title and
+     "Tomorrow, Alder Creek chooses." first. Two things fought that:
+     focusing the Continue button (it sits at the foot of the card)
+     made the browser scroll the card down to bring the button into
+     view, and the card kept whatever scroll position the last read
+     left behind. So every open resets the card to scrollTop 0,
+     focuses Continue with preventScroll so the focus itself cannot
+     pull the view down, and re-pins the top once focus and layout
+     have settled (animation frame + a beat later). The player's own
+     scrolling while reading is untouched; closing also resets, so
+     the next open starts at the top again. */
+  function resetPrologueScroll(){
+    if (prologueCard) prologueCard.scrollTop = 0;
+    prologueSheet.scrollTop = 0;
+  }
   function openPrologue(mode){
     prologueMode = mode || "read";
     prologueSheet.classList.add("show");
-    prologueContinue.focus();
+    resetPrologueScroll();
+    try { prologueContinue.focus({ preventScroll:true }); }
+    catch(e){ prologueContinue.focus(); }
+    resetPrologueScroll();
+    if (window.requestAnimationFrame) {
+      window.requestAnimationFrame(function(){
+        resetPrologueScroll();
+        window.requestAnimationFrame(resetPrologueScroll);
+      });
+    }
+    window.setTimeout(resetPrologueScroll, 80);
   }
   function openPrologueRun(){ openPrologue("run"); }
   function closePrologue(){
     stopPrologueAudio();
     prologueSheet.classList.remove("show");
+    resetPrologueScroll();
     if (prologueMode === "run") {
       document.getElementById("chooseSection").scrollIntoView({ behavior:"smooth" });
     } else if (prologueBtn) {
@@ -3906,6 +3960,19 @@
   var helpPopTitle = document.getElementById("helpPopTitle");
   var helpPopBody = document.getElementById("helpPopBody");
   var helpKey = null, helpDotEl = null, helpPinned = false, helpHoverTimer = null;
+  /* The top safe-area inset (status bar / notch), measured once through a
+     probe element so the popup's top clamp keeps it out of that zone on
+     home-screen phones; 0 where there is no inset. */
+  var _safeTopInset = null;
+  function safeTopInset(){
+    if (_safeTopInset !== null) return _safeTopInset;
+    var d = document.createElement("div");
+    d.style.cssText = "position:fixed;top:0;left:0;width:0;height:env(safe-area-inset-top, 0px);visibility:hidden;pointer-events:none";
+    document.body.appendChild(d);
+    _safeTopInset = d.offsetHeight || 0;
+    if (d.parentNode) d.parentNode.removeChild(d);
+    return _safeTopInset;
+  }
   function positionHelpPop(){
     if (!helpPop || helpPop.hidden || !helpKey) return;
     if (!helpDotEl || !helpDotEl.isConnected) {
@@ -3919,8 +3986,9 @@
     var vw = window.innerWidth, vh = window.innerHeight;
     var left = Math.min(Math.max(8, r.left + r.width / 2 - pw / 2), Math.max(8, vw - pw - 8));
     var top = r.bottom + 8;
+    var topFloor = 8 + safeTopInset();
     if (top + ph > vh - 8) top = r.top - ph - 8;
-    if (top < 8) top = Math.max(8, Math.min(vh - ph - 8, r.bottom + 8));
+    if (top < topFloor) top = Math.max(topFloor, Math.min(vh - ph - 8, r.bottom + 8));
     helpPop.style.left = left + "px";
     helpPop.style.top = top + "px";
   }
