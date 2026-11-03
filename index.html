@@ -1205,6 +1205,42 @@
   .sheet-card h3{font-size:1.3rem;margin:0 0 8px}
   .sheet-card ol{margin:8px 0;padding-left:20px;font-size:.94rem;color:var(--muted)}
   .sheet-card ol b{color:var(--ink)}
+
+  /* ---------- Print this sheet (screen side) ---------- */
+  .print-sheet-btn{margin-top:8px;width:100%;border:2px solid var(--line);background:transparent;color:var(--ink);font-weight:700;font-size:.88rem;padding:10px 14px;border-radius:8px}
+  .print-sheet-btn:active{transform:translateY(1px)}
+  #printSheet{display:none}
+
+  /* ---------- Print this sheet (paper side) ----------
+     Under print the whole app steps aside and only the one prepared
+     sheet in #printSheet shows: white paper, dark ink, one page. */
+  @page{margin:13mm}
+  @media print{
+    body>*:not(#printSheet){display:none!important}
+    html,body{background:#fff!important}
+    #printSheet{display:block!important;background:#fff;color:#14181c;font-family:"Public Sans",system-ui,sans-serif;font-size:11.5pt;line-height:1.45}
+    .ps-page{break-inside:avoid}
+    .ps-head{display:flex;gap:7mm;align-items:flex-start;border-bottom:2.5px solid #14181c;padding-bottom:5mm}
+    .ps-portrait{position:relative;flex:0 0 46mm;width:46mm;border:2.5px solid #14181c;outline:1px solid #14181c;outline-offset:2.5px;overflow:hidden;background:#fff}
+    .ps-portrait img{display:block;width:100%;height:auto}
+    .ps-portrait .look-layer{position:absolute;inset:0;pointer-events:none;background-repeat:no-repeat;background-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-position:0 0;mask-position:0 0;mask-mode:alpha}
+    .ps-id{flex:1 1 auto;min-width:0;padding-top:1mm}
+    .ps-tag{font-family:"JetBrains Mono",monospace;font-size:8.5pt;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#14181c;margin:0}
+    .ps-name{font-family:"Anton",sans-serif;font-weight:400;text-transform:uppercase;line-height:1;font-size:30pt;margin:2mm 0 1mm;color:#14181c}
+    .ps-class{font-size:14pt;font-weight:800;margin:0;color:#14181c}
+    .ps-age{font-size:10.5pt;margin:1mm 0 0;color:#333}
+    .ps-hp{margin:5mm 0 0;font-size:12pt;border:1.5px solid #14181c;display:inline-block;padding:1.5mm 4mm}
+    .ps-hp b{font-family:"JetBrains Mono",monospace}
+    .ps-stats{display:flex;flex-wrap:wrap;gap:2.5mm;margin:6mm 0 0}
+    .ps-stat{flex:1 1 20mm;border:1.5px solid #14181c;text-align:center;padding:2mm 1mm 1.5mm}
+    .ps-stat .ps-stat-name{display:block;font-family:"JetBrains Mono",monospace;font-size:7.5pt;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+    .ps-stat .ps-stat-val{display:block;font-size:16pt;font-weight:800;line-height:1.15}
+    .ps-stat .ps-stat-mod{display:block;font-family:"JetBrains Mono",monospace;font-size:9pt}
+    .ps-rows{margin:6mm 0 0;border-top:1.5px solid #14181c}
+    .ps-row{display:flex;gap:4mm;padding:2.2mm 0;border-bottom:1px solid #9aa3a0;break-inside:avoid}
+    .ps-row dt{flex:0 0 30mm;font-family:"JetBrains Mono",monospace;font-size:8.5pt;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding-top:.6mm}
+    .ps-row dd{flex:1 1 auto;margin:0}
+  }
 </style>
 <script>
   /* Single source of truth for artwork paths. Every <img> in the page carries a
@@ -1487,6 +1523,7 @@
         </div>
         <p class="style-line"><b>How she fights:</b> with the record, at range — Maya's Voting Arrows counter Sound Bite Spin (+2 to hit), facts piercing spin before it settles. <b>Pick her when</b> his spin is thick and a clean, documented shot is what breaks it.</p>
         <button class="pick-btn" type="button" aria-pressed="false">Send Maya into battle →</button>
+        <button class="print-sheet-btn" type="button" data-print-sheet="maya">Print this sheet</button>
       </div>
       <div class="fighter" data-fighter="dre">
         <span class="sheet-tag">Character sheet · Fighter</span>
@@ -1555,6 +1592,7 @@
         </div>
         <p class="style-line"><b>How he fights:</b> with force — Dre's Axe of Freedom counters the War Drum (+2 to hit) and swings the band's heaviest damage die. <b>Pick him when</b> the drum is loud and something big needs splitting in one swing.</p>
         <button class="pick-btn" type="button" aria-pressed="false">Send Dre into battle →</button>
+        <button class="print-sheet-btn" type="button" data-print-sheet="dre">Print this sheet</button>
       </div>
       <div class="fighter" data-fighter="priya">
         <span class="sheet-tag">Character sheet · Paladin</span>
@@ -1623,6 +1661,7 @@
         </div>
         <p class="style-line"><b>How she fights:</b> with the timeline — Priya's Sword of Youth counters Mission Creep (+2 to hit), cutting occupations and excuses down to their dates. <b>Pick her when</b> the fight turns on who did what, when — and keep her standing: her Healing Hands are the band's only way back from 0 HP.</p>
         <button class="pick-btn" type="button" aria-pressed="false">Send Priya into battle →</button>
+        <button class="print-sheet-btn" type="button" data-print-sheet="priya">Print this sheet</button>
       </div>
       <div class="fighter" data-fighter="marc">
         <span class="sheet-tag">Character sheet · Builder</span>
@@ -1691,6 +1730,7 @@
         </div>
         <p class="style-line"><b>How he fights:</b> with a builder's tool, not a blade — the Hammer of Hands doesn't slash; what lands is the measure, and it rings true against Blowback (+2 to hit and damage). <b>Pick him when</b> The Fade turns your own side's old weapons back on you.</p>
         <button class="pick-btn" type="button" aria-pressed="false">Send Marc into battle →</button>
+        <button class="print-sheet-btn" type="button" data-print-sheet="marc">Print this sheet</button>
       </div>
       <div class="fighter" data-fighter="sana">
         <span class="sheet-tag">Character sheet · Herald</span>
@@ -1759,6 +1799,7 @@
         </div>
         <p class="style-line"><b>How she fights:</b> with the documented record, said loudly, in public — the Megaphone of Record doesn't cut; what lands is the correction, and every correct answer she gives also raises the band's Voice (+1). <b>Pick her when</b> the band's Voice needs raising and the record needs a voice.</p>
         <button class="pick-btn" type="button" aria-pressed="false">Send Sana into battle →</button>
+        <button class="print-sheet-btn" type="button" data-print-sheet="sana">Print this sheet</button>
       </div>
       <div class="fighter" data-fighter="eli">
         <span class="sheet-tag">Character sheet · Keeper</span>
@@ -1827,6 +1868,7 @@
         </div>
         <p class="style-line"><b>How he fights:</b> with the ringing bell and the fair scale — the Bell doesn't bludgeon; what lands is the weighing: who pays, who profits, what's fair. <b>Pick him when</b> The Fade is selling the war out of his War Chest and the ledger needs reading aloud.</p>
         <button class="pick-btn" type="button" aria-pressed="false">Send Eli into battle →</button>
+        <button class="print-sheet-btn" type="button" data-print-sheet="eli">Print this sheet</button>
       </div>
     </div>
   </section>
@@ -2504,6 +2546,10 @@
   <span class="help-pop-title" id="helpPopTitle"></span>
   <p class="help-pop-body" id="helpPopBody"></p>
 </div>
+
+<!-- Print rendering for "Print this sheet": filled from the chosen hero's
+     live sheet at press time, shown only under @media print. -->
+<div id="printSheet" aria-hidden="true"></div>
 
 <script>
 (function(){
@@ -8787,6 +8833,7 @@
       campaigns +
       '<p class="style-line"><b>How they fight:</b> on the ' + forgeEsc(cls) + ' pattern — ' + forgeEsc(FIGHTERS[hero].name) + '\'s spell list and camp gift, their own three weapons, sliders and Look. <b>Death Blow:</b> ' + forgeEsc(dbName) + ', on the standard opening under 15 boss HP.</p>' +
       '<button class="pick-btn" type="button" aria-pressed="false">Send ' + forgeEsc(name) + ' into battle →</button>' +
+      '<button class="print-sheet-btn" type="button" data-print-sheet="' + fid + '">Print this sheet</button>' +
       '</div>';
   }
   function registerForgedCharacter(docId, c, urls){
@@ -9007,6 +9054,93 @@
     });
   }
   forgeInit();
+
+  /* ============ Print this sheet ============
+     Each sheet's "Print this sheet" button prepares a dedicated print
+     rendering of THAT hero in #printSheet — populated from the live
+     sheet at press time — and hands it to the browser's print flow.
+     Under @media print the app is hidden and only this rendering
+     shows, on white paper in dark ink. The portrait is the very file
+     the sheet's own portrait is showing right now (its current src):
+     for Maya, her picked Trail hair x skin finished portrait at full
+     resolution, or the original sketch while her default-look state
+     is on; for every other built-in hero, their native portrait; for
+     a forged fighter, their own portrait with its Look layers laid
+     over it, exactly as their sheet composites it. Preparing a print
+     only reads the sheet — it never touches game state. */
+  var CAMP_GIFT_PRINT = {
+    maya: "Scout's Omen — d4 Inspiration for the next fighter, and reveals the next battle's aspect",
+    dre: "Sharpen & Brace — +2 to hit and +2 Defense for the next fighter",
+    priya: "Healing Hands — heal a band member by d4 + 3 + her HEAL bonus; the band's only way back from 0 HP",
+    marc: "Mend & Make — most-wounded standing hero +6 HP · next fighter +2 Defense (bracing)",
+    sana: "Signal Boost — next battle: every correct answer also raises Voice +2",
+    eli: "Open the Till — +6 Voice now · next battle's first correct answer charges the Power Card +1 extra pip"
+  };
+  function printSheetFor(hero){
+    var card = document.querySelector('.fighter[data-fighter="' + hero + '"]');
+    var host = document.getElementById("printSheet");
+    if (!card || !host || !FIGHTERS[hero]) return;
+    var tagEl = card.querySelector(".sheet-tag");
+    var cls = tagEl ? tagEl.textContent.replace(/^Character sheet\s*·\s*/, "") : "";
+    var h3 = card.querySelector("h3");
+    var name = h3 ? h3.textContent : FIGHTERS[hero].name;
+    var ageEl = card.querySelector(".age");
+    var age = ageEl ? ageEl.textContent : "";
+    var simg = card.querySelector("img.sketch");
+    var src = simg ? (simg.getAttribute("src") || simg.src || "") : "";
+    var alt = simg ? (simg.getAttribute("alt") || "") : "";
+    var layers = "";
+    var frame = (simg && simg.parentElement && simg.parentElement.classList.contains("look-frame")) ? simg.parentElement : null;
+    if (frame) frame.querySelectorAll(".look-layer").forEach(function(n){ layers += n.outerHTML; });
+    var hpEl = document.getElementById("hpVal-" + hero);
+    var hp = hpEl ? hpEl.textContent : "";
+    var derivedEl = document.getElementById("derived-" + hero);
+    var derived = derivedEl ? derivedEl.textContent : "";
+    var perkEl = card.querySelector(".perk");
+    var perk = perkEl ? perkEl.textContent : "";
+    var dbEl = document.getElementById("dbStatus-" + hero);
+    var db = dbEl ? dbEl.textContent : "";
+    var W = curWeapon(hero);
+    var giftKey = (typeof FORGED !== "undefined" && FORGED[hero]) ? FORGED[hero].hero : hero;
+    var gift = CAMP_GIFT_PRINT[giftKey] || "";
+    var statsHtml = STAT_KEYS.map(function(k){
+      var v = getStat(hero, k);
+      return '<div class="ps-stat"><span class="ps-stat-name">' + STAT_NAMES[k] + '</span><span class="ps-stat-val">' + v + '</span><span class="ps-stat-mod">' + fmtMod(statMod(v)) + '</span></div>';
+    }).join("");
+    host.innerHTML =
+      '<article class="ps-page">' +
+        '<header class="ps-head">' +
+          '<div class="ps-portrait"><img src="' + forgeEsc(src) + '" alt="' + forgeEsc(alt) + '" />' + layers + '</div>' +
+          '<div class="ps-id">' +
+            '<p class="ps-tag">Character sheet</p>' +
+            '<h1 class="ps-name">' + forgeEsc(name) + '</h1>' +
+            '<p class="ps-class">' + forgeEsc(cls) + '</p>' +
+            (age ? '<p class="ps-age">' + forgeEsc(age) + '</p>' : "") +
+            '<p class="ps-hp">Hit points <b>' + forgeEsc(hp) + '</b></p>' +
+          '</div>' +
+        '</header>' +
+        '<section class="ps-stats">' + statsHtml + '</section>' +
+        '<dl class="ps-rows">' +
+          '<div class="ps-row"><dt>Weapon</dt><dd>' + forgeEsc(W.name) + ' · damage die 1d' + W.die + '</dd></div>' +
+          '<div class="ps-row"><dt>Combat</dt><dd>' + forgeEsc(derived) + '</dd></div>' +
+          '<div class="ps-row"><dt>Perk</dt><dd>' + forgeEsc(perk) + '</dd></div>' +
+          '<div class="ps-row"><dt>Death Blow</dt><dd>' + forgeEsc(db) + '</dd></div>' +
+          (gift ? '<div class="ps-row"><dt>Camp gift</dt><dd>' + forgeEsc(gift) + '</dd></div>' : "") +
+        '</dl>' +
+      '</article>';
+    var pim = host.querySelector(".ps-portrait img");
+    var fired = false;
+    function fire(){ if (fired) return; fired = true; window.print(); }
+    if (pim && !pim.complete) {
+      pim.addEventListener("load", fire);
+      pim.addEventListener("error", fire);
+      setTimeout(fire, 800);
+    } else fire();
+  }
+  document.addEventListener("click", function(e){
+    var b = (e.target && e.target.closest) ? e.target.closest("[data-print-sheet]") : null;
+    if (b) printSheetFor(b.getAttribute("data-print-sheet"));
+  });
 
   HERO_KEYS.forEach(updateDerived);
   buildGearUp();
