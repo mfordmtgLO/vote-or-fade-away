@@ -1478,7 +1478,7 @@
     <div class="camp" id="campPanel" hidden>
       <span class="camp-tag">Between battles · One camp action <button type="button" class="help-dot" data-help="camp" aria-label="Help: Camp actions" aria-expanded="false">?</button></span>
       <p class="coach-hint" id="campCoach" hidden>Coach: one camp action per stop — then the rotation's next fighter goes in.</p>
-      <p class="camp-lede">The band catches its breath before the next fight. Choose <b>one</b> camp action — each gift belongs to a hero in this band: heal the dying, bless the next fighter, sharpen up, mend and brace, boost the signal, open the till, canvass for the vote, or press on. Healing Hands and the spells roll the <b>d4</b> — the little four-sided pyramid: swipe or tap it to roll. <b>Canvass</b> sends a fighter knocking on doors in Alder Creek, talking with neighbors about the vote — the ground game this whole adventure points at — and rolls the <b>d8</b> for the street's answer: Power Card momentum earned at the doors instead of under fire.</p>
+      <p class="camp-lede">The band catches its breath before the next fight. Choose <b>one</b> camp action — each gift belongs to a hero in this band: heal the dying, bless the next fighter, sharpen up, mend and brace, boost the signal, open the till, canvass for the vote, or press on. Healing Hands and the spells roll the <b>d4</b> — the little four-sided pyramid: swipe or tap it to roll. <b>Canvass</b> sends a fighter knocking on doors in Alder Creek, talking with neighbors about the vote — the ground game this whole adventure points at — and rolls the <b>d8</b> for the street's answer: Power Card momentum earned at the doors instead of under fire. A forged fighter who solidified <b>their own camp action</b> in the Forge brings it here under their own name, in place of their class pattern's gift — lit only while they stand in this band.</p>
       <div class="camp-actions">
         <div class="camp-row"><span class="camp-name">Healing Hands</span><span class="camp-sub">Priya · d4 + 3 + her HEAL bonus · pick who she lays hands on</span><button type="button" class="help-dot" data-help="heal" aria-label="Help: Healing Hands" aria-expanded="false">?</button></div>
         <div class="camp-row">
@@ -3972,7 +3972,7 @@
      position:fixed and clamped to the viewport, so it is never clipped
      and never causes horizontal overflow. */
   var HELP = {
-    camp:     { t:"Camp actions", b:"Between battles the band camps and gets exactly ONE action: heal, sharpen up, scout ahead, or canvass. Then the rotation's next fighter goes in. Camp gifts come only from band members who are in the run and standing — Maya brings Scout's Omen, Dre brings Sharpen & Brace, Priya brings Healing Hands and Blessing of the Dawn, Marc brings Mend & Make, Sana brings Signal Boost, and Eli brings Open the Till. Leave a hero out — or let them fall — and their gift goes with them: no Priya means no Healing Hands revive, no Dre means no Sharpen & Brace." },
+    camp:     { t:"Camp actions", b:"Between battles the band camps and gets exactly ONE action: heal, sharpen up, scout ahead, or canvass. Then the rotation's next fighter goes in. Camp gifts come only from band members who are in the run and standing — Maya brings Scout's Omen, Dre brings Sharpen & Brace, Priya brings Healing Hands and Blessing of the Dawn, Marc brings Mend & Make, Sana brings Signal Boost, and Eli brings Open the Till. Leave a hero out — or let them fall — and their gift goes with them: no Priya means no Healing Hands revive, no Dre means no Sharpen & Brace. A forged fighter who solidified their own camp action in the Forge brings THAT action instead of their class pattern's gift: it appears in this menu under the name they gave it, and only while they are in the band and standing." },
     sharpen:  { t:"Sharpen & Brace", b:"Dre's camp craft, available while he stands: no die needed — the next fighter sent in gets +2 to hit and +2 Defense for the coming battle. Dre hones the edge and sets the stance: the band goes in sharp and braced." },
     omen:     { t:"Scout's Omen (d4)", b:"Maya's scout spell. It rolls the little four-sided pyramid (a d4 — it lands on 1, 2, 3, or 4): the next fighter gets +that many on their attack rolls. Maya also scouts which of The Fade's tricks the next battle leans on, so you can send the fighter whose weapon counters it." },
     bless:    { t:"Blessing of the Dawn (d4)", b:"Priya's blessing rolls the same d4 pyramid: the next fighter gets +that many on attack rolls. Unlike Maya's Omen, it doesn't scout the next battle's trick." },
@@ -5516,11 +5516,20 @@
     var signal = document.getElementById("campSignal"); if (signal) signal.disabled = campUsed || !giftUp("sana");
     var till = document.getElementById("campTill"); if (till) till.disabled = campUsed || !giftUp("eli");
     var press = document.getElementById("campPress"); if (press) press.disabled = campUsed;
+    /* A forged fighter's OWN camp action (solidified in the Forge) is its
+       own button, lit only while that fighter is in the band and standing —
+       the same law as every built-in gift. */
+    document.querySelectorAll("[data-own-camp]").forEach(function(b){
+      b.disabled = campUsed || !ownCampUp(b.getAttribute("data-own-camp"));
+    });
     document.querySelectorAll("[data-heal]").forEach(function(b){
       var t = b.getAttribute("data-heal");
-      b.disabled = campUsed || priyaDown || !inBand(t) || state.hp[t] >= 100;
+      /* While a forged fighter's own heal action is armed, the target row
+         serves THEM as the healer even when Priya's gift is not up. */
+      var noHealer = priyaDown && !ownHealArmedFor;
+      b.disabled = campUsed || noHealer || !inBand(t) || state.hp[t] >= 100;
       b.textContent = !inBand(t) ? FIGHTERS[t].name + " · not in this band"
-        : !giftUp("priya") ? FIGHTERS[t].name + " · no healer in the band"
+        : noHealer ? FIGHTERS[t].name + " · no healer in the band"
         : FIGHTERS[t].name + " · " + Math.max(0, state.hp[t]) + " HP";
     });
     document.querySelectorAll("[data-canvass]").forEach(function(b){
@@ -5531,6 +5540,7 @@
   }
   function campDone(msg){
     campUsed = true;
+    ownHealArmedFor = null;
     var n = document.getElementById("campNote");
     if (n) n.innerHTML = msg;
     refreshCamp();
@@ -5546,8 +5556,10 @@
   function wireCamp(){
     document.querySelectorAll("[data-heal]").forEach(function(b){
       b.addEventListener("click", function(){
-        if (campUsed || !giftUp("priya")) return;
+        if (campUsed) return;
         var t = b.getAttribute("data-heal");
+        if (ownHealArmedFor) { runOwnHeal(ownHealArmedFor, t); return; }
+        if (!giftUp("priya")) return;
         campDie("Healing Hands · Priya's d4", function(roll){
           var amt = roll + 3 + healBonus();
           var wasDown = state.hp[t] <= 0;
@@ -7308,6 +7320,7 @@
     refreshPickChrome();
     /* Camp: exactly one action before the next fighter is sent in. */
     campUsed = false;
+    ownHealArmedFor = null;
     var campNote = document.getElementById("campNote"); if (campNote) campNote.innerHTML = "";
     var campTray = document.getElementById("campTray"); if (campTray) campTray.innerHTML = "";
     var campPanel = document.getElementById("campPanel"); if (campPanel) campPanel.hidden = false;
@@ -8852,6 +8865,12 @@
      member. Spells, camp gift, slider caps and primary stat follow the
      class table: Ranger->Maya, Warrior->Dre, Healer->Priya, Builder->Marc,
      Herald->Sana, Keeper->Eli; Fighter->Dre, Magician->Sana, Paladin->Priya.
+     One exception, by the Forge's own law: a character who solidified
+     their OWN camp action in the Forge (the doc's campAction field)
+     brings THAT action to camp under their own name — selectable only
+     while they stand in the band — instead of borrowing the class
+     hero's gift; characters forged before the Forge asked carry no
+     campAction and keep borrowing.
      Their Death Blow is their Forge Death Blow NAME on the standard
      opening (under 15 boss HP) with the standard question and the d6
      overkill — no bespoke per-hero question. */
@@ -8886,14 +8905,167 @@
 
   /* A camp gift is "up" when its shipped hero is standing in the band —
      or when a forged band member of that hero's class is standing in it
-     (a forged fighter's camp action is their class hero's camp gift). */
+     (a forged fighter's camp action is their class hero's camp gift) —
+     UNLESS that forged fighter solidified their OWN camp action in the
+     Forge: then their action is theirs alone (its own button in the camp
+     menu, below) and they no longer lend their standing to the class
+     hero's gift. Forged fighters from before the Forge asked carry no
+     camp action and keep borrowing, exactly as they always have. */
   function giftUp(heroKey){
     if (inBand(heroKey) && (state.hp[heroKey] || 0) > 0) return true;
     for (var i = 0; i < HERO_KEYS.length; i++) {
       var k = HERO_KEYS[i];
-      if (FORGED[k] && FORGED[k].hero === heroKey && inBand(k) && (state.hp[k] || 0) > 0) return true;
+      if (FORGED[k] && FORGED[k].hero === heroKey && !FORGED[k].campAction && inBand(k) && (state.hp[k] || 0) > 0) return true;
     }
     return false;
+  }
+
+  /* ---------- A forged fighter's OWN camp action ----------
+     The Forge requires every character to choose what their camp action
+     DOES from the game's real camp effects and to solidify it at
+     creation — their own name for it and their own one line — so the
+     character doc carries campAction { effect, name, line }. Canvass is
+     never among the choices: it stays the universal action anyone
+     standing can take, not something a character owns. The reader here
+     is tolerant of the field's exact shape (an effect id, a built-in
+     gift's name, or alt keys) so a doc written by any Forge build
+     lands; anything unrecognized reads as NO camp action, and the
+     fighter keeps borrowing their class hero's gift. */
+  var FORGE_CAMP_EFFECTS = {
+    heal:    { gift:"Healing Hands",       sum:"heal one hero · d4 + 3 + their HEAL bonus · can lift the fallen" },
+    inspire: { gift:"Blessing of the Dawn", sum:"d4 Inspiration for the next fighter" },
+    omen:    { gift:"Scout's Omen",         sum:"d4 Inspiration + reveals the next battle's aspect" },
+    brace:   { gift:"Sharpen & Brace",      sum:"next fighter · +2 to hit, +2 Defense · no die" },
+    mend:    { gift:"Mend & Make",          sum:"most-wounded standing hero +6 HP · next fighter +2 Defense" },
+    signal:  { gift:"Signal Boost",         sum:"next battle: every correct answer also raises Voice +2" },
+    till:    { gift:"Open the Till",        sum:"+6 Voice now · next battle's first correct answer charges the Power Card +1 extra pip" }
+  };
+  function forgeCampEffectId(raw){
+    var s = String(raw == null ? "" : raw).toLowerCase().replace(/[^a-z]/g, "");
+    if (!s) return null;
+    if (s.indexOf("heal") >= 0 || s.indexOf("hands") >= 0 || s.indexOf("reviv") >= 0) return "heal";
+    if (s.indexOf("omen") >= 0 || s.indexOf("scout") >= 0) return "omen";
+    if (s.indexOf("bless") >= 0 || s.indexOf("inspir") >= 0 || s.indexOf("dawn") >= 0) return "inspire";
+    if (s.indexOf("brace") >= 0 || s.indexOf("sharpen") >= 0) return "brace";
+    if (s.indexOf("mend") >= 0 || s.indexOf("make") >= 0) return "mend";
+    if (s.indexOf("signal") >= 0 || s.indexOf("boost") >= 0) return "signal";
+    if (s.indexOf("till") >= 0) return "till";
+    return FORGE_CAMP_EFFECTS[s] ? s : null;
+  }
+  function forgeCampActionOf(c){
+    var raw = c && c.campAction;
+    if (!raw) return null;
+    var effect = null, nm = "", ln = "";
+    if (typeof raw === "string") effect = forgeCampEffectId(raw);
+    else {
+      effect = forgeCampEffectId(raw.effect || raw.kind || raw.type || raw.id || raw.gift);
+      nm = String(raw.name || raw.title || "").trim();
+      ln = String(raw.line || raw.text || raw.desc || raw.description || "").trim();
+    }
+    if (!effect) return null;
+    return { effect: effect, name: nm || FORGE_CAMP_EFFECTS[effect].gift, line: ln };
+  }
+  /* Their own action is selectable only while THEY are in the band and
+     standing — the same law swap #21 gave the built-in gifts. */
+  function ownCampUp(fid){
+    return !!(FORGED[fid] && FORGED[fid].campAction && inBand(fid) && (state.hp[fid] || 0) > 0);
+  }
+  /* Using a forged fighter's own camp action: underneath, the engine
+     effect is the game's real one — the same heals and pendingBuffs the
+     built-in gifts drive — narrated under the player's own name and
+     line for it. The heal effect arms the Healing Hands target row:
+     the player picks who the hands land on, exactly like Priya's, with
+     THIS fighter as the healer (their own HEAL score drives the bonus,
+     and a downed band member can be lifted, exactly like the original). */
+  var ownHealArmedFor = null;
+  function runOwnCampAction(fid){
+    var F = FORGED[fid];
+    if (!F || !F.campAction || campUsed || !ownCampUp(fid)) return;
+    var ca = F.campAction, heroName = FIGHTERS[fid].name;
+    var nm = forgeEsc(ca.name), hn = forgeEsc(heroName);
+    var lineBit = ca.line ? " \u201C" + forgeEsc(ca.line) + "\u201D" : "";
+    if (ca.effect === "heal") {
+      ownHealArmedFor = fid;
+      var n = document.getElementById("campNote");
+      if (n) n.innerHTML = "<b>" + nm + ":</b> " + hn + " is ready to lay on hands." + lineBit + " Choose who they heal in the <b>Healing Hands</b> row above — the d4 rolls when you pick.";
+      refreshCamp();
+      return;
+    }
+    if (ca.effect === "inspire") {
+      campDie(ca.name + " · " + heroName + "'s d4", function(roll){
+        state.pendingBuffs.insp += roll;
+        campDone("<b>" + nm + ":</b> the d4 shows " + roll + " — the next fighter sent in gains <b>+" + roll + " Inspiration</b> on attack rolls for the coming battle." + lineBit);
+        log(heroName + "'s " + ca.name + ": +" + roll + " Inspiration banked for the next fighter.");
+      });
+      return;
+    }
+    if (ca.effect === "omen") {
+      campDie(ca.name + " · " + heroName + "'s d4", function(roll){
+        state.pendingBuffs.insp += roll;
+        var aspect = ASPECTS[state.idx];
+        var counter = aspect === "spin" ? "Voting Arrows counter it" : aspect === "drum" ? "the Axe of Freedom counters it" : aspect === "creep" ? "the Sword of Youth counters it" : "the Hammer of Hands counters it";
+        campDone("<b>" + nm + ":</b> the d4 shows " + roll + " — <b>+" + roll + " Inspiration</b> banked, and " + hn + " reads the road ahead: the coming battle's aspect is <b>" + ASPECT_NAMES[aspect] + "</b> — " + counter + " (+2 to hit)." + lineBit);
+        log(heroName + "'s " + ca.name + ": the next battle's aspect is " + ASPECT_NAMES[aspect] + ". +" + roll + " Inspiration banked.");
+      });
+      return;
+    }
+    if (ca.effect === "brace") {
+      var slotB = document.getElementById("campTray"); if (slotB) slotB.innerHTML = "";
+      state.pendingBuffs.sharpen = true;
+      campDone("<b>" + nm + ":</b> " + hn + " sharpens and braces the line — no die needed — the next fighter sent in gets <b>+2 to hit and +2 Defense</b> for the coming battle." + lineBit);
+      log(heroName + "'s " + ca.name + ": the next fighter readied (+2 to hit, +2 Defense).");
+      return;
+    }
+    if (ca.effect === "mend") {
+      var slotM = document.getElementById("campTray"); if (slotM) slotM.innerHTML = "";
+      state.pendingBuffs.braceDef = true;
+      var target = null, lowest = 101;
+      bandKeys().forEach(function(k){ if (state.hp[k] > 0 && state.hp[k] < lowest) { lowest = state.hp[k]; target = k; } });
+      var amt = 0;
+      if (target) { amt = Math.min(6, 100 - state.hp[target]); state.hp[target] += amt; }
+      renderHeroHp();
+      renderBars();
+      if (target && amt > 0) {
+        campDone("<b>" + nm + ":</b> " + hn + "'s hands go to the worst hurt first — " + FIGHTERS[target].name + " regains <b>+" + amt + " HP</b> (now " + state.hp[target] + " HP), and the next fighter sent in goes braced: <b>+2 Defense</b> for the coming battle." + lineBit);
+        log(heroName + "'s " + ca.name + ": " + FIGHTERS[target].name + " regains +" + amt + " HP (now " + state.hp[target] + "). Next fighter braced: +2 Defense.");
+      } else {
+        campDone("<b>" + nm + ":</b> the band stands whole — no wounds to mend — so " + hn + " braces the line instead: the next fighter sent in gets <b>+2 Defense</b> for the coming battle." + lineBit);
+        log(heroName + "'s " + ca.name + ": no wounds to mend. Next fighter braced: +2 Defense.");
+      }
+      return;
+    }
+    if (ca.effect === "signal") {
+      var slotS = document.getElementById("campTray"); if (slotS) slotS.innerHTML = "";
+      state.pendingBuffs.signal = true;
+      campDone("<b>" + nm + ":</b> " + hn + " boosts the band's signal — in the next battle, <b>every correct answer also raises Voice +2</b>. The signal gets through, and being heard is fuel." + lineBit);
+      log(heroName + "'s " + ca.name + ": the next battle's correct answers also raise Voice +2.");
+      return;
+    }
+    if (ca.effect === "till") {
+      var slotT = document.getElementById("campTray"); if (slotT) slotT.innerHTML = "";
+      var tillVoice = gainVoice(12);
+      state.pendingBuffs.till = true;
+      renderBars();
+      campDone("<b>" + nm + ":</b> " + hn + " opens the till for the band — <b>+" + tillVoice + " Voice</b> (now " + state.voice + "), and the next battle's first correct answer charges the Power Card <b>+1 extra pip</b>. Generosity carries." + lineBit);
+      log(heroName + "'s " + ca.name + ": +" + tillVoice + " Voice (now " + state.voice + "). The next battle's first correct answer charges the Power Card +1 extra pip.");
+      return;
+    }
+  }
+  function runOwnHeal(fid, t){
+    var F = FORGED[fid];
+    ownHealArmedFor = null;
+    if (!F || !F.campAction || F.campAction.effect !== "heal") { refreshCamp(); return; }
+    var ca = F.campAction, heroName = FIGHTERS[fid].name;
+    campDie(ca.name + " · " + heroName + "'s d4", function(roll){
+      var bonus = statMod(getStat(fid, "heal"));
+      var amt = roll + 3 + bonus;
+      var wasDown = state.hp[t] <= 0;
+      state.hp[t] = Math.min(100, Math.max(0, state.hp[t]) + amt);
+      if (wasDown && state.hp[t] > 0) state.highlights.push({ type:"revive", hero:t, by:fid, amt:amt });
+      renderHeroHp();
+      campDone("<b>" + forgeEsc(ca.name) + ":</b> the d4 shows " + roll + " — " + roll + " + 3 + " + bonus + " (" + forgeEsc(heroName) + "'s HEAL bonus) = <b>+" + amt + " HP</b> to " + FIGHTERS[t].name + ", who now stands at " + state.hp[t] + " HP." + (ca.line ? " \u201C" + forgeEsc(ca.line) + "\u201D" : "") + (state.hp[t] > 0 && state.hp[t] <= 15 ? " Still clawing at death's door — one more knock could end them." : ""));
+      log(heroName + "'s " + ca.name + ": " + FIGHTERS[t].name + " healed +" + amt + " HP (d4 rolled " + roll + "). Now at " + state.hp[t] + " HP.");
+    });
   }
   function forgeEsc(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   function forgeDie(d){ d = parseInt(d, 10); return [4, 6, 8, 10, 12, 20].indexOf(d) >= 0 ? d : 8; }
@@ -8959,6 +9131,7 @@
       var F = FORGED[k];
       var img = F ? ART[k + "a1"] : ART[k];
       var meta = F ? F.cls + " · Forged" : "Band regular";
+      if (F && F.campAction) meta += " · Camp: " + F.campAction.name;
       var wpn = F ? WEAPONS[k][0].name + " · 1d" + WEAPONS[k][0].die : FIGHTERS[k].wname + " · 1d" + FIGHTERS[k].die;
       return '<div class="qcard"><img src="' + forgeEsc(img || "") + '" alt="Portrait of ' + forgeEsc(FIGHTERS[k].name) + '" />' +
         '<span class="q-name">' + forgeEsc(FIGHTERS[k].name) + '</span>' +
@@ -9051,7 +9224,9 @@
       var hb = document.createElement("button");
       hb.type = "button"; hb.className = "camp-btn"; hb.setAttribute("data-heal", fid); hb.textContent = FIGHTERS[fid].name;
       hb.addEventListener("click", function(){
-        if (campUsed || !giftUp("priya")) return;
+        if (campUsed) return;
+        if (ownHealArmedFor) { runOwnHeal(ownHealArmedFor, fid); return; }
+        if (!giftUp("priya")) return;
         campDie("Healing Hands · the healer's d4", function(roll){
           var amt = roll + 3 + healBonus();
           var wasDown = state.hp[fid] <= 0;
@@ -9089,10 +9264,42 @@
       });
       canRow.parentElement.appendChild(cb);
     }
+    /* Their OWN camp action, when the Forge doc carries one solidified:
+       a row of its own in the camp menu, in the built-in gifts' house
+       style, named by the player — inserted just above Press On. It is
+       wired here (not in wireCamp) because the fighter arrives after
+       load; its enabled state is refreshCamp's [data-own-camp] loop. */
+    var F = FORGED[fid];
+    if (F && F.campAction) {
+      var ca = F.campAction;
+      HELP["owncamp-" + fid] = { t: ca.name, b: FIGHTERS[fid].name + "'s own camp action, chosen and solidified in the Character Forge: " + FORGE_CAMP_EFFECTS[ca.effect].sum + ". At camp it is available only while " + FIGHTERS[fid].name + " is in the band and standing — and it is theirs alone: it replaces the camp gift of their class pattern, so no borrowed gift stands in for it." + (ca.line ? " In their own words: \u201C" + ca.line + "\u201D" : "") };
+      var actionsBox = document.querySelector(".camp-actions");
+      var pressBtn = document.getElementById("campPress");
+      if (actionsBox && pressBtn && pressBtn.parentElement) {
+        var row = document.createElement("div");
+        row.className = "camp-row";
+        var ob = document.createElement("button");
+        ob.type = "button"; ob.className = "camp-btn"; ob.id = "campOwn-" + fid;
+        ob.setAttribute("data-own-camp", fid);
+        ob.innerHTML = forgeEsc(ca.name) + " <em>" + forgeEsc(FIGHTERS[fid].name) + "'s own camp action · " + FORGE_CAMP_EFFECTS[ca.effect].sum + "</em>";
+        ob.addEventListener("click", function(){ runOwnCampAction(fid); });
+        var dot = document.createElement("button");
+        dot.type = "button"; dot.className = "help-dot"; dot.setAttribute("data-help", "owncamp-" + fid);
+        dot.setAttribute("aria-label", "Help: " + ca.name); dot.setAttribute("aria-expanded", "false"); dot.textContent = "?";
+        row.appendChild(ob);
+        row.appendChild(dot);
+        actionsBox.insertBefore(row, pressBtn.parentElement);
+      }
+    }
     if (typeof refreshCamp === "function") refreshCamp();
   }
-  function forgedSheetHTML(fid, c, cls, hero, weapons, sliders, ranges, hasTales, dbName){
+  function forgedSheetHTML(fid, c, cls, hero, weapons, sliders, ranges, hasTales, dbName, campAction){
     var name = String(c.name || "Forged fighter");
+    /* The camp line tells the truth either way: their OWN solidified
+       action when the Forge sent one, else the borrowed class gift. */
+    var campBit = campAction
+      ? forgeEsc(FIGHTERS[hero].name) + '\'s spell list, their own three weapons, sliders and Look. <b>Their camp action:</b> ' + forgeEsc(campAction.name) + ' — ' + FORGE_CAMP_EFFECTS[campAction.effect].sum + (campAction.line ? ' · \u201C' + forgeEsc(campAction.line) + '\u201D' : '') + ' — solidified in the Forge and theirs alone: at camp it lights up only while they are in the band and standing, in place of the pattern\u2019s gift.'
+      : forgeEsc(FIGHTERS[hero].name) + '\'s spell list and camp gift, their own three weapons, sliders and Look.';
     var statRows = STAT_KEYS.map(function(k, i){
       return '<div class="stat"><label for="st-' + fid + '-' + k + '">' + STAT_NAMES[k] + '</label><input type="range" id="st-' + fid + '-' + k + '" min="' + ranges[i][0] + '" max="' + ranges[i][1] + '" value="' + sliders[k] + '" /><output for="st-' + fid + '-' + k + '">' + sliders[k] + '</output></div>';
     }).join("");
@@ -9129,7 +9336,7 @@
       '<div class="gearup" data-gearup="' + fid + '"></div>' +
       '<p class="cap-note">' + forgeEsc(cls) + ' caps — the class table from the Character Forge, the same floors and caps this sheet was forged with.</p>' +
       campaigns +
-      '<p class="style-line"><b>How they fight:</b> on the ' + forgeEsc(cls) + ' pattern — ' + forgeEsc(FIGHTERS[hero].name) + '\'s spell list and camp gift, their own three weapons, sliders and Look. <b>Death Blow:</b> ' + forgeEsc(dbName) + ', on the standard opening under 15 boss HP.</p>' +
+      '<p class="style-line"><b>How they fight:</b> on the ' + forgeEsc(cls) + ' pattern — ' + campBit + ' <b>Death Blow:</b> ' + forgeEsc(dbName) + ', on the standard opening under 15 boss HP.</p>' +
       '<button class="pick-btn" type="button" aria-pressed="false">Send ' + forgeEsc(name) + ' into battle →</button>' +
       '<button class="print-sheet-btn" type="button" data-print-sheet="' + fid + '">Print this sheet</button>' +
       '</div>';
@@ -9176,6 +9383,9 @@
     var tales = (Array.isArray(c.tales) && c.tales.length) ? c.tales : null;
     var hasTales = !!tales && [0, 1, 2].every(function(i){ return tales[i] && tales[i].text; });
     var dbName = String(c.deathBlow || "").trim() || (name + "'s Death Blow");
+    /* Their own camp action, solidified in the Forge (null for fighters
+       forged before the Forge asked — they keep borrowing, see giftUp). */
+    var campAction = forgeCampActionOf(c);
     var attireDesc = (Array.isArray(c.attiresDesc) && c.attiresDesc.some(function(s){ return (s || "").trim(); }))
       ? [0, 1, 2].map(function(i){ return String(c.attiresDesc[i] || "").trim(); })
       : [String(c.outfit || "").trim(), "", ""];
@@ -9206,7 +9416,7 @@
       ART[ak + "_skin"] = urls.skins[ai] || null;
       ART[ak + "_hair"] = urls.hairs[ai] || null;
     }
-    FORGED[fid] = { docId: docId, cls: cls, hero: hero, spellPicks: spellPicks.slice(), look: look };
+    FORGED[fid] = { docId: docId, cls: cls, hero: hero, spellPicks: spellPicks.slice(), look: look, campAction: campAction };
     FORGED_BY_DOC[docId] = fid;
     state.hp[fid] = 100;
     state.deathBlowSpent[fid] = false;
@@ -9219,7 +9429,7 @@
     forgeQueueKeys.push(fid);
 
     var grid = document.querySelector(".fighters");
-    grid.insertAdjacentHTML("beforeend", forgedSheetHTML(fid, c, cls, hero, weapons, sliders, ranges, hasTales, dbName));
+    grid.insertAdjacentHTML("beforeend", forgedSheetHTML(fid, c, cls, hero, weapons, sliders, ranges, hasTales, dbName, campAction));
     var card = grid.querySelector('.fighter[data-fighter="' + fid + '"]');
     forgeRegisterPool(fid);
     var pb = card.querySelector(".pick-btn");
@@ -9401,6 +9611,14 @@
     var W = curWeapon(hero);
     var giftKey = (typeof FORGED !== "undefined" && FORGED[hero]) ? FORGED[hero].hero : hero;
     var gift = CAMP_GIFT_PRINT[giftKey] || "";
+    var giftLabel = "Camp gift";
+    /* A forged fighter's printed sheet names their OWN solidified camp
+       action — the printout tells the same truth the camp menu does. */
+    if (typeof FORGED !== "undefined" && FORGED[hero] && FORGED[hero].campAction) {
+      var pca = FORGED[hero].campAction;
+      giftLabel = "Camp action";
+      gift = pca.name + " — " + FORGE_CAMP_EFFECTS[pca.effect].sum + (pca.line ? " · \u201C" + pca.line + "\u201D" : "") + " · theirs alone, solidified in the Forge";
+    }
     var statsHtml = STAT_KEYS.map(function(k){
       var v = getStat(hero, k);
       return '<div class="ps-stat"><span class="ps-stat-name">' + STAT_NAMES[k] + '</span><span class="ps-stat-val">' + v + '</span><span class="ps-stat-mod">' + fmtMod(statMod(v)) + '</span></div>';
@@ -9423,7 +9641,7 @@
           '<div class="ps-row"><dt>Combat</dt><dd>' + forgeEsc(derived) + '</dd></div>' +
           '<div class="ps-row"><dt>Perk</dt><dd>' + forgeEsc(perk) + '</dd></div>' +
           '<div class="ps-row"><dt>Death Blow</dt><dd>' + forgeEsc(db) + '</dd></div>' +
-          (gift ? '<div class="ps-row"><dt>Camp gift</dt><dd>' + forgeEsc(gift) + '</dd></div>' : "") +
+          (gift ? '<div class="ps-row"><dt>' + giftLabel + '</dt><dd>' + forgeEsc(gift) + '</dd></div>' : "") +
         '</dl>' +
       '</article>';
     var pim = host.querySelector(".ps-portrait img");
