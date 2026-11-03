@@ -1454,7 +1454,7 @@
     <div class="pick-banner" id="pickBanner" role="status"></div>
     <div class="band-select" id="bandSelect">
       <span class="camp-tag">Form your merry band</span>
-      <p class="camp-lede">Choose your band size — <b>3, 4, or all 6</b> — then tap that many heroes to bring. The band <b>locks for the whole run</b>: only they gear up, customize, camp and fight. Right after the band locks, you <b>choose your opener</b> — who fights Battle 1 — and the rotation runs from them. Camp gifts come only from band members — leave Priya out and there is <b>no Healing Hands revive</b>; leave Marc, Sana or Eli out and their camp crafts stay home too. The Walk Off scales to your band: every band member standing, and every band member having cast the Power Card.</p>
+      <p class="camp-lede">Choose your band size — <b>3, 4, or all 6</b> — then tap that many heroes to bring. The band <b>locks for the whole run</b>: only they gear up, customize, camp and fight. Right after the band locks, you <b>choose your opener</b> — who fights Battle 1 — and the rotation runs from them. Camp gifts come only from band members — every hero brings their own: Maya's Scout's Omen, Dre's Sharpen &amp; Brace, Priya's Healing Hands, Marc's Mend &amp; Make, Sana's Signal Boost and Eli's Open the Till. Leave Priya out and there is <b>no Healing Hands revive</b>; leave any hero out and their camp gift stays home too. The Walk Off scales to your band: every band member standing, and every band member having cast the Power Card.</p>
       <div class="band-sizes" role="group" aria-label="Band size">
         <button type="button" class="band-size-btn" data-band-size="3">Band of 3</button>
         <button type="button" class="band-size-btn" data-band-size="4">Band of 4</button>
@@ -1478,7 +1478,7 @@
     <div class="camp" id="campPanel" hidden>
       <span class="camp-tag">Between battles · One camp action <button type="button" class="help-dot" data-help="camp" aria-label="Help: Camp actions" aria-expanded="false">?</button></span>
       <p class="coach-hint" id="campCoach" hidden>Coach: one camp action per stop — then the rotation's next fighter goes in.</p>
-      <p class="camp-lede">The band catches its breath before the next fight. Choose <b>one</b> camp action — heal the dying, bless the next fighter, sharpen up, mend and brace, boost the signal, open the till, canvass for the vote, or press on. Healing Hands and the spells roll the <b>d4</b> — the little four-sided pyramid: swipe or tap it to roll. <b>Canvass</b> sends a fighter knocking on doors in Alder Creek, talking with neighbors about the vote — the ground game this whole adventure points at — and rolls the <b>d8</b> for the street's answer: Power Card momentum earned at the doors instead of under fire.</p>
+      <p class="camp-lede">The band catches its breath before the next fight. Choose <b>one</b> camp action — each gift belongs to a hero in this band: heal the dying, bless the next fighter, sharpen up, mend and brace, boost the signal, open the till, canvass for the vote, or press on. Healing Hands and the spells roll the <b>d4</b> — the little four-sided pyramid: swipe or tap it to roll. <b>Canvass</b> sends a fighter knocking on doors in Alder Creek, talking with neighbors about the vote — the ground game this whole adventure points at — and rolls the <b>d8</b> for the street's answer: Power Card momentum earned at the doors instead of under fire.</p>
       <div class="camp-actions">
         <div class="camp-row"><span class="camp-name">Healing Hands</span><span class="camp-sub">Priya · d4 + 3 + her HEAL bonus · pick who she lays hands on</span><button type="button" class="help-dot" data-help="heal" aria-label="Help: Healing Hands" aria-expanded="false">?</button></div>
         <div class="camp-row">
@@ -1491,7 +1491,7 @@
         </div>
         <div class="camp-row"><button type="button" class="camp-btn" id="campBless">Blessing of the Dawn <em>Priya's spell · d4 Inspiration for the next fighter</em></button><button type="button" class="help-dot" data-help="bless" aria-label="Help: Blessing of the Dawn (d4)" aria-expanded="false">?</button></div>
         <div class="camp-row"><button type="button" class="camp-btn" id="campOmen">Scout's Omen <em>Maya's minor magic · d4 Inspiration + reveals the next battle's aspect</em></button><button type="button" class="help-dot" data-help="omen" aria-label="Help: Scout's Omen (d4)" aria-expanded="false">?</button></div>
-        <div class="camp-row"><button type="button" class="camp-btn" id="campSharpen">Sharpen &amp; Brace <em>next fighter · +2 to hit, +2 Defense</em></button></div>
+        <div class="camp-row"><button type="button" class="camp-btn" id="campSharpen">Sharpen &amp; Brace <em>Dre's craft · next fighter · +2 to hit, +2 Defense</em></button><button type="button" class="help-dot" data-help="sharpen" aria-label="Help: Sharpen &amp; Brace" aria-expanded="false">?</button></div>
         <div class="camp-row"><button type="button" class="camp-btn" id="campMend">Mend &amp; Make <em>Marc's craft · most-wounded standing hero +6 HP · next fighter +2 Defense (bracing)</em></button><button type="button" class="help-dot" data-help="mend" aria-label="Help: Mend &amp; Make" aria-expanded="false">?</button></div>
         <div class="camp-row"><button type="button" class="camp-btn" id="campSignal">Signal Boost <em>Sana's craft · next battle: every correct answer also raises Voice +2</em></button><button type="button" class="help-dot" data-help="signal" aria-label="Help: Signal Boost" aria-expanded="false">?</button></div>
         <div class="camp-row"><button type="button" class="camp-btn" id="campTill">Open the Till <em>Eli's craft · +6 Voice now · next battle's first correct answer charges the Power Card +1 extra pip</em></button><button type="button" class="help-dot" data-help="till" aria-label="Help: Open the Till" aria-expanded="false">?</button></div>
@@ -3972,7 +3972,8 @@
      position:fixed and clamped to the viewport, so it is never clipped
      and never causes horizontal overflow. */
   var HELP = {
-    camp:     { t:"Camp actions", b:"Between battles the band camps and gets exactly ONE action: heal, sharpen up, scout ahead, or canvass. Then the rotation's next fighter goes in. Camp gifts come only from band members — no Priya in the band means no Healing Hands revive." },
+    camp:     { t:"Camp actions", b:"Between battles the band camps and gets exactly ONE action: heal, sharpen up, scout ahead, or canvass. Then the rotation's next fighter goes in. Camp gifts come only from band members who are in the run and standing — Maya brings Scout's Omen, Dre brings Sharpen & Brace, Priya brings Healing Hands and Blessing of the Dawn, Marc brings Mend & Make, Sana brings Signal Boost, and Eli brings Open the Till. Leave a hero out — or let them fall — and their gift goes with them: no Priya means no Healing Hands revive, no Dre means no Sharpen & Brace." },
+    sharpen:  { t:"Sharpen & Brace", b:"Dre's camp craft, available while he stands: no die needed — the next fighter sent in gets +2 to hit and +2 Defense for the coming battle. Dre hones the edge and sets the stance: the band goes in sharp and braced." },
     omen:     { t:"Scout's Omen (d4)", b:"Maya's scout spell. It rolls the little four-sided pyramid (a d4 — it lands on 1, 2, 3, or 4): the next fighter gets +that many on their attack rolls. Maya also scouts which of The Fade's tricks the next battle leans on, so you can send the fighter whose weapon counters it." },
     bless:    { t:"Blessing of the Dawn (d4)", b:"Priya's blessing rolls the same d4 pyramid: the next fighter gets +that many on attack rolls. Unlike Maya's Omen, it doesn't scout the next battle's trick." },
     heal:     { t:"Healing Hands", b:"Priya rolls the d4 and heals a fighter. This is the ONLY way to bring back a fighter who has fallen to 0 HP." },
@@ -5497,20 +5498,20 @@
      bonus; the only way to lift a DOWN fighter. Spells (d4) — Priya's Blessing
      of the Dawn and Maya's Scout's Omen bank Inspiration (+1 per point) for the
      next fighter; the Omen also reveals the coming battle's aspect. Sharpen &
-     Brace — +2 to hit and +2 Defense for whoever is sent in next. Canvass —
+     Brace (Dre) — +2 to hit and +2 Defense for whoever is sent in next. Canvass —
      the chosen fighter knocks on doors in Alder Creek: the Power Card pip is
      guaranteed (+1), and a d8 roll — the street's answer — adds that much
      Voice (half the roll, rounded up) and 5 × that in Friends Rallied. */
   var campUsed = false;
   function refreshCamp(){
     /* Camp gifts come only from band members: leave Priya out and there is
-       no Healing Hands and no Blessing; Maya, Marc, Sana and Eli's crafts
+       no Healing Hands and no Blessing; Maya, Dre, Marc, Sana and Eli's gifts
        likewise stay home with them. Non-band targets can't be healed or
        sent canvassing either — they didn't make the trip. */
     var priyaDown = !giftUp("priya"), mayaDown = !giftUp("maya");
     var bless = document.getElementById("campBless"); if (bless) bless.disabled = campUsed || priyaDown;
     var omen = document.getElementById("campOmen"); if (omen) omen.disabled = campUsed || mayaDown;
-    var sharp = document.getElementById("campSharpen"); if (sharp) sharp.disabled = campUsed;
+    var sharp = document.getElementById("campSharpen"); if (sharp) sharp.disabled = campUsed || !giftUp("dre");
     var mend = document.getElementById("campMend"); if (mend) mend.disabled = campUsed || !giftUp("marc");
     var signal = document.getElementById("campSignal"); if (signal) signal.disabled = campUsed || !giftUp("sana");
     var till = document.getElementById("campTill"); if (till) till.disabled = campUsed || !giftUp("eli");
@@ -5580,11 +5581,11 @@
     });
     var sharp = document.getElementById("campSharpen");
     if (sharp) sharp.addEventListener("click", function(){
-      if (campUsed) return;
+      if (campUsed || !giftUp("dre")) return;
       var slot = document.getElementById("campTray"); if (slot) slot.innerHTML = "";
       state.pendingBuffs.sharpen = true;
-      campDone("<b>Sharpen &amp; Brace:</b> no die needed — the next fighter sent in gets <b>+2 to hit and +2 Defense</b> for the coming battle.");
-      log("Sharpen & Brace readied for the next fighter.");
+      campDone("<b>Sharpen &amp; Brace:</b> Dre sharpens and braces the line — no die needed — the next fighter sent in gets <b>+2 to hit and +2 Defense</b> for the coming battle.");
+      log("Sharpen & Brace: Dre readied the next fighter (+2 to hit, +2 Defense).");
     });
     var mend = document.getElementById("campMend");
     if (mend) mend.addEventListener("click", function(){
@@ -5627,7 +5628,7 @@
       b.addEventListener("click", function(){
         if (campUsed) return;
         var t = b.getAttribute("data-canvass");
-        if (state.hp[t] <= 0) return;
+        if (!inBand(t) || state.hp[t] <= 0) return;
         campDie("Canvass · " + FIGHTERS[t].name + " knocks — the street answers on the d8", function(roll){
           /* Extra Ballots (Gear Up Pack): Canvass grants +1 additional
              pip — 2 total while the pack carries it. A natural 8 on the
@@ -9069,7 +9070,7 @@
       cb.type = "button"; cb.className = "camp-btn"; cb.setAttribute("data-canvass", fid); cb.textContent = FIGHTERS[fid].name + " canvasses";
       cb.addEventListener("click", function(){
         if (campUsed) return;
-        if (state.hp[fid] <= 0) return;
+        if (!inBand(fid) || state.hp[fid] <= 0) return;
         campDie("Canvass · " + FIGHTERS[fid].name + " knocks — the street answers on the d8", function(roll){
           /* Extra Ballots (Gear Up Pack): Canvass grants +1 additional
              pip — 2 total while the pack carries it. A natural 8 on the
@@ -9451,9 +9452,5 @@
 <script>
   if ('serviceWorker' in navigator) { try { navigator.serviceWorker.register('sw.js').catch(function(){}); } catch(e){} }
 </script>
-<div style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#7b1d1d;color:#fff;font:700 14px/1.35 system-ui,sans-serif;text-align:center;padding:8px 10px">TEST PAGE — CURRENT BUILD (Swap #20): this page opens on the win screen. Tap “Play the closing song &amp; roll your battle highlights” — the song should loop while the credits are still rolling; when the credits settle on the last card, the song plays out once more and does NOT start again.</div>
-<script>
-window.addEventListener('load', function(){ setTimeout(function(){ var w = document.getElementById('winEnding'); if (w){ w.classList.add('show'); w.scrollIntoView(); } }, 400); });
-</script>
-</body>
+<div style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#b91c1c;color:#fff;font:700 15px/1.45 system-ui,sans-serif;padding:10px 14px;text-align:center">FINALE TEST — Swap #21 cut (Sharpen &amp; Brace is now Dre's own camp gift). Tap a button below to start the closing song &amp; roll your battle highlights. This page auto-opens the WIN screen so you land on the finale buttons.</div><script>window.addEventListener("load",function(){setTimeout(function(){var w=document.getElementById("winEnding"); if(w){w.classList.add("show"); w.scrollIntoView();}},400);});</script></body>
 </html>
