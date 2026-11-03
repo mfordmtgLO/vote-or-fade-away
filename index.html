@@ -1165,6 +1165,19 @@
      Same storybook sheet family, with its own voice button up top (Pin's
      narration, tap to play / tap to stop) and a plain Continue at the foot
      that always moves on. */
+  /* Prologue sheet scrolling: the card is the sheet's one scroll
+     container, and it has to win every vertical gesture. It is a flex
+     item whose height comes only from its max-height cap, so it needs
+     min-height:0 to be sized by that cap instead of its content —
+     without it WebKit never treats the card as a touch scroller and
+     hands the pan to the page behind. Momentum scrolling
+     (-webkit-overflow-scrolling) makes the card the pan's owner on
+     iOS, touch-action:pan-y licenses the vertical pan explicitly, and
+     overscroll-behavior:contain stops the gesture chaining to the
+     page at the card's top and bottom edges. openPrologue also locks
+     the background page for the sheet's lifetime (see the script). */
+  #prologueSheet{overscroll-behavior:contain}
+  #prologueSheet .prologue-card{min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
   .prologue-card p.prologue-quote{margin:8px 0 0 18px;font-style:italic;color:#ffe9a8}
   .prologue-voice{display:block;margin:18px auto 4px;border:2px solid #5fd3c6;border-radius:8px;background:transparent;color:#5fd3c6;font-weight:800;font-size:.95rem;padding:11px 18px;cursor:pointer}
   .prologue-voice:active{transform:translate(1px,1px)}
@@ -2789,8 +2802,53 @@
     if (prologueCard) prologueCard.scrollTop = 0;
     prologueSheet.scrollTop = 0;
   }
+  /* While the Prologue sheet is open the background page must not
+     scroll: a swipe that reaches the page (at the card's edges, or on
+     the backdrop) otherwise drags the page behind the sheet while the
+     card sits frozen — the regression this lock exists to close. The
+     page is pinned with the iOS-proof recipe (overflow hidden on the
+     root and body, body position:fixed held at the current scroll
+     offset) and every inline value it replaces is restored exactly on
+     close, with the scroll position put back to the pixel. The lock
+     belongs to the Prologue alone; opening twice never stacks it. */
+  var prologueLockState = null;
+  function lockPrologueBackground(){
+    if (prologueLockState) return;
+    var y = window.scrollY || window.pageYOffset || 0;
+    prologueLockState = {
+      y: y,
+      htmlOverflow: document.documentElement.style.overflow,
+      bodyOverflow: document.body.style.overflow,
+      bodyPosition: document.body.style.position,
+      bodyTop: document.body.style.top,
+      bodyLeft: document.body.style.left,
+      bodyWidth: document.body.style.width
+    };
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = (-y) + "px";
+    document.body.style.left = "0";
+    document.body.style.width = "100%";
+  }
+  function unlockPrologueBackground(){
+    if (!prologueLockState) return;
+    var s = prologueLockState;
+    prologueLockState = null;
+    document.documentElement.style.overflow = s.htmlOverflow;
+    document.body.style.overflow = s.bodyOverflow;
+    document.body.style.position = s.bodyPosition;
+    document.body.style.top = s.bodyTop;
+    document.body.style.left = s.bodyLeft;
+    document.body.style.width = s.bodyWidth;
+    /* The root's smooth scroll-behavior would animate this restore;
+       the page must land back exactly where it was, instantly. */
+    try { window.scrollTo({ top: s.y, left: 0, behavior: "instant" }); }
+    catch(e){ window.scrollTo(0, s.y); }
+  }
   function openPrologue(mode){
     prologueMode = mode || "read";
+    lockPrologueBackground();
     prologueSheet.classList.add("show");
     resetPrologueScroll();
     try { prologueContinue.focus({ preventScroll:true }); }
@@ -2810,9 +2868,17 @@
     prologueSheet.classList.remove("show");
     resetPrologueScroll();
     if (prologueMode === "run") {
+      unlockPrologueBackground();
       document.getElementById("chooseSection").scrollIntoView({ behavior:"smooth" });
-    } else if (prologueBtn) {
-      prologueBtn.focus();
+    } else {
+      /* Return focus to the Prologue button BEFORE unlocking: while
+         the page is still pinned the focus cannot drag it anywhere,
+         so the unlock's exact scroll restore is the last word. */
+      if (prologueBtn) {
+        try { prologueBtn.focus({ preventScroll:true }); }
+        catch(e){ prologueBtn.focus(); }
+      }
+      unlockPrologueBackground();
     }
   }
   prologueBtn.addEventListener("click", function(){ openPrologue("read"); });
@@ -8085,11 +8151,43 @@
      But it moves at a fixed, readable pace — ROLL_PX_PER_SEC, never
      faster: the roll's total time is the LONGER of the song's length
      and the time the column needs to cross at that pace, so no credit
-     ever flies past unread. The roll runs once, stops at the end, and
-     never loops or restarts. Only a genuinely failed player (ytFailed)
-     releases the roll to run on its own clock from the start. */
+     ever flies past unread. The roll itself runs once, stops at the
+     end, and never loops or restarts — but the song loops underneath
+     it (see maybeLoopSong): a finished song restarts while the roll
+     is still short of its end, and the final pass plays out unlooped
+     over the parked closing card. Only a genuinely failed player
+     (ytFailed) releases the roll to run on its own clock from the
+     start. */
   var ROLL_PX_PER_SEC = 25;
   var creditsElapsed = 0, creditsLastTick = 0, lastSongT = 0;
+  /* Song looping for the roll: while the roll is still short of its
+     end, a song that finishes restarts from the beginning — through
+     the player interface alone (seekTo(0) + the audible start), so the
+     YouTube player and any adapter behind the same interface loop the
+     same way. The roll's own clock is never touched by a restart: the
+     column keeps the pace and position it already had. Looping arms
+     only once the song has actually played, never restarts while the
+     reader is holding/scrubbing, and is spent for good the moment the
+     roll completes — from then the pass that is playing plays out to
+     its natural end over the parked closing card and is not restarted.
+     songEndLatched keeps one song-end from restarting twice (the state
+     event and the frame poll can both report it); it clears when the
+     player is seen playing again. */
+  var songStarted = false, songEndLatched = false;
+  function creditsComplete(){
+    var g = creditsGeom();
+    return g.total > 0 && creditsElapsed >= g.total;
+  }
+  function maybeLoopSong(){
+    if (songEndLatched || !songStarted) return;
+    if (creditsRM || scrubActive) return;
+    if (ytFailed || !ytWantPlayer || !ytPlayer) return;
+    if (!overlay.classList.contains("show")) return;
+    if (creditsComplete()) return;
+    songEndLatched = true;
+    try { ytPlayer.seekTo(0); } catch(e){}
+    startSongAudibly(ytPlayer);
+  }
   /* Scrub state for press-and-hold re-reading (the scrub block sits below
      startCreditsRoll): while scrubActive, the roll is frozen at scrubY and
      the song is paused; creditsCurY mirrors the last offset the roll drew,
@@ -8143,6 +8241,14 @@
       }
       return;
     }
+    /* Song-end bookkeeping for the loop: seeing the player playing
+       arms (and re-arms) the loop; seeing it ended offers the end to
+       maybeLoopSong, which restarts the song unless the roll is done.
+       Polled here as well as heard in onStateChange, so a player
+       behind the plain interface (no events) loops the same way. */
+    var pst = playerState();
+    if (pst === 1) { songStarted = true; songEndLatched = false; }
+    else if (pst === 0) { maybeLoopSong(); }
     if (songAdvancing()) creditsElapsed += dt;
     var vh = creditsViewport.clientHeight;
     var ch = creditsScroll.offsetHeight;
@@ -8162,6 +8268,7 @@
 
   function startCreditsRoll(){
     creditsElapsed = 0; creditsLastTick = 0; lastSongT = 0;
+    songStarted = false; songEndLatched = false;
     resetScrub();
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       creditsRM = true;
@@ -8414,7 +8521,9 @@
             startSongAudibly(e.target);
           },
           onStateChange: function(e){
-            if (e.data !== 1) return; /* only PLAYING matters here */
+            if (e.data === 0) { maybeLoopSong(); return; } /* ENDED: loop it, unless the roll is done */
+            if (e.data !== 1) return; /* only PLAYING matters below */
+            songStarted = true; songEndLatched = false;
             try { if (e.target.isMuted()) e.target.unMute(); e.target.setVolume(100); } catch(err){}
           },
           onError: function(){ failYt(); }
