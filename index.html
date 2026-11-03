@@ -6396,7 +6396,7 @@
   function renderSpellBar(){
     var bar = document.getElementById("spellBar");
     if (!bar) return;
-    if (state.awaitingPick || state.runOver || state.deathBlowWon || state.dbOpen) { bar.hidden = true; return; }
+    if (!state.band || state.awaitingPick || state.runOver || state.deathBlowWon || state.dbOpen) { bar.hidden = true; return; }
     var f = state.fighter, F = FIGHTERS[f];
     var carried = state.gearSpells[f] || [0,1];
     var html = '<span class="sb-tag">' + F.name + "'s spells · each casts once per battle" + helpDotHTML("spells") + "</span>";
@@ -6603,6 +6603,11 @@
   }
   function renderBait(){
     state.baitIdx = state.idx;
+    /* The Bait is still pre-battle (awaitingPick holds until beginBattle),
+       so the spell bar re-syncs here too — hidden for now, and re-rendered
+       for the actual fighter the moment the battle begins. Without this
+       call the bar kept whatever the boot/reset render left in it. */
+    renderSpellBar();
     var hero = state.fighter, name = FIGHTERS[hero].name;
     /* Per-hero aim: the jab and the tall tale both come from the on-deck
        hero's FADE_HERO_LINES entry — the hero the rotation (or the one
@@ -7731,6 +7736,7 @@
     });
     var bs = document.getElementById("bandSelect"); if (bs) bs.hidden = true;
     state.awaitingPick = true;
+    renderSpellBar();
     var q = QUESTS[state.idx];
     chooseHeading.textContent = state.band.length + " in the band — now choose your opener";
     pickBanner.innerHTML = "Band locked: <b>" + state.band.map(function(k){ return FIGHTERS[k].name; }).join(", ") + "</b>. One choice remains before Battle 1: <b>who opens</b>. Pick your opener below — The Fade aims his first taunts and tall tales at whoever walks in first, and the rotation runs from them. No opener, no Battle 1: nobody is picked for you. Gear up and customize your band members on their sheets first if you like — only they made the trip.";
@@ -7797,6 +7803,7 @@
     if (state.band.indexOf(k) < 0 || state.hp[k] <= 0) return;
     state.opener = k;
     state.fighter = k;
+    renderSpellBar();
     var q = QUESTS[state.idx];
     chooseHeading.textContent = state.band.length + " in the band — " + FIGHTERS[k].name + " fights battle 1 of " + QUESTS.length;
     pickBanner.innerHTML = "Band locked: <b>" + state.band.map(function(k){ return FIGHTERS[k].name; }).join(", ") + "</b>. <b>" + FIGHTERS[k].name + "</b> opens — hard rotation runs from " + FIGHTERS[k].name + ": the green button on " + (heroPronoun(k) === "his" ? "his" : "her") + " sheet is the way in. The Fade is already aiming at " + FIGHTERS[k].name + ": \u201C" + fadeJabFor(k) + "\u201D You can still change the opener above — the pick locks when Battle 1 starts.";
