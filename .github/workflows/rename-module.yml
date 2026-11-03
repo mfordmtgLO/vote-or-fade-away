@@ -1,0 +1,19 @@
+name: Rename module
+
+on:
+  workflow_dispatch:
+
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rename Module.html.html to module.html
+        run: |
+          git mv -f "Module.html.html" module.html
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "Rename Module.html.html to module.html"
+          git push
