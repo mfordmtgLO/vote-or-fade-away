@@ -1158,6 +1158,21 @@
   .prologue-voice{display:block;margin:18px auto 4px;border:2px solid #5fd3c6;border-radius:8px;background:transparent;color:#5fd3c6;font-weight:800;font-size:.95rem;padding:11px 18px;cursor:pointer}
   .prologue-voice:active{transform:translate(1px,1px)}
   .prologue-voice[aria-pressed="true"]{background:#5fd3c6;color:#10181d}
+  /* Prologue narration seek bar: sits directly under the voice button once
+     the narration has started, and stays while it is loaded (playing or
+     paused). Native range input — the full row is a ~44px touch target. */
+  .prologue-seek{display:flex;align-items:center;gap:10px;max-width:440px;margin:4px auto 0;padding:0 2px}
+  .prologue-seek[hidden]{display:none}
+  .prologue-seek-time{font-family:"JetBrains Mono",monospace;font-size:.78rem;font-weight:700;color:var(--ink);min-width:36px;text-align:center}
+  input.prologue-seek-range{flex:1 1 auto;min-width:0;height:44px;margin:0;padding:0;background:transparent;cursor:pointer;-webkit-appearance:none;appearance:none;--fill:0%}
+  input.prologue-seek-range::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:linear-gradient(to right,#5fd3c6 0%,#5fd3c6 var(--fill),#43565f var(--fill),#43565f 100%)}
+  input.prologue-seek-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;margin-top:-8px;border-radius:50%;background:#5fd3c6;border:2px solid #10181d;box-shadow:0 0 0 2px #5fd3c6}
+  input.prologue-seek-range::-moz-range-track{height:6px;border-radius:999px;background:#43565f}
+  input.prologue-seek-range::-moz-range-progress{height:6px;border-radius:999px;background:#5fd3c6}
+  input.prologue-seek-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#5fd3c6;border:2px solid #10181d;box-shadow:0 0 0 2px #5fd3c6}
+  .prologue-voice-note{margin:10px auto 0;max-width:440px;text-align:center;font-size:.88rem;font-weight:700;line-height:1.5;color:var(--red)}
+  .prologue-voice-note[hidden]{display:none}
+  @media (prefers-color-scheme: dark){.prologue-voice-note{color:#ffd34d}}
   .dm-card{margin-top:18px;border:1px solid #3a4a52;border-radius:10px;padding:14px 16px}
   .dm-card h2{font-size:1.05rem;color:var(--stage-ink);margin:0}
   .dm-link{display:inline-block;margin-top:10px;border:2px solid #43565f;border-radius:8px;padding:10px 16px;font-weight:700;font-size:.95rem;color:var(--stage-ink);text-decoration:none}
@@ -2523,6 +2538,12 @@
     <h3 id="prologueTitle">PROLOGUE — THE QUIET</h3>
     <hr class="scene-rule" />
     <button class="prologue-voice" id="prologueVoiceBtn" type="button" aria-pressed="false">🔊 Hear it in Pin's voice</button>
+    <div class="prologue-seek" id="prologueSeek" hidden>
+      <span class="prologue-seek-time" id="prologueSeekElapsed">0:00</span>
+      <input class="prologue-seek-range" id="prologueSeekRange" type="range" min="0" max="0" step="1" value="0" aria-label="Seek in Pin's narration" />
+      <span class="prologue-seek-time" id="prologueSeekTotal">0:00</span>
+    </div>
+    <p class="prologue-voice-note" id="prologueVoiceNote" role="status" hidden>Pin's voice couldn't play here — the words are all below, ready to read.</p>
     <p>Tomorrow, Alder Creek chooses. Not the hall, not the loudest voice: the people, together, decide what kind of town this is going to be.</p>
     <p>And yet.</p>
     <p>If you stand still, you can feel it. A quiet, rolling in off the fields like weather. The colors going a little thin at the edges. Voices dropping, one by one, into a shrug.</p>
@@ -2605,9 +2626,16 @@
      select; opened from the opening screen's Prologue button it simply
      closes back to the opening screen. Pin's narration is one Audio
      instance, created once from the ART registry: it never autoplays,
-     a tap plays it from the start, a second tap stops it, the button
-     returns to its resting label when the reading ends, and closing the
-     panel mid-narration stops it. */
+     a tap plays it, a tap while it plays pauses it, and a tap while
+     paused resumes it. A seek bar sits directly under the voice button
+     once the reading has started and stays while it is loaded (playing
+     or paused): the audio's own timeupdate drives it, dragging it seeks
+     the recording (and audio-driven updates stand aside while a drag is
+     in progress). The button label follows the real playback state —
+     playing / paused / ended / failed — seeking to the end runs into
+     the ended state and resets the control, a failed play shows a
+     plain-words note under the button, and closing the panel
+     mid-narration stops and resets it. */
   var prologueSheet = document.getElementById("prologueSheet");
   var prologueBtn = document.getElementById("prologueBtn");
   var prologueContinue = document.getElementById("prologueContinue");
@@ -2616,22 +2644,107 @@
   var prologueAudio = new Audio();
   prologueAudio.src = ART.prologue;
   prologueAudio.preload = "none";
-  function setPrologueVoiceLabel(playing){
-    prologueVoiceBtn.textContent = playing ? "⏹ Stop" : "🔊 Hear it in Pin's voice";
-    prologueVoiceBtn.setAttribute("aria-pressed", playing ? "true" : "false");
+  var prologueSeek = document.getElementById("prologueSeek");
+  var prologueSeekRange = document.getElementById("prologueSeekRange");
+  var prologueSeekElapsed = document.getElementById("prologueSeekElapsed");
+  var prologueSeekTotal = document.getElementById("prologueSeekTotal");
+  var prologueVoiceNote = document.getElementById("prologueVoiceNote");
+  var prologueStarted = false;
+  var prologueScrubbing = false;
+  function fmtSeekTime(t){
+    if (!isFinite(t) || t < 0) t = 0;
+    var s = Math.floor(t);
+    return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2);
+  }
+  function setPrologueVoiceLabel(state){
+    if (state === "playing") {
+      prologueVoiceBtn.textContent = "⏸ Pause";
+      prologueVoiceBtn.setAttribute("aria-pressed", "true");
+    } else if (state === "paused") {
+      prologueVoiceBtn.textContent = "▶ Resume Pin's voice";
+      prologueVoiceBtn.setAttribute("aria-pressed", "false");
+    } else {
+      prologueVoiceBtn.textContent = "🔊 Hear it in Pin's voice";
+      prologueVoiceBtn.setAttribute("aria-pressed", "false");
+    }
+  }
+  function paintPrologueSeek(){
+    var dur = prologueAudio.duration;
+    var cur = prologueScrubbing ? parseFloat(prologueSeekRange.value || "0") : prologueAudio.currentTime;
+    if (isFinite(dur) && dur > 0) {
+      prologueSeekRange.max = String(dur);
+      prologueSeekTotal.textContent = fmtSeekTime(dur);
+      if (!prologueScrubbing) prologueSeekRange.value = String(cur);
+      var pct = Math.max(0, Math.min(100, (cur / dur) * 100));
+      prologueSeekRange.style.setProperty("--fill", pct + "%");
+    }
+    prologueSeekElapsed.textContent = fmtSeekTime(cur);
+  }
+  function showPrologueSeek(){
+    if (prologueStarted) { prologueSeek.hidden = false; paintPrologueSeek(); }
+  }
+  function resetPrologueSeek(){
+    prologueStarted = false;
+    prologueScrubbing = false;
+    prologueSeek.hidden = true;
+    prologueSeekRange.value = "0";
+    prologueSeekRange.style.setProperty("--fill", "0%");
+    prologueSeekElapsed.textContent = "0:00";
+  }
+  function failPrologueVoice(){
+    prologueVoiceNote.hidden = false;
+    if (prologueStarted) setPrologueVoiceLabel("paused");
+    else { resetPrologueSeek(); setPrologueVoiceLabel("idle"); }
   }
   function stopPrologueAudio(){
     if (!prologueAudio.paused) prologueAudio.pause();
     try { prologueAudio.currentTime = 0; } catch(e){}
-    setPrologueVoiceLabel(false);
+    prologueVoiceNote.hidden = true;
+    resetPrologueSeek();
+    setPrologueVoiceLabel("idle");
   }
-  prologueAudio.addEventListener("ended", function(){ setPrologueVoiceLabel(false); });
+  prologueAudio.addEventListener("loadedmetadata", paintPrologueSeek);
+  prologueAudio.addEventListener("durationchange", paintPrologueSeek);
+  prologueAudio.addEventListener("timeupdate", function(){ if (!prologueScrubbing) paintPrologueSeek(); });
+  prologueAudio.addEventListener("play", function(){
+    prologueStarted = true;
+    prologueVoiceNote.hidden = true;
+    setPrologueVoiceLabel("playing");
+    showPrologueSeek();
+  });
+  prologueAudio.addEventListener("playing", function(){
+    setPrologueVoiceLabel("playing");
+    showPrologueSeek();
+  });
+  prologueAudio.addEventListener("pause", function(){
+    if (prologueStarted && !prologueAudio.ended) setPrologueVoiceLabel("paused");
+  });
+  prologueAudio.addEventListener("ended", function(){
+    resetPrologueSeek();
+    setPrologueVoiceLabel("idle");
+  });
+  prologueAudio.addEventListener("error", failPrologueVoice);
   prologueVoiceBtn.addEventListener("click", function(){
-    if (!prologueAudio.paused) { stopPrologueAudio(); return; }
-    try { prologueAudio.currentTime = 0; } catch(e){}
-    setPrologueVoiceLabel(true);
+    if (!prologueAudio.paused) { prologueAudio.pause(); return; }
+    prologueVoiceNote.hidden = true;
     var played = prologueAudio.play();
-    if (played && played.catch) played.catch(function(){ setPrologueVoiceLabel(false); });
+    if (played && played.catch) played.catch(failPrologueVoice);
+  });
+  prologueSeekRange.addEventListener("input", function(){
+    prologueScrubbing = true;
+    paintPrologueSeek();
+    var dur = prologueAudio.duration;
+    if (isFinite(dur) && dur > 0) {
+      try { prologueAudio.currentTime = parseFloat(prologueSeekRange.value); } catch(e){}
+    }
+  });
+  prologueSeekRange.addEventListener("change", function(){
+    var dur = prologueAudio.duration;
+    if (isFinite(dur) && dur > 0) {
+      try { prologueAudio.currentTime = parseFloat(prologueSeekRange.value); } catch(e){}
+    }
+    prologueScrubbing = false;
+    paintPrologueSeek();
   });
   function openPrologue(mode){
     prologueMode = mode || "read";
