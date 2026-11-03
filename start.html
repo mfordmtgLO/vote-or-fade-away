@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Power Card — Start Here</title>
+<meta name="description" content="Two minutes of setup puts Power Card on your home screen like an app. Plain steps for iPhone, Android, and the offline campfire edition.">
+<style>
+  :root{
+    --bg:#10151d; --panel:#1a2230; --panel2:#212c3f; --line:#3a4a63;
+    --ink:#f2ead8; --muted:#b9c2cf; --amber:#e8a33d; --teal:#2ec4b6; --red:#e06c5a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:0 16px 56px}
+  .wrap{max-width:680px;margin:0 auto}
+  header{text-align:center;padding:34px 6px 8px}
+  .kicker{letter-spacing:.22em;font-size:.78rem;font-weight:700;color:var(--amber);text-transform:uppercase}
+  h1{font-size:2.1rem;line-height:1.15;margin:.35em 0 .25em}
+  .sub{color:var(--muted);font-size:1.05rem;margin:0 auto;max-width:34em}
+  .play{display:block;text-align:center;background:var(--teal);color:#0b2e2a;font-weight:800;font-size:1.15rem;
+       text-decoration:none;border-radius:14px;padding:16px 18px;margin:26px 0 6px;box-shadow:0 4px 0 #177a6f}
+  .play:active{transform:translateY(2px);box-shadow:0 2px 0 #177a6f}
+  .play-note{text-align:center;color:var(--muted);font-size:.92rem;margin:0 0 8px}
+  section{background:var(--panel);border:1.5px solid var(--line);border-radius:16px;padding:20px 20px 8px;margin:20px 0}
+  h2{font-size:1.3rem;margin:.1em 0 .35em;display:flex;align-items:center;gap:.5em}
+  .tag{font-size:.72rem;letter-spacing:.14em;font-weight:800;text-transform:uppercase;border-radius:999px;padding:4px 10px;white-space:nowrap}
+  .tag.link{background:#3d2f14;color:var(--amber);border:1px solid var(--amber)}
+  .tag.file{background:#14333a;color:var(--teal);border:1px solid var(--teal)}
+  .lede{color:var(--muted);margin:.2em 0 1em}
+  ol{margin:0 0 14px;padding-left:1.35em}
+  li{margin:.55em 0}
+  li b{color:#fff}
+  .btn-name{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:1px 8px;font-weight:700;white-space:nowrap}
+  .warn{border-color:var(--red)}
+  .warn h2{color:var(--red)}
+  .fine{color:var(--muted);font-size:.93rem}
+  footer{text-align:center;color:var(--muted);font-size:.9rem;margin-top:30px}
+  footer b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Power Card · Vote or Fade Away</div>
+  <h1>Start Here</h1>
+  <p class="sub">Two minutes of setup, and the game lives on your home screen like an app — no app store, no account, nothing to buy. Find your phone below and follow the steps in order.</p>
+</header>
+
+<a class="play" href="https://vote-or-fade-away.vercel.app/">&#9654; Open Power Card</a>
+<p class="play-note">That button is the game. The steps below show how to keep it on your home screen.</p>
+
+<section>
+  <h2>iPhone <span class="tag link">From the link</span></h2>
+  <p class="lede">Do this in <b>Safari</b> — the blue compass app that came with your phone.</p>
+  <ol>
+    <li>Tap <b>Open Power Card</b> above. The game opens in Safari.<br>
+    <span class="fine">If it opened inside some other app instead, copy the game&rsquo;s address &mdash; <b>vote-or-fade-away.vercel.app</b> &mdash; and paste it into Safari&rsquo;s address bar at the top, then tap Go.</span></li>
+    <li>Tap the <span class="btn-name">Share</span> button — the square with an arrow pointing up, at the bottom of Safari.</li>
+    <li>Scroll down the list and tap <span class="btn-name">Add to Home Screen</span>.</li>
+    <li>Tap <span class="btn-name">Add</span> in the top corner. Done!</li>
+  </ol>
+  <p class="fine">Power Card now sits on your home screen next to your other apps. Open it from there from now on. Bonus: once it has opened online one time, it even works with no signal.</p>
+</section>
+
+<section>
+  <h2>Android <span class="tag link">From the link</span></h2>
+  <p class="lede">Do this in <b>Chrome</b> — the round red-yellow-green browser app.</p>
+  <ol>
+    <li>Tap <b>Open Power Card</b> above. The game opens in Chrome.<br>
+    <span class="fine">If it opened inside some other app instead, copy the game&rsquo;s address &mdash; <b>vote-or-fade-away.vercel.app</b> &mdash; and paste it into Chrome&rsquo;s address bar at the top, then tap Go.</span></li>
+    <li>Tap the <span class="btn-name">&#8942; three dots</span> menu in the top-right corner.</li>
+    <li>Tap <span class="btn-name">Add to Home screen</span> (on newer phones it may say <span class="btn-name">Install app</span>).</li>
+    <li>Tap <span class="btn-name">Add</span>. Done!</li>
+  </ol>
+  <p class="fine">Power Card now sits on your home screen next to your other apps. Open it from there from now on. Bonus: once it has opened online one time, it even works with no signal.</p>
+</section>
+
+<section>
+  <h2>Got a ZIP file instead? <span class="tag file">Campfire edition</span></h2>
+  <p class="lede">The ZIP is the offline edition — the whole game in one file package, no internet needed after you have it. It holds two things: the game (<b>index.html</b>) and the DM Guide (<b>module.html</b>), the game-master&rsquo;s book. Both open the same way on your phone.</p>
+  <p><b>On iPhone — one free app first:</b></p>
+  <ol>
+    <li>Open the <b>App Store</b>, search for <span class="btn-name">Documents by Readdle</span>, and get it. It&rsquo;s free. (Apple&rsquo;s own Files app can <i>show</i> the game&rsquo;s pages but can&rsquo;t <i>run</i> them — the buttons would do nothing. Documents runs them properly.)</li>
+    <li>Put the ZIP inside Documents: either download it using the browser built into Documents (the compass button inside the app), or share/send the ZIP to Documents from wherever you received it.</li>
+    <li>In Documents, tap the ZIP once — it unpacks into a folder.</li>
+    <li>Open the folder and tap <span class="btn-name">index.html</span> to play. (Game-masters: <span class="btn-name">module.html</span> is your Guide.)</li>
+  </ol>
+  <p><b>On Android — nothing extra to get:</b></p>
+  <ol>
+    <li>Open your <b>Files</b> app and tap the ZIP — it unpacks into a folder.</li>
+    <li>Open the folder, tap <span class="btn-name">index.html</span>, and choose <span class="btn-name">Chrome</span> if it asks how to open it. (Game-masters: <span class="btn-name">module.html</span> is your Guide.)</li>
+  </ol>
+</section>
+
+<section>
+  <h2>On a computer?</h2>
+  <p class="lede">Just tap <b>Open Power Card</b> above and play in your browser. To keep it, bookmark the page (Ctrl+D, or Cmd+D on a Mac).</p>
+</section>
+
+<section class="warn">
+  <h2>If the buttons don&rsquo;t work</h2>
+  <p class="lede">Dead buttons or a frozen page almost always means the game was opened in a <i>preview</i> — the quick look inside Files, Google Drive, or an email/chat app. Previews can show the page but can&rsquo;t run it. Close the preview and open the game the real way: the link in <b>Safari</b> or <b>Chrome</b>, or the ZIP&rsquo;s files inside <b>Documents</b> (iPhone) or <b>Chrome</b> (Android).</p>
+</section>
+
+<footer>
+  <p><b>Play the game. Make your move count.</b><br>Play your power card in hand — cast your vote.</p>
+</footer>
+
+</div>
+</body>
+</html>
