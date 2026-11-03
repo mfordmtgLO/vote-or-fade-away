@@ -1,0 +1,17 @@
+name: guide-promote
+on:
+  workflow_dispatch:
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Promote guide to module.html
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git mv -f module-guide-para-trigger.html module.html
+          git commit -m "Promote updated DM Guide to module.html"
+          git push
