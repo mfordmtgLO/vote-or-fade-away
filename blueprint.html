@@ -291,6 +291,7 @@
           <li><b>Form</b><span>Single self-contained HTML file; service worker for offline play; campfire file edition exists</span></li>
           <li><b>The card</b><span>The thesis made playable — charges only on informed play; playing it deals exactly <strong>12 damage</strong> and strikes through The Fade's current excuse</span></li>
           <li><b>Endings</b><span>Four endings; credits are a song-synced replay montage — press-and-hold to pause and re-read any scene</span></li>
+          <li><b>Print</b><span>Every hero sheet carries <strong>“Print this sheet”</strong> — it prints the hero exactly as dialed in: the chosen look at full resolution and the live stats, one clean page</span></li>
         </ul>
       </article>
 
@@ -303,6 +304,9 @@
           <li><b>The Fade</b><span><strong>185 HP</strong> at the table (vs 100 in the browser game)</span></li>
           <li><b>Death Blow</b><span>Window opens at <strong>25 HP or less</strong> — DC 18; on a fail, he regenerates <strong>15 HP</strong></span></li>
           <li><b>Canvass</b><span>Tabletop action: <strong>heals the band 1d8 health, +1 Power Card pip</strong> — going and talking to people is a mechanic, not a cutscene</span></li>
+          <li><b>On the phone</b><span>A thin quick-jump bar rides along on phone-width screens only — <strong>Encounters · Sheets · Trackers · Fall</strong> — and hides itself on scroll down, back on scroll up</span></li>
+          <li><b>Band sheets</b><span><strong>“Print the band’s sheets”</strong> prints one sheet per Session Roster seat, in roster order, one per page — player names in the headers, the six heroes at full-resolution 1000×2000 portraits; a seat carrying a player’s pushed, dialed-in data prints that data</span></li>
+          <li><b>Credits push</b><span>The end-of-session replay credits are identity-safe: each credit carries the character’s permanent ID and true name, so a hero renamed for one night — “played as” somebody else — cannot be misfiled; it lands on the original character’s sheet in their Forge, the night’s name noted</span></li>
         </ul>
         <div class="card-actions">
           <a href="https://vote-or-fade-away.vercel.app/module.html#dmguide">DM Guide</a>
@@ -415,7 +419,7 @@
       <tbody>
         <tr><td><strong><a href="https://vote-or-fade-away.vercel.app/">Power Card — browser game</a></strong></td><td><span class="chip live">Live</span></td><td>Public door serves the expanded edition (6 heroes + five minions).</td></tr>
         <tr><td><strong>Expanded game — 6 heroes + minions</strong></td><td><span class="chip built">Live</span></td><td>Shipped to the public door; this is the edition the browser-game row above serves.</td></tr>
-        <tr><td><strong><a href="https://vote-or-fade-away.vercel.app/module.html">DM Guide + Module</a></strong> (<span class="mono">/module.html</span>)</td><td><span class="chip live">Live</span></td><td>16 encounters + Boss Gate, live at the same Vercel address as the game; the rebuilt edition (Fall protocol, Voice tally, Pin-narrated Prologue) is built and awaiting its door swap.</td></tr>
+        <tr><td><strong><a href="https://vote-or-fade-away.vercel.app/module.html">DM Guide + Module</a></strong> (<span class="mono">/module.html</span>)</td><td><span class="chip live">Live</span></td><td>16 encounters + Boss Gate, live at the same Vercel address as the game; the final rebuilt edition (Fall protocol, Voice tally, Pin-narrated Prologue) is the edition live at the door today.</td></tr>
         <tr><td><strong><a href="https://muse.ai/s/how-the-forge-works-power-card-vm6sxxxqusj3f/B-95528IMlEEt6XbOG7anver-ERPFct-PfvNPeEyuLo">The Forge — sheet designer</a></strong></td><td><span class="chip built">Built · Not yet live</span></td><td>App built and verified code-side; Firebase backend setup is a parked owner sitting.</td></tr>
         <tr><td><strong>Roll20 bridge — ForgeImporter</strong></td><td><span class="chip built">Written · Sim-tested</span></td><td>Simulation-tested; not yet installed. Quiet end-to-end test comes first.</td></tr>
         <tr><td><strong>Campaigns + session automation</strong></td><td><span class="chip built">Built · Not yet live</span></td><td>Built and verified in the Forge app — ledger, PLAY prompt, Kendo pre-load, next-day email. Goes live with the Forge's Firebase setup.</td></tr>
