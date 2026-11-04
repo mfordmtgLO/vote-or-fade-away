@@ -3968,7 +3968,7 @@
     hardMode:false, gambitResolved:true, gambitCollapsed:false, gambitClaim:null, gambitTauntOverride:null, debtInterest:0,
     powerCharge:0, powerPlayed:true, powerCastBy:{ maya:true, dre:true, priya:true, marc:false, sana:false, eli:false }, powerSpinUntilIdx:-1, powerHealBlockIdx:-1, canvassRallied:0, runOver:false, struckExcuse:null,
     fadeSurgeUsed:false, fadeFloorNoted:false, fadeSurgeJustFired:false,
-    highlights:[{ type:"battle", hero:"maya", battle:0, title:"The Strait Slams Shut", dmg:11, crit:false, ended:true, missed:false }, { type:"battle", hero:"dre", battle:1, title:"The Tariff Trap", dmg:13, crit:false, ended:true, missed:false }, { type:"minion", key:"imp", hero:"dre", battle:2, banished:true }, { type:"battle", hero:"priya", battle:2, title:"Who Built the Corner?", dmg:9, crit:false, ended:true, missed:false }, { type:"battle", hero:"maya", battle:3, title:"Sticker Shock, Stacked", dmg:16, crit:true, ended:true, missed:false }, { type:"battle", hero:"dre", battle:4, title:"The Hidden Harvest", dmg:12, crit:false, ended:true, missed:false }, { type:"minion", key:"wraith", hero:"maya", battle:5, banished:false }, { type:"battle", hero:"priya", battle:5, title:"The Rate Freeze", dmg:10, crit:false, ended:true, missed:false }, { type:"battle", hero:"maya", battle:6, title:"Surge — or Spiral?", dmg:14, crit:false, ended:true, missed:false }, { type:"battle", hero:"dre", battle:7, title:"What Your Vote Actually Pulls", dmg:11, crit:false, ended:true, missed:false }, { type:"minion", key:"parachute", hero:"priya", battle:8, banished:true }, { type:"battle", hero:"priya", battle:8, title:"Receipts: The Forecasts", dmg:15, crit:false, ended:true, missed:false }, { type:"battle", hero:"maya", battle:9, title:"The Invisible Tax", dmg:9, crit:false, ended:true, missed:false }, { type:"revive", hero:"dre", by:"priya", amt:11 }, { type:"battle", hero:"dre", battle:10, title:"“Two Weeks Away?”", dmg:12, crit:false, ended:true, missed:false }, { type:"minion", key:"golem", hero:"maya", battle:11, banished:true }, { type:"battle", hero:"priya", battle:11, title:"The Empty Cushion", dmg:17, crit:true, ended:true, missed:false }, { type:"battle", hero:"maya", battle:12, title:"The Inheritance (Debt, in Context)", dmg:10, crit:false, ended:true, missed:false }, { type:"battle", hero:"dre", battle:13, title:"The War Chest", dmg:13, crit:false, ended:true, missed:false }, { type:"battle", hero:"priya", battle:14, title:"“Freedom Fighters”", dmg:12, crit:false, ended:true, missed:false }, { type:"battle", hero:"maya", battle:15, title:"The Long Fuse", dmg:14, crit:false, ended:true, missed:false }], factChecked:{}, battleBest:null, battleCommitted:-1, pendingFall:null,
+    highlights:[{ type:"battle", hero:"maya", battle:0, title:"The Strait Slams Shut", dmg:11, crit:false, ended:true, missed:false, look:"maya_trail_auburn_fair" }, { type:"battle", hero:"dre", battle:1, title:"The Tariff Trap", dmg:13, crit:false, ended:true, missed:false }, { type:"minion", key:"imp", hero:"dre", battle:2, banished:true }, { type:"battle", hero:"priya", battle:2, title:"Who Built the Corner?", dmg:9, crit:false, ended:true, missed:false }, { type:"battle", hero:"maya", battle:3, title:"Sticker Shock, Stacked", dmg:16, crit:true, ended:true, missed:false, look:"maya_trail_auburn_fair" }, { type:"battle", hero:"dre", battle:4, title:"The Hidden Harvest", dmg:12, crit:false, ended:true, missed:false }, { type:"minion", key:"wraith", hero:"maya", battle:5, banished:false, look:"maya_trail_auburn_fair" }, { type:"battle", hero:"priya", battle:5, title:"The Rate Freeze", dmg:10, crit:false, ended:true, missed:false }, { type:"battle", hero:"maya", battle:6, title:"Surge — or Spiral?", dmg:14, crit:false, ended:true, missed:false, look:"maya_trail_auburn_fair" }, { type:"battle", hero:"dre", battle:7, title:"What Your Vote Actually Pulls", dmg:11, crit:false, ended:true, missed:false }, { type:"minion", key:"parachute", hero:"priya", battle:8, banished:true }, { type:"battle", hero:"priya", battle:8, title:"Receipts: The Forecasts", dmg:15, crit:false, ended:true, missed:false }, { type:"battle", hero:"maya", battle:9, title:"The Invisible Tax", dmg:9, crit:false, ended:true, missed:false, look:"maya_trail_auburn_fair" }, { type:"revive", hero:"dre", by:"priya", amt:11 }, { type:"battle", hero:"dre", battle:10, title:"“Two Weeks Away?”", dmg:12, crit:false, ended:true, missed:false }, { type:"minion", key:"golem", hero:"maya", battle:11, banished:true, look:"maya_trail_auburn_fair" }, { type:"battle", hero:"priya", battle:11, title:"The Empty Cushion", dmg:17, crit:true, ended:true, missed:false }, { type:"battle", hero:"maya", battle:12, title:"The Inheritance (Debt, in Context)", dmg:10, crit:false, ended:true, missed:false, look:"maya_trail_auburn_fair" }, { type:"surge", battle:12 }, { type:"battle", hero:"dre", battle:13, title:"The War Chest", dmg:13, crit:false, ended:true, missed:false }, { type:"battle", hero:"priya", battle:14, title:"“Freedom Fighters”", dmg:12, crit:false, ended:true, missed:false }, { type:"battle", hero:"maya", battle:15, title:"The Long Fuse", dmg:14, crit:false, ended:true, missed:false, look:"maya_trail_auburn_fair" }], factChecked:{}, battleBest:null, battleCommitted:-1, pendingFall:null,
     coach:{ answer:false, roll:false, camp:false },
     readied:{ maya:null, dre:null, priya:null, marc:null, sana:null, eli:null }, activeMove:null, moveKey:null,
     moveFx:{ attackUsed:false, counterUsed:false }, moveHealKey:null, moveHealText:"",
@@ -4670,12 +4670,12 @@
     if (picked === m.correct) {
       var gain = chargePower(1);
       var vg = gainVoice(2);
-      state.highlights.push({ type:"minion", key:key, hero:state.fighter, battle:state.idx, banished:true });
+      state.highlights.push(stampMayaLook({ type:"minion", key:key, hero:state.fighter, battle:state.idx, banished:true }));
       out = '<span class="m-verdict good">' + m.name + ' — BANISHED</span>' +
         "<p>The correction lands and " + m.name + " comes apart — <b>banished for the rest of the run</b>. The band presses on: <b>+1 Power Card charge</b>" + (gain > 0 ? " (now <b>" + state.powerCharge + "/5</b>)" : " (already CHARGED at 5/5)") + " and <b>+" + vg + " Voice</b> (now " + state.voice + ").</p>";
       log(m.name + " banished — the correction lands, and it is gone for the rest of the run. Power Card charge " + state.powerCharge + "/5, Voice +" + vg + " (now " + state.voice + ").");
     } else {
-      state.highlights.push({ type:"minion", key:key, hero:state.fighter, battle:state.idx, banished:false });
+      state.highlights.push(stampMayaLook({ type:"minion", key:key, hero:state.fighter, battle:state.idx, banished:false }));
       var hitHtml = "", hitLog = "";
       if (key === "imp") {
         hitHtml = "Cropped Clip repeats — <b>the clip made the rounds</b>. It costs the band <b>no Voice</b> — Voice never shrinks for speaking up — and the correction below still stands.";
@@ -5798,7 +5798,7 @@
           var amt = roll + 3 + healBonus();
           var wasDown = state.hp[t] <= 0;
           state.hp[t] = Math.min(100, Math.max(0, state.hp[t]) + amt);
-          if (wasDown && state.hp[t] > 0) state.highlights.push({ type:"revive", hero:t, by:"priya", amt:amt });
+          if (wasDown && state.hp[t] > 0) state.highlights.push(stampMayaLook({ type:"revive", hero:t, by:"priya", amt:amt }));
           renderHeroHp();
           campDone("<b>Healing Hands:</b> the d4 shows " + roll + " — " + roll + " + 3 + " + healBonus() + " (Priya's HEAL bonus) = <b>+" + amt + " HP</b> to " + FIGHTERS[t].name + ", who now stands at " + state.hp[t] + " HP." + (state.hp[t] > 0 && state.hp[t] <= 15 ? " Still clawing at death's door — one more knock could end them." : ""));
           log("Healing Hands: " + FIGHTERS[t].name + " healed +" + amt + " HP (d4 rolled " + roll + "). Now at " + state.hp[t] + " HP.");
@@ -6999,7 +6999,7 @@
     if (correctFake) {
       state.momentum = Math.min(8, state.momentum + 1); updateMood();
       state.gambitCollapsed = true;
-      state.highlights.push({ type:"gambit", hero:state.fighter, battle:state.idx, title:QUESTS[state.idx].title });
+      state.highlights.push(stampMayaLook({ type:"gambit", hero:state.fighter, battle:state.idx, title:QUESTS[state.idx].title }));
       var gambitCard = document.getElementById("gambitCard");
       if (gambitCard) gambitCard.classList.add("gambit-correct");
       questBox.querySelectorAll("[data-gambit]").forEach(function(b){ if (b.getAttribute("data-gambit") === ruling) b.classList.add("gambit-correct-choice"); });
@@ -7445,6 +7445,36 @@
      nothing else is recorded and nothing about play changes. The battle
      highlight is the active fighter's biggest strike of the battle, tracked
      during attack resolutions and committed when the battle finalizes. */
+  /* Maya's look in the credits reel (swap #29): Maya is the only hero
+     with a look system, so her highlight records are stamped at commit
+     time with the ART key of the portrait her character sheet is
+     displaying at that moment — her customized Trail hair x skin
+     portrait when she has one, the plain original sketch when her
+     sheet shows the sketch. The stamp is an ART key string only, never
+     a URL, so a mid-run look change is honored per battle: earlier
+     records keep the earlier look, later records carry the new one. */
+  function mayaSheetArtKey(){
+    var img = document.querySelector('.fighter[data-fighter="maya"] img.sketch');
+    var src = img ? img.getAttribute("src") : null;
+    if (src) {
+      for (var k in ART) { if (ART[k] === src) return k; }
+    }
+    var lk = (state && state.gearLook) ? state.gearLook.maya : null;
+    if (lk) {
+      if (isMayaOriginalSketch("maya", lk)) return "maya";
+      if (isMayaTrailDirect("maya", lk)) return mayaTrailArtKey(lk);
+      return (LOOK_ART.maya || [])[lk.attire] || "maya";
+    }
+    return "maya";
+  }
+  function stampMayaLook(rec){
+    if (rec && rec.hero === "maya") rec.look = mayaSheetArtKey();
+    return rec;
+  }
+  function mayaReelArtKey(rec){
+    if (rec && typeof rec.look === "string" && ART[rec.look]) return rec.look;
+    return mayaSheetArtKey();
+  }
   function noteBattleStrike(dmg, crit){
     var cur = state.battleBest;
     if (!cur || cur.battle !== state.idx || dmg > cur.dmg) {
@@ -7456,9 +7486,11 @@
     state.battleCommitted = state.idx;
     var b = (state.battleBest && state.battleBest.battle === state.idx) ? state.battleBest
       : { type:"battle", hero:state.fighter, battle:state.idx, title:QUESTS[state.idx].title, dmg:0, crit:false, ended:false, missed:true };
+    stampMayaLook(b);
     state.highlights.push(b);
     state.battleBest = null;
     if (state.pendingFall && state.pendingFall.battle === state.idx) {
+      stampMayaLook(state.pendingFall);
       state.highlights.push(state.pendingFall);
       state.pendingFall = null;
     }
@@ -8398,16 +8430,15 @@
     return a;
   }
 
-  /* Deal the vignettes across the credits' slots. Slot 0 leads with the
-     true replay — the featured Death Blow / Power Card scenes (when
-     earned) and the run's highlights in battle order; the lead block's
-     order is never shuffled (chronology is the point). The stock scenes
-     are shuffled once and dealt round-robin across every slot, so each
-     scene appears exactly once in the whole roll: nothing repeats, so
-     the roll never looks like it is looping, and the column stays short
-     enough to cross at a readable pace. Scenes are collected from every
-     slot, not just slot 0, so reopening the credits re-deals the full
-     set instead of losing the ones dealt to later slots last time. */
+  /* The stock montage is retired as a fixed part of the roll: the reel
+     is composed from the run that just ended (see buildRunReel), and
+     slot 0 carries exactly that composed reel, in its composed order.
+     The stock scenes are not deleted — they are stashed off-DOM in
+     stockStash, because a band hero who never fought still takes their
+     portrait vignette from this material (buildRunReel clones one from
+     the stash on any opening, including re-openings where the originals
+     have already left the document). */
+  var stockStash = [];
   function isLeadVignette(f){
     return f.id === "dbVignette" || f.id === "pcVignette" || f.hasAttribute("data-run-highlight");
   }
@@ -8415,12 +8446,16 @@
     var slots = overlay.querySelectorAll(".vignette-slot");
     if (!slots.length) return;
     var all = Array.prototype.slice.call(overlay.querySelectorAll(".vignette"));
-    if (!all.length) return;
     var lead = all.filter(isLeadVignette);
-    var stock = shuffleArr(all.filter(function(f){ return !isLeadVignette(f); }));
-    for (var s = 0; s < slots.length; s++) slots[s].innerHTML = "";
+    all.forEach(function(f){
+      if (!isLeadVignette(f) && stockStash.indexOf(f) < 0) stockStash.push(f);
+    });
+    stockStash.forEach(function(f){ if (f.parentNode) f.parentNode.removeChild(f); });
+    /* The composed reel lives in slot 0, in buildRunReel's order —
+       appendChild in document order preserves it (every lead figure is
+       already a slot-0 child in that order). The later slots stay
+       empty: their sections roll on as text credits, as written. */
     lead.forEach(function(fig){ slots[0].appendChild(fig); });
-    stock.forEach(function(fig, i){ slots[i % slots.length].appendChild(fig); });
   }
 
   /* The roll keeps time with the song without being crushed by it. It
@@ -8828,10 +8863,14 @@
   loadYtApi();
 
   /* ============ The run reel: the credits' true replay ============
-     One figure per recorded highlight, in the order the run produced them.
-     Sentence 1 of each caption states the recorded moment with its facts;
-     sentence 2 gives its meaning in the game's own voice. No invented
-     facts, no new claims about the world. */
+     The roll is composed from the run that just ended (see
+     buildRunReel): a guaranteed cast figure for every character who
+     appeared, the run's guaranteed events, band-highlight fill up to
+     the cap, and the finishing battle's figure last. highlightFigure
+     renders one recorded moment as one figure. Sentence 1 of each
+     caption states the recorded moment with its facts; sentence 2
+     gives its meaning in the game's own voice. No invented facts, no
+     new claims about the world. */
   function highlightFigure(h){
     var fig = document.createElement("figure");
     fig.setAttribute("data-run-highlight", "1");
@@ -8853,7 +8892,11 @@
     var full = HERO_FULL[h.hero] || FIGHTERS[h.hero].name;
     var first = FIGHTERS[h.hero].name;
     var n = h.battle + 1;
-    var sketch = ART[h.hero];
+    /* Maya's figures show the look stamped on her record — the portrait
+       her sheet displayed when that moment was committed — falling back
+       to the sheet's current portrait for unstamped records. Every
+       other hero keeps their stock sketch. */
+    var sketch = h.hero === "maya" ? ART[mayaReelArtKey(h)] : ART[h.hero];
     var head, dmg, caption, fade = false;
     if (h.type === "minion") {
       var mn = MINIONS[h.key] || {};
@@ -8927,19 +8970,253 @@
     fig.appendChild(capEl);
     return fig;
   }
+  /* A never-fought hero's portrait vignette: their stock "Hero Strike"
+     scene from the montage material, cloned. Searched in the live
+     overlay first (the first opening), then in the stash buildVignettes
+     keeps off-DOM (later openings, when the originals have left the
+     document). */
+  function stockPortraitFor(hero){
+    var pools = Array.prototype.slice.call(overlay.querySelectorAll(".vignette"));
+    stockStash.forEach(function(f){ pools.push(f); });
+    var anyHit = null;
+    for (var i = 0; i < pools.length; i++) {
+      var f = pools[i];
+      if (isLeadVignette(f)) continue;
+      if (!f.classList.contains("hit-" + hero)) continue;
+      if (!anyHit) anyHit = f;
+      var head = f.querySelector(".v-head");
+      if (head && head.textContent.replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") === "Highlight · Hero Strike") return f;
+    }
+    return anyHit;
+  }
+  function portraitFigureFor(hero){
+    var src = stockPortraitFor(hero);
+    if (!src) return null;
+    var fig = src.cloneNode(true);
+    fig.removeAttribute("id");
+    fig.setAttribute("data-run-highlight", "1");
+    fig.setAttribute("data-portrait", hero);
+    /* Maya never fought, so no record carries her stamp: her portrait
+       figure wears the look her sheet displays at run's end. */
+    if (hero === "maya") {
+      var vimg = fig.querySelector("img.v-hero");
+      if (vimg) vimg.src = ART[mayaSheetArtKey()];
+    }
+    return fig;
+  }
+
+  /* Compose the reel from the run that just ended. Figures roll in
+     battle order, and the victory figure is the LAST figure before the
+     thesis card:
+       1. CAST — one guaranteed figure per character who appeared:
+          each band hero's biggest battle highlight, or — for a hero
+          who never fought — their portrait vignette at the FRONT of
+          the reel; each intervening minion's figure (the Golden
+          Parachute's included) at its battle position; and The Fade's
+          victory figure from the finishing battle's record.
+       2. EVENTS — guaranteed when they occurred: the Early Call surge
+          figure at its battle, and the featured Power Card figure
+          whenever the card was played, immediately before the victory
+          figure.
+       3. FILL — the remaining battle and revive records, biggest
+          first, spread across heroes round-robin, until band figures
+          (hero cast figures + portraits + fill) total 15. Minion,
+          parachute, surge, Power Card and victory figures never count
+          toward the 15. If the records run out first, the reel is
+          simply shorter.
+     Any single record renders at most one figure. */
   function buildRunReel(){
     var slot0 = overlay.querySelector(".vignette-slot");
     if (!slot0) return;
     /* Reopening the credits never duplicates the reel. */
     Array.prototype.slice.call(slot0.querySelectorAll("[data-run-highlight]")).forEach(function(f){ f.remove(); });
+
     var hl = state.highlights || [];
-    if (!hl.length) return; /* zero highlights: featured (if any) + stock, as before */
+    /* The featured figures openFinale built: the reel adopts them into
+       the composition — the Death Blow figure AS the victory figure,
+       the Power Card figure immediately before it — instead of leaving
+       them stacked at the front. */
+    var dbFig = document.getElementById("dbVignette");
+    var pcFig = document.getElementById("pcVignette");
+    if (dbFig && dbFig.parentNode) dbFig.parentNode.removeChild(dbFig);
+    if (pcFig && pcFig.parentNode) pcFig.parentNode.removeChild(pcFig);
+
+    var usedRecs = [];
+    function markUsed(r){ if (r && usedRecs.indexOf(r) < 0) usedRecs.push(r); }
+    function isUsed(r){ return usedRecs.indexOf(r) >= 0; }
+
+    var battleRecs = [], minionRecs = [], surgeRecs = [], reviveRecs = [];
+    hl.forEach(function(h){
+      if (h.type === "battle") battleRecs.push(h);
+      else if (h.type === "minion") minionRecs.push(h);
+      else if (h.type === "surge") surgeRecs.push(h);
+      else if (h.type === "revive") reviveRecs.push(h);
+    });
+    var band = (state.band && state.band.length) ? state.band.slice() : [];
+    if (!band.length) {
+      battleRecs.forEach(function(r){ if (band.indexOf(r.hero) < 0) band.push(r.hero); });
+    }
+
+    /* Sort position for a record that carries no battle of its own (a
+       revive happens at camp, between battles): the battle it follows
+       in the run's own recording order. */
+    var sortBattles = [];
+    (function(){
+      var last = -1;
+      for (var i = 0; i < hl.length; i++) {
+        if (typeof hl[i].battle === "number") last = hl[i].battle;
+        sortBattles.push(last);
+      }
+    })();
+    function battleOf(r){
+      return typeof r.battle === "number" ? r.battle : sortBattles[hl.indexOf(r)];
+    }
+    function magnitudeOf(r){
+      return r.type === "revive" ? (r.amt || 0) : (r.dmg || 0);
+    }
+
+    /* ---- The victory figure: the finishing battle's record. On a
+       Death Blow win, the featured Death Blow figure IS the victory
+       figure (never both, exactly once), and the Death Blow battle's
+       plain battle record is excluded from cast and fill selection so
+       the moment is not duplicated. On any other ending — a battle-16
+       win, Went the Distance, The Fall — the final battle's record
+       still closes the reel as the last stand. ---- */
+    var dbWin = !!state.wonByDeathBlow;
+    var victoryRec = null, victoryFig = null;
+    if (dbWin) {
+      var dbRec = null;
+      battleRecs.forEach(function(r){ if (r.dbRoll) dbRec = r; });
+      if (!dbRec) {
+        battleRecs.forEach(function(r){
+          if (r.hero === state.wonByDeathBlow && (!dbRec || (r.battle || 0) >= (dbRec.battle || 0))) dbRec = r;
+        });
+      }
+      markUsed(dbRec);
+      victoryFig = dbFig || (dbRec ? highlightFigure(dbRec) : null);
+    } else if (battleRecs.length) {
+      battleRecs.forEach(function(r){
+        if (!victoryRec || (r.battle || 0) >= (victoryRec.battle || 0)) victoryRec = r;
+      });
+    }
+
+    /* ---- Cast: each band hero's biggest battle highlight — highest
+       dmg; an "ended" record wins ties, then the later battle. If the
+       finishing battle's record is also its hero's biggest highlight,
+       that one figure serves as both the hero's cast figure and the
+       victory figure (placed last); otherwise the finishing record is
+       the victory figure even if that hero also has a cast figure from
+       another battle. ---- */
+    var entries = []; /* { fig, battle, idx } — the battle-ordered body */
+    var portraits = [];
+    var bandCount = 0;
+    function biggestFor(hero){
+      var best = null;
+      battleRecs.forEach(function(r){
+        if (r.hero !== hero || isUsed(r)) return;
+        if (!best) { best = r; return; }
+        var rd = r.dmg || 0, bd = best.dmg || 0;
+        if (rd > bd) best = r;
+        else if (rd === bd) {
+          if (!!r.ended !== !!best.ended) { if (r.ended) best = r; }
+          else if ((r.battle || 0) > (best.battle || 0)) best = r;
+        }
+      });
+      return best;
+    }
+    band.forEach(function(hero){
+      var fought = battleRecs.some(function(r){ return r.hero === hero; });
+      if (!fought) {
+        var pf = portraitFigureFor(hero);
+        if (pf) { portraits.push(pf); bandCount++; }
+        return;
+      }
+      var best = biggestFor(hero);
+      if (!best) return; /* fought only the excluded Death Blow battle — the victory figure is their scene */
+      if (best === victoryRec) { markUsed(best); return; } /* one figure: cast + victory, placed last */
+      markUsed(best);
+      entries.push({ fig: highlightFigure(best), battle: battleOf(best), idx: hl.indexOf(best) });
+      bandCount++;
+    });
+
+    /* The finishing record is spoken for — as the victory figure, or
+       (in the cast loop's dedupe) as cast + victory in one figure — so
+       fill never sees it and the moment is never rendered twice. */
+    markUsed(victoryRec);
+
+    /* ---- Cast, continued: every minion who intervened, at their
+       battle position — and the surge, a guaranteed event at its
+       recorded battle. Neither counts toward the band cap. ---- */
+    minionRecs.forEach(function(r){
+      markUsed(r);
+      entries.push({ fig: highlightFigure(r), battle: battleOf(r), idx: hl.indexOf(r) });
+    });
+    surgeRecs.forEach(function(r){
+      markUsed(r);
+      entries.push({ fig: highlightFigure(r), battle: battleOf(r), idx: hl.indexOf(r) });
+    });
+
+    /* ---- Fill: remaining battle records (crits included) and revive
+       records. Ranked biggest first (a revive's amt is its magnitude),
+       crits before non-crits on ties, then the earlier battle — and
+       spread across heroes round-robin (key: by || hero), so no hero
+       takes a second fill slot while another hero still has unused
+       records. ---- */
+    var fillPool = [];
+    battleRecs.forEach(function(r){ if (!isUsed(r)) fillPool.push(r); });
+    reviveRecs.forEach(function(r){ if (!isUsed(r)) fillPool.push(r); });
+    fillPool.sort(function(a, b){
+      if (magnitudeOf(b) !== magnitudeOf(a)) return magnitudeOf(b) - magnitudeOf(a);
+      if (!!b.crit !== !!a.crit) return b.crit ? 1 : -1;
+      if (battleOf(a) !== battleOf(b)) return battleOf(a) - battleOf(b);
+      return hl.indexOf(a) - hl.indexOf(b);
+    });
+    var fillWant = Math.max(0, 15 - bandCount);
+    var counts = {}, picked = [], remaining = fillPool.slice();
+    while (picked.length < fillWant && remaining.length) {
+      var minC = Infinity;
+      remaining.forEach(function(r){
+        var c = counts[r.by || r.hero] || 0;
+        if (c < minC) minC = c;
+      });
+      for (var i = 0; i < remaining.length; i++) {
+        if ((counts[remaining[i].by || remaining[i].hero] || 0) === minC) {
+          var rec = remaining.splice(i, 1)[0];
+          counts[rec.by || rec.hero] = (counts[rec.by || rec.hero] || 0) + 1;
+          picked.push(rec);
+          break;
+        }
+      }
+    }
+    picked.forEach(function(r){
+      markUsed(r);
+      entries.push({ fig: highlightFigure(r), battle: battleOf(r), idx: hl.indexOf(r) });
+      bandCount++;
+    });
+
+    /* The victory figure renders last (on a Death Blow win it is the
+       featured figure adopted above). */
+    if (!dbWin && victoryRec) {
+      markUsed(victoryRec);
+      victoryFig = highlightFigure(victoryRec);
+    }
+
+    entries.sort(function(a, b){
+      if (a.battle !== b.battle) return a.battle - b.battle;
+      return a.idx - b.idx;
+    });
+    var figures = [];
+    portraits.forEach(function(f){ figures.push(f); });
+    entries.forEach(function(e){ figures.push(e.fig); });
+    /* The Power Card figure is guaranteed whenever the card was played,
+       placed immediately before the victory figure. */
+    if (pcFig) figures.push(pcFig);
+    if (victoryFig) figures.push(victoryFig);
     var firstStock = null;
     Array.prototype.slice.call(slot0.querySelectorAll(".vignette")).forEach(function(f){
       if (!firstStock && !isLeadVignette(f)) firstStock = f;
     });
-    hl.forEach(function(h){
-      var fig = highlightFigure(h);
+    figures.forEach(function(fig){
       if (firstStock) slot0.insertBefore(fig, firstStock); else slot0.appendChild(fig);
     });
   }
@@ -8966,9 +9243,19 @@
          each asset path lives exactly once — so a single-file export embeds one
          copy of each image no matter how many scenes reference it. */
       var DB_SKETCH = ART;
+      /* Maya's featured figure wears the look stamped on her Death Blow
+         record; with no such record, the look her sheet shows now. */
+      var winnerArt = DB_SKETCH[w];
+      if (w === "maya") {
+        var dbRec = null;
+        (state.highlights || []).forEach(function(r){
+          if (r.type === "battle" && r.hero === "maya" && r.dbRoll) dbRec = r;
+        });
+        winnerArt = dbRec ? ART[mayaReelArtKey(dbRec)] : ART[mayaSheetArtKey()];
+      }
       fig.innerHTML = '<span class="v-head">Featured · The Death Blow</span>' +
         '<div class="v-stage">' +
-        '<img class="v-hero" src="' + DB_SKETCH[w] + '" alt="Pencil sketch of ' + FIGHTERS[w].name + ' delivering the Death Blow" />' +
+        '<img class="v-hero" src="' + winnerArt + '" alt="Pencil sketch of ' + FIGHTERS[w].name + ' delivering the Death Blow" />' +
         '<img class="v-boss" src="' + ART.boss + '" alt="The Fade falling to the Death Blow" />' +
         '<span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">Death Blow</span>' +
         "</div><figcaption>" + (state.dbRoll ? DB_SCENES[w].replace("ends the run", "ends the run — " + DB_STYLE[state.dbRoll] + " —") : DB_SCENES[w]) + "</figcaption>";
@@ -9346,7 +9633,7 @@
       var amt = roll + 3 + bonus;
       var wasDown = state.hp[t] <= 0;
       state.hp[t] = Math.min(100, Math.max(0, state.hp[t]) + amt);
-      if (wasDown && state.hp[t] > 0) state.highlights.push({ type:"revive", hero:t, by:fid, amt:amt });
+      if (wasDown && state.hp[t] > 0) state.highlights.push(stampMayaLook({ type:"revive", hero:t, by:fid, amt:amt }));
       renderHeroHp();
       campDone("<b>" + forgeEsc(ca.name) + ":</b> the d4 shows " + roll + " — " + roll + " + 3 + " + bonus + " (" + forgeEsc(heroName) + "'s HEAL bonus) = <b>+" + amt + " HP</b> to " + FIGHTERS[t].name + ", who now stands at " + state.hp[t] + " HP." + (ca.line ? " \u201C" + forgeEsc(ca.line) + "\u201D" : "") + (state.hp[t] > 0 && state.hp[t] <= 15 ? " Still clawing at death's door — one more knock could end them." : ""));
       log(heroName + "'s " + ca.name + ": " + FIGHTERS[t].name + " healed +" + amt + " HP (d4 rolled " + roll + "). Now at " + state.hp[t] + " HP.");
@@ -9516,7 +9803,7 @@
           var amt = roll + 3 + healBonus();
           var wasDown = state.hp[fid] <= 0;
           state.hp[fid] = Math.min(100, Math.max(0, state.hp[fid]) + amt);
-          if (wasDown && state.hp[fid] > 0) state.highlights.push({ type:"revive", hero:fid, by:"priya", amt:amt });
+          if (wasDown && state.hp[fid] > 0) state.highlights.push(stampMayaLook({ type:"revive", hero:fid, by:"priya", amt:amt }));
           renderHeroHp();
           campDone("<b>Healing Hands:</b> the d4 shows " + roll + " — " + roll + " + 3 + " + healBonus() + " (the healer's HEAL bonus) = <b>+" + amt + " HP</b> to " + FIGHTERS[fid].name + ", who now stands at " + state.hp[fid] + " HP." + (state.hp[fid] > 0 && state.hp[fid] <= 15 ? " Still clawing at death's door — one more knock could end them." : ""));
           log("Healing Hands: " + FIGHTERS[fid].name + " healed +" + amt + " HP (d4 rolled " + roll + "). Now at " + state.hp[fid] + " HP.");
@@ -9955,8 +10242,7 @@
 <script>
   if ('serviceWorker' in navigator) { try { navigator.serviceWorker.register('sw.js').catch(function(){}); } catch(e){} }
 </script>
-
-<div style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#b3001b;color:#fff;font:700 15px/1.35 system-ui,sans-serif;text-align:center;padding:10px 14px">TEST PAGE — credits roll seeded with a REALISTIC full run: 16 battle highlights, 4 minion interventions (incl. Golden Parachute), 1 revive, Power Card featured. Not the game door.</div>
+<div style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#b3001b;color:#fff;font:700 15px/1.35 system-ui,sans-serif;text-align:center;padding:10px 14px">TEST PAGE — credits roll seeded with a REALISTIC full run: 16 battle highlights, 4 minion interventions (incl. Golden Parachute), 1 revive, The Early Call, Power Card featured. Not the game door.</div>
 <script>window.addEventListener('load',function(){setTimeout(function(){var w=document.getElementById('winEnding');if(w){w.classList.add('show');w.scrollIntoView();}},400);});</script>
 </body>
 </html>
