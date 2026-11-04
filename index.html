@@ -4021,7 +4021,15 @@
        greed, and answers only to his own trigger — minionParachute arms
        it, and the first Mission Creep heal that lands while The Fade
        stands at 60 HP or below drops him in, once per run. */
-    minionQueue:["imp","wraith","golem","specter"], minionT60:true, minionT45:true, minionParachute:true, minionFiredIdx:-1, minionHpStart:100 };
+    minionQueue:["imp","wraith","golem","specter"], minionT60:true, minionT45:true, minionParachute:true, minionFiredIdx:-1, minionHpStart:100,
+    /* Presentation-time answer shuffle (Mike's ruling, 2026-11-04): the
+       display order each multiple-choice list was presented in, keyed per
+       presentation and kept with the run's state, so a presented question
+       never changes order on a re-render or redraw. gambitSwaps holds the
+       same memory for the Fake News Gambit's ruling-button order. The
+       written data order in QUESTS / DEATH_BLOWS / MINIONS never changes —
+       only the presented copy is shuffled. Cleared by reset(). */
+    presentedOrders:{}, gambitSwaps:{} };
 
   var questBox = document.getElementById("questBox");
   var chooseSection = document.getElementById("chooseSection");
@@ -4646,7 +4654,7 @@
       '<p class="m-claim">“' + m.claim + '”</p>' +
       '<p class="m-prompt">Your one move — land the correction:</p>' +
       '<div class="m-actions">' +
-        m.options.map(function(o, i){ return '<button type="button" class="m-btn" data-minion="' + i + '">' + o + "</button>"; }).join("") +
+        presentedOrder("minion" + key, m.options.length).map(function(oi){ return '<button type="button" class="m-btn" data-minion="' + oi + '">' + m.options[oi] + "</button>"; }).join("") +
       "</div>" +
       '<div id="minionResult"></div>' +
       '<p class="m-foot">' + (isPara ? "He works for no one — not even The Fade. He drops in on his own trigger, once per run, and only while the war drags on." : "Each of his defenders can face you only once per run.") + "</p>";
@@ -6910,6 +6918,38 @@
     if (res) res.scrollIntoView({ behavior:"smooth", block:"nearest" });
   }
 
+  /* Presentation-time answer shuffle (Mike's ruling, 2026-11-04): when a
+     multiple-choice list is presented, shuffle a COPY of its index order
+     with shuffleArr and render that order. Buttons keep carrying each
+     answer's ORIGINAL index (data-choice / data-dbchoice / data-minion),
+     so correctness follows the answer text, never the slot, and every
+     resolver (answer, answerDeathBlow, resolveMinion) and outcome —
+     charges, Voice, wrong-pick effects, highlights, corrections — is
+     exactly as before. The order is computed ONCE per presentation and
+     kept on state.presentedOrders, so re-renders or redraws of the same
+     presented question never reshuffle it; reset() clears the map so the
+     next run shuffles fresh. The data arrays keep their written order. */
+  function presentedOrder(key, count){
+    var ord = state.presentedOrders[key];
+    if (!ord || ord.length !== count) {
+      ord = [];
+      for (var i = 0; i < count; i++) ord.push(i);
+      shuffleArr(ord);
+      state.presentedOrders[key] = ord;
+    }
+    return ord;
+  }
+  /* The Fake News Gambit's two ruling buttons swap their left-right order
+     at random, decided ONCE per gambit presentation and kept the same
+     way. Each button keeps its own data-gambit ruling and styling — only
+     the order changes. Skip is not a ruling button and stays last. */
+  function gambitSwapped(key){
+    if (state.gambitSwaps[key] === undefined) {
+      state.gambitSwaps[key] = Math.random() < 0.5;
+    }
+    return state.gambitSwaps[key];
+  }
+
   function renderQuest(){
     if (!state.band) {
       /* No band locked in yet: the arena waits on the sheets above. */
@@ -6949,14 +6989,16 @@
       html += '<div class="gambit-card" id="gambitCard"><span class="g-tag">Hard Mode · Fake News Gambit — rule before you answer</span>' + helpDotHTML("gambit") +
         '<p class="g-claim">“' + gambit.claim + '”</p>' +
         '<p>The Fade slides this “fact” into the fight, loud and confident. Rule on it first: is the claim TRUE or FAKE? The documented correction appears either way.</p>' +
-        '<div class="g-actions"><button type="button" class="g-btn" data-gambit="fake">Rule: FAKE</button><button type="button" class="g-btn alt" data-gambit="true">Rule: TRUE</button><button type="button" class="g-btn ghost" data-gambit="skip">Skip the ruling</button></div>' +
+        '<div class="g-actions">' + (gambitSwapped("gambit" + state.idx)
+          ? '<button type="button" class="g-btn alt" data-gambit="true">Rule: TRUE</button><button type="button" class="g-btn" data-gambit="fake">Rule: FAKE</button>'
+          : '<button type="button" class="g-btn" data-gambit="fake">Rule: FAKE</button><button type="button" class="g-btn alt" data-gambit="true">Rule: TRUE</button>') + '<button type="button" class="g-btn ghost" data-gambit="skip">Skip the ruling</button></div>' +
         '<div id="gambitResult"></div></div>';
     }
     html += '<p class="q">' + q.q + "</p>";
     if (state.idx === 0 && !state.coach.answer) html += '<p class="coach-hint">Coach: pick the answer the fact above supports.</p>';
     html += '<div class="choices">';
-    q.choices.forEach(function(c, i){
-      html += '<button class="choice" type="button" data-choice="' + i + '"' + (gambit ? " disabled" : "") + '><span class="wtag ' + wclass + '">' + q.wlabel + '</span><span>' + c + "</span></button>";
+    presentedOrder("q" + state.idx, q.choices.length).forEach(function(oi){
+      html += '<button class="choice" type="button" data-choice="' + oi + '"' + (gambit ? " disabled" : "") + '><span class="wtag ' + wclass + '">' + q.wlabel + '</span><span>' + q.choices[oi] + "</span></button>";
     });
     html += "</div>";
     if (deathBlowEligible()) {
@@ -7052,8 +7094,8 @@
     html += '<p class="scene">The claim this blow answers, in his own words: <b>' + (DB_CONNECT[state.fighter] ? DB_CONNECT[state.fighter].claim : "") + '</b> Rule on the record below and the claim falls with him.</p>';
     html += '<p class="q">' + db.q + "</p>";
     html += '<div class="choices">';
-    db.choices.forEach(function(c, i){
-      html += '<button class="choice" type="button" data-dbchoice="' + i + '"><span class="wtag" style="background:var(--amber)">Death Blow</span><span>' + c + "</span></button>";
+    presentedOrder("db" + state.fighter + "@" + state.idx, db.choices.length).forEach(function(oi){
+      html += '<button class="choice" type="button" data-dbchoice="' + oi + '"><span class="wtag" style="background:var(--amber)">Death Blow</span><span>' + db.choices[oi] + "</span></button>";
     });
     html += "</div>";
     html += '<div class="feedback" id="feedback"></div>';
@@ -7842,6 +7884,8 @@
        re-armed, the per-battle intervention flag cleared, and any open
        minion card dismissed. */
     state.minionQueue = ["imp","wraith","golem","specter"]; state.minionT60 = true; state.minionT45 = true; state.minionParachute = true; state.minionFiredIdx = -1; state.minionHpStart = 100;
+    /* A fresh run re-shuffles every presentation: clear the kept orders. */
+    state.presentedOrders = {}; state.gambitSwaps = {};
     activeMinion = null; activeMinionKey = null; minionResume = null;
     var minionSheetEl = document.getElementById("minionSheet"); if (minionSheetEl) minionSheetEl.classList.remove("show");
     state.highlights = []; state.factChecked = {}; state.battleBest = null; state.battleCommitted = -1; state.pendingFall = null;
