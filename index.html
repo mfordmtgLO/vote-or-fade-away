@@ -4670,12 +4670,12 @@
     if (picked === m.correct) {
       var gain = chargePower(1);
       var vg = gainVoice(2);
-      state.highlights.push({ type:"minion", key:key, hero:state.fighter, battle:state.idx, banished:true });
+      state.highlights.push(stampMayaLook({ type:"minion", key:key, hero:state.fighter, battle:state.idx, banished:true }));
       out = '<span class="m-verdict good">' + m.name + ' — BANISHED</span>' +
         "<p>The correction lands and " + m.name + " comes apart — <b>banished for the rest of the run</b>. The band presses on: <b>+1 Power Card charge</b>" + (gain > 0 ? " (now <b>" + state.powerCharge + "/5</b>)" : " (already CHARGED at 5/5)") + " and <b>+" + vg + " Voice</b> (now " + state.voice + ").</p>";
       log(m.name + " banished — the correction lands, and it is gone for the rest of the run. Power Card charge " + state.powerCharge + "/5, Voice +" + vg + " (now " + state.voice + ").");
     } else {
-      state.highlights.push({ type:"minion", key:key, hero:state.fighter, battle:state.idx, banished:false });
+      state.highlights.push(stampMayaLook({ type:"minion", key:key, hero:state.fighter, battle:state.idx, banished:false }));
       var hitHtml = "", hitLog = "";
       if (key === "imp") {
         hitHtml = "Cropped Clip repeats — <b>the clip made the rounds</b>. It costs the band <b>no Voice</b> — Voice never shrinks for speaking up — and the correction below still stands.";
@@ -5798,7 +5798,7 @@
           var amt = roll + 3 + healBonus();
           var wasDown = state.hp[t] <= 0;
           state.hp[t] = Math.min(100, Math.max(0, state.hp[t]) + amt);
-          if (wasDown && state.hp[t] > 0) state.highlights.push({ type:"revive", hero:t, by:"priya", amt:amt });
+          if (wasDown && state.hp[t] > 0) state.highlights.push(stampMayaLook({ type:"revive", hero:t, by:"priya", amt:amt }));
           renderHeroHp();
           campDone("<b>Healing Hands:</b> the d4 shows " + roll + " — " + roll + " + 3 + " + healBonus() + " (Priya's HEAL bonus) = <b>+" + amt + " HP</b> to " + FIGHTERS[t].name + ", who now stands at " + state.hp[t] + " HP." + (state.hp[t] > 0 && state.hp[t] <= 15 ? " Still clawing at death's door — one more knock could end them." : ""));
           log("Healing Hands: " + FIGHTERS[t].name + " healed +" + amt + " HP (d4 rolled " + roll + "). Now at " + state.hp[t] + " HP.");
@@ -6999,7 +6999,7 @@
     if (correctFake) {
       state.momentum = Math.min(8, state.momentum + 1); updateMood();
       state.gambitCollapsed = true;
-      state.highlights.push({ type:"gambit", hero:state.fighter, battle:state.idx, title:QUESTS[state.idx].title });
+      state.highlights.push(stampMayaLook({ type:"gambit", hero:state.fighter, battle:state.idx, title:QUESTS[state.idx].title }));
       var gambitCard = document.getElementById("gambitCard");
       if (gambitCard) gambitCard.classList.add("gambit-correct");
       questBox.querySelectorAll("[data-gambit]").forEach(function(b){ if (b.getAttribute("data-gambit") === ruling) b.classList.add("gambit-correct-choice"); });
@@ -7445,6 +7445,36 @@
      nothing else is recorded and nothing about play changes. The battle
      highlight is the active fighter's biggest strike of the battle, tracked
      during attack resolutions and committed when the battle finalizes. */
+  /* Maya's look in the credits reel (swap #29): Maya is the only hero
+     with a look system, so her highlight records are stamped at commit
+     time with the ART key of the portrait her character sheet is
+     displaying at that moment — her customized Trail hair x skin
+     portrait when she has one, the plain original sketch when her
+     sheet shows the sketch. The stamp is an ART key string only, never
+     a URL, so a mid-run look change is honored per battle: earlier
+     records keep the earlier look, later records carry the new one. */
+  function mayaSheetArtKey(){
+    var img = document.querySelector('.fighter[data-fighter="maya"] img.sketch');
+    var src = img ? img.getAttribute("src") : null;
+    if (src) {
+      for (var k in ART) { if (ART[k] === src) return k; }
+    }
+    var lk = (state && state.gearLook) ? state.gearLook.maya : null;
+    if (lk) {
+      if (isMayaOriginalSketch("maya", lk)) return "maya";
+      if (isMayaTrailDirect("maya", lk)) return mayaTrailArtKey(lk);
+      return (LOOK_ART.maya || [])[lk.attire] || "maya";
+    }
+    return "maya";
+  }
+  function stampMayaLook(rec){
+    if (rec && rec.hero === "maya") rec.look = mayaSheetArtKey();
+    return rec;
+  }
+  function mayaReelArtKey(rec){
+    if (rec && typeof rec.look === "string" && ART[rec.look]) return rec.look;
+    return mayaSheetArtKey();
+  }
   function noteBattleStrike(dmg, crit){
     var cur = state.battleBest;
     if (!cur || cur.battle !== state.idx || dmg > cur.dmg) {
@@ -7456,9 +7486,11 @@
     state.battleCommitted = state.idx;
     var b = (state.battleBest && state.battleBest.battle === state.idx) ? state.battleBest
       : { type:"battle", hero:state.fighter, battle:state.idx, title:QUESTS[state.idx].title, dmg:0, crit:false, ended:false, missed:true };
+    stampMayaLook(b);
     state.highlights.push(b);
     state.battleBest = null;
     if (state.pendingFall && state.pendingFall.battle === state.idx) {
+      stampMayaLook(state.pendingFall);
       state.highlights.push(state.pendingFall);
       state.pendingFall = null;
     }
@@ -8860,7 +8892,11 @@
     var full = HERO_FULL[h.hero] || FIGHTERS[h.hero].name;
     var first = FIGHTERS[h.hero].name;
     var n = h.battle + 1;
-    var sketch = ART[h.hero];
+    /* Maya's figures show the look stamped on her record — the portrait
+       her sheet displayed when that moment was committed — falling back
+       to the sheet's current portrait for unstamped records. Every
+       other hero keeps their stock sketch. */
+    var sketch = h.hero === "maya" ? ART[mayaReelArtKey(h)] : ART[h.hero];
     var head, dmg, caption, fade = false;
     if (h.type === "minion") {
       var mn = MINIONS[h.key] || {};
@@ -8960,6 +8996,12 @@
     fig.removeAttribute("id");
     fig.setAttribute("data-run-highlight", "1");
     fig.setAttribute("data-portrait", hero);
+    /* Maya never fought, so no record carries her stamp: her portrait
+       figure wears the look her sheet displays at run's end. */
+    if (hero === "maya") {
+      var vimg = fig.querySelector("img.v-hero");
+      if (vimg) vimg.src = ART[mayaSheetArtKey()];
+    }
     return fig;
   }
 
@@ -9201,9 +9243,19 @@
          each asset path lives exactly once — so a single-file export embeds one
          copy of each image no matter how many scenes reference it. */
       var DB_SKETCH = ART;
+      /* Maya's featured figure wears the look stamped on her Death Blow
+         record; with no such record, the look her sheet shows now. */
+      var winnerArt = DB_SKETCH[w];
+      if (w === "maya") {
+        var dbRec = null;
+        (state.highlights || []).forEach(function(r){
+          if (r.type === "battle" && r.hero === "maya" && r.dbRoll) dbRec = r;
+        });
+        winnerArt = dbRec ? ART[mayaReelArtKey(dbRec)] : ART[mayaSheetArtKey()];
+      }
       fig.innerHTML = '<span class="v-head">Featured · The Death Blow</span>' +
         '<div class="v-stage">' +
-        '<img class="v-hero" src="' + DB_SKETCH[w] + '" alt="Pencil sketch of ' + FIGHTERS[w].name + ' delivering the Death Blow" />' +
+        '<img class="v-hero" src="' + winnerArt + '" alt="Pencil sketch of ' + FIGHTERS[w].name + ' delivering the Death Blow" />' +
         '<img class="v-boss" src="' + ART.boss + '" alt="The Fade falling to the Death Blow" />' +
         '<span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">Death Blow</span>' +
         "</div><figcaption>" + (state.dbRoll ? DB_SCENES[w].replace("ends the run", "ends the run — " + DB_STYLE[state.dbRoll] + " —") : DB_SCENES[w]) + "</figcaption>";
@@ -9581,7 +9633,7 @@
       var amt = roll + 3 + bonus;
       var wasDown = state.hp[t] <= 0;
       state.hp[t] = Math.min(100, Math.max(0, state.hp[t]) + amt);
-      if (wasDown && state.hp[t] > 0) state.highlights.push({ type:"revive", hero:t, by:fid, amt:amt });
+      if (wasDown && state.hp[t] > 0) state.highlights.push(stampMayaLook({ type:"revive", hero:t, by:fid, amt:amt }));
       renderHeroHp();
       campDone("<b>" + forgeEsc(ca.name) + ":</b> the d4 shows " + roll + " — " + roll + " + 3 + " + bonus + " (" + forgeEsc(heroName) + "'s HEAL bonus) = <b>+" + amt + " HP</b> to " + FIGHTERS[t].name + ", who now stands at " + state.hp[t] + " HP." + (ca.line ? " \u201C" + forgeEsc(ca.line) + "\u201D" : "") + (state.hp[t] > 0 && state.hp[t] <= 15 ? " Still clawing at death's door — one more knock could end them." : ""));
       log(heroName + "'s " + ca.name + ": " + FIGHTERS[t].name + " healed +" + amt + " HP (d4 rolled " + roll + "). Now at " + state.hp[t] + " HP.");
@@ -9751,7 +9803,7 @@
           var amt = roll + 3 + healBonus();
           var wasDown = state.hp[fid] <= 0;
           state.hp[fid] = Math.min(100, Math.max(0, state.hp[fid]) + amt);
-          if (wasDown && state.hp[fid] > 0) state.highlights.push({ type:"revive", hero:fid, by:"priya", amt:amt });
+          if (wasDown && state.hp[fid] > 0) state.highlights.push(stampMayaLook({ type:"revive", hero:fid, by:"priya", amt:amt }));
           renderHeroHp();
           campDone("<b>Healing Hands:</b> the d4 shows " + roll + " — " + roll + " + 3 + " + healBonus() + " (the healer's HEAL bonus) = <b>+" + amt + " HP</b> to " + FIGHTERS[fid].name + ", who now stands at " + state.hp[fid] + " HP." + (state.hp[fid] > 0 && state.hp[fid] <= 15 ? " Still clawing at death's door — one more knock could end them." : ""));
           log("Healing Hands: " + FIGHTERS[fid].name + " healed +" + amt + " HP (d4 rolled " + roll + "). Now at " + state.hp[fid] + " HP.");
