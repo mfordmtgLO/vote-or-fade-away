@@ -1,0 +1,15 @@
+name: rename30
+on: workflow_dispatch
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          git mv -f vote-or-fade-away.html index.html
+          git config user.name "mfordmtgLO"
+          git config user.email "mfordmtgLO@users.noreply.github.com"
+          git commit -m "Publish swap 30 as index.html"
+          git push
