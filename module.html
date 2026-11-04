@@ -65,6 +65,11 @@ main{max-width:1060px;margin:0 auto;padding:22px 16px 50px}
 @media(prefers-color-scheme:dark){.readaloud{background:#2a241e}}
 /* FALL & VOICE TRAY — the tray (.tool) is dark with cream text in BOTH schemes, but its .readaloud cards keep a white background in the light scheme, so tray cards must carry the standard dark ink there, not the inherited cream. Covers the three Voice script cards and The Brighten's read-aloud cards (all .readaloud inside #fallpanel). Dark scheme needs nothing: the cards turn dark (#2a241e) and the cream text already reads on them. */
 @media(prefers-color-scheme:light){#fallpanel .readaloud{color:var(--ink)}}
+/* Same failure, one panel deeper: The Brighten panel (.brighten) sits on light paper in the light scheme, but its buttons still carry the tray's white label — .tool button (specificity 0,1,1) overrides both .pin-btn and .preset (0,1,0), so the Pin voice button and the six revival-roll buttons render white-on-cream and unreadable. (The Restore button escapes only via its inline ink color.) In the light scheme only, the panel's buttons take the panel's dark ink; on hover the accent paints dark behind them, so the label flips back to white there. Dark scheme needs nothing and is untouched: the panel's paper is dark and the tray's cream labels already read on it. */
+@media(prefers-color-scheme:light){
+  #brightenPanel .pin-btn,#brightenPanel .preset{color:var(--ink)}
+  #brightenPanel .pin-btn:hover,#brightenPanel .preset:hover{color:#fff}
+}
 .opening-box{background:var(--paper);border:2px solid var(--border);box-shadow:6px 6px 0 var(--accent);padding:20px 22px;margin:18px 0 26px}
 .opening-label{font-family:Cinzel,serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);text-align:center;margin:0 0 8px}
 .opening-box h3{font-family:Cinzel,serif;text-align:center;font-size:26px;letter-spacing:.08em;margin:0 0 14px;line-height:1.1}
