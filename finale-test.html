@@ -231,6 +231,12 @@
   .feedback .brief-note{margin-top:10px;font-size:.82rem;color:var(--stage-muted);border-top:1px dashed #3a4a52;padding-top:9px}
   .feedback .kill-style{margin-top:10px;font-family:"JetBrains Mono",monospace;font-size:.82rem;font-weight:700;letter-spacing:.05em;color:#a86e00;background:#fff7e0;border:1px dashed #d9a514;border-radius:8px;padding:8px 10px}
   @media (prefers-color-scheme: dark){.feedback .kill-style{background:#2a2410;color:var(--amber)}}
+  .feedback .early-call{margin-top:12px;border:1px solid #b07d2b;background:#fdf6e3;border-radius:10px;padding:12px 14px}
+  .feedback .early-call .ec-head{font-family:"Anton",sans-serif;text-transform:uppercase;font-size:1.05rem;letter-spacing:.02em;color:#8a5a00}
+  .feedback .early-call p{color:#4a3a14}
+  .feedback .early-call p b{color:#8a5a00}
+  .feedback .early-call .brief-note{color:#6b5a2e;border-top:1px dashed #d9a514}
+  @media (prefers-color-scheme: dark){.feedback .early-call{background:#2a2410;border-color:#8a6a1f}.feedback .early-call .ec-head{color:var(--amber)}.feedback .early-call p{color:#e8dcc0}.feedback .early-call p b{color:var(--amber)}.feedback .early-call .brief-note{color:#c9b98a}}
   .next-row{margin-top:14px;display:none}
   .next-row.show{display:block}
   .log{border-top:1px solid #26343c;padding:10px 16px 14px;font-family:"JetBrains Mono",monospace;font-size:.74rem;color:var(--stage-muted);min-height:2.2em}
@@ -2023,6 +2029,7 @@
           <input type="range" id="fs-creep" min="0" max="12" value="6" />
           <p class="fx"><b>Effect:</b> at the end of every battle The Fade survives, the occupation digs in and he regains <b id="fx-creep">+3</b> HP.</p>
           <p class="cap">While he stands, he heals at the end of every battle — half his Mission Creep dial, rounded: Standard 6 → +3 · Hard 9 → +5 · dial at 12 → +6. Why: a war that drags on digs in — every battle you give him, his machine repairs itself. One thing stops it: play your Power Card that battle, and he does not heal.</p>
+          <p class="cap">The Early Call: the first time a blow would drop him below 10 HP, the town's complacency feeds him and he surges +25 (never above 39) — once per run. And he cannot be killed by arithmetic: damage pins him at 1 HP; only a Death Blow, or the battle-16 reckoning, can best him.</p>
           <p class="cap">Wars are easy to start and brutal to end; stay long enough and nobody remembers the original reason.</p>
         </div>
         <div class="fstat">
@@ -3960,6 +3967,7 @@
     battleMods:null, dbBonus:0, dbRoll:0, allDown:false, tillSpent:false,
     hardMode:false, gambitResolved:true, gambitCollapsed:false, gambitClaim:null, gambitTauntOverride:null, debtInterest:0,
     powerCharge:0, powerPlayed:true, powerCastBy:{ maya:true, dre:true, priya:true, marc:false, sana:false, eli:false }, powerSpinUntilIdx:-1, powerHealBlockIdx:-1, canvassRallied:0, runOver:false, struckExcuse:null,
+    fadeSurgeUsed:false, fadeFloorNoted:false, fadeSurgeJustFired:false,
     highlights:[{ type:"battle", hero:"maya", battle:0, title:"The Strait Slams Shut", dmg:11, crit:false, ended:true, missed:false }, { type:"battle", hero:"dre", battle:1, title:"The Tariff Trap", dmg:13, crit:false, ended:true, missed:false }, { type:"minion", key:"imp", hero:"dre", battle:2, banished:true }, { type:"battle", hero:"priya", battle:2, title:"Who Built the Corner?", dmg:9, crit:false, ended:true, missed:false }, { type:"battle", hero:"maya", battle:3, title:"Sticker Shock, Stacked", dmg:16, crit:true, ended:true, missed:false }, { type:"battle", hero:"dre", battle:4, title:"The Hidden Harvest", dmg:12, crit:false, ended:true, missed:false }, { type:"minion", key:"wraith", hero:"maya", battle:5, banished:false }, { type:"battle", hero:"priya", battle:5, title:"The Rate Freeze", dmg:10, crit:false, ended:true, missed:false }, { type:"battle", hero:"maya", battle:6, title:"Surge — or Spiral?", dmg:14, crit:false, ended:true, missed:false }, { type:"battle", hero:"dre", battle:7, title:"What Your Vote Actually Pulls", dmg:11, crit:false, ended:true, missed:false }, { type:"minion", key:"parachute", hero:"priya", battle:8, banished:true }, { type:"battle", hero:"priya", battle:8, title:"Receipts: The Forecasts", dmg:15, crit:false, ended:true, missed:false }, { type:"battle", hero:"maya", battle:9, title:"The Invisible Tax", dmg:9, crit:false, ended:true, missed:false }, { type:"revive", hero:"dre", by:"priya", amt:11 }, { type:"battle", hero:"dre", battle:10, title:"“Two Weeks Away?”", dmg:12, crit:false, ended:true, missed:false }, { type:"minion", key:"golem", hero:"maya", battle:11, banished:true }, { type:"battle", hero:"priya", battle:11, title:"The Empty Cushion", dmg:17, crit:true, ended:true, missed:false }, { type:"battle", hero:"maya", battle:12, title:"The Inheritance (Debt, in Context)", dmg:10, crit:false, ended:true, missed:false }, { type:"battle", hero:"dre", battle:13, title:"The War Chest", dmg:13, crit:false, ended:true, missed:false }, { type:"battle", hero:"priya", battle:14, title:"“Freedom Fighters”", dmg:12, crit:false, ended:true, missed:false }, { type:"battle", hero:"maya", battle:15, title:"The Long Fuse", dmg:14, crit:false, ended:true, missed:false }], factChecked:{}, battleBest:null, battleCommitted:-1, pendingFall:null,
     coach:{ answer:false, roll:false, camp:false },
     readied:{ maya:null, dre:null, priya:null, marc:null, sana:null, eli:null }, activeMove:null, moveKey:null,
@@ -4333,12 +4341,57 @@
       (powerSpinSuppressed() ? " · <b>Power Card played: Spin Defense bonus is 0</b>" : "") +
       " · " + FIGHTERS[state.fighter].name + "'s Defense <b>" + state.battleMods.def + "</b>" + readiedNoteHTML();
   }
+  /* ============ THE EARLY CALL — The Fade's one-time surge ============
+     Every arithmetic reduction of The Fade's HP routes through
+     applyBossDamage: attack resolutions, Power Card plays (both
+     windows), and readied-move reflects. The Death Blow's kill set
+     (state.boss = 0) is NOT arithmetic and never passes through here.
+     The first time a blow would drop him below 10 HP, the town's
+     complacency feeds him instead: he surges +25, never above 39, once
+     per run. After that — and always — arithmetic pins him at 1 HP:
+     only a Death Blow, or the battle-16 reckoning, can best him. */
+  var EARLY_CALL_BODY = "The word runs ahead of the count: the band has it in hand — no need to hurry down to the hall. Porch lights go off across Alder Creek, one by one. They've got this. And The Fade, who feeds on exactly that shrug, drinks in the town's complacency — and rises. +25 HP.";
+  var EARLY_CALL_RULE = "He will not fall to arithmetic. Strikes can pin him at 1 HP, but he can only be bested two ways: a Death Blow — or break him by the final reckoning: finish battle 16 with The Fade broken, under 40 HP, and the town's future is claimed — a victory spark that will ignite the band's generation to always play the Power Cards in hand - casting their votes for change.";
+  function earlyCallCardHTML(){
+    return '<div class="early-call"><span class="ec-head">THE EARLY CALL</span><p>' + EARLY_CALL_BODY + '</p><p class="brief-note">' + EARLY_CALL_RULE + "</p></div>";
+  }
+  /* Returns true when the surge fired. feedbackEl, when given, is the
+     live battle feedback surface and receives the Early Call card;
+     callers in a window with no live panel pass null and present the
+     card's content themselves (see playPowerCard). */
+  function applyBossDamage(amount, feedbackEl){
+    var pre = state.boss;
+    var raw = pre - amount;
+    if (!state.fadeSurgeUsed && pre >= 10 && raw < 10) {
+      state.boss = Math.min(39, Math.max(1, raw) + 25);
+      state.fadeSurgeUsed = true;
+      state.fadeSurgeJustFired = state.idx;
+      state.highlights.push({ type:"surge", battle: state.idx });
+      log("THE EARLY CALL — the town relaxed, and The Fade surged +25 HP (now at " + state.boss + " HP).");
+      if (feedbackEl) feedbackEl.innerHTML += earlyCallCardHTML();
+      return true;
+    }
+    state.boss = Math.max(1, raw);
+    if (state.boss === 1 && state.fadeSurgeUsed && !state.fadeFloorNoted) {
+      state.fadeFloorNoted = true;
+      log("The Fade clings at 1 HP — only the Death Blow or the final reckoning can end him now.");
+    }
+    return false;
+  }
   function playPowerCard(){
     if (state.powerCharge < 5 || state.awaitingPick || state.runOver || state.deathBlowWon) return;
     startRun();
     var excuse = excuseFor(state.boss);
     var before = Math.max(0, state.boss);
-    state.boss = Math.max(0, state.boss - 12);
+    /* The card can be played in two windows: at the start of a battle,
+       before the answer (no battle feedback panel is live yet), and
+       after the battle resolves (the feedback panel is live and shown).
+       In the live window the surge card joins the battle feedback; in
+       the other, the full card content is written into the session log
+       below instead, so the surge never passes silently. */
+    var pcFb = document.getElementById("feedback");
+    var pcFbLive = !!(pcFb && pcFb.classList.contains("show"));
+    var pcSurged = applyBossDamage(12, pcFbLive ? pcFb : null);
     state.powerCharge = 0;
     state.powerPlayed = true;
     /* The play is credited to the fighter whose battle this is — the Walk
@@ -4369,6 +4422,12 @@
     bossStage.classList.remove("hurt"); void bossStage.offsetWidth; bossStage.classList.add("hurt");
     if (navigator.vibrate) { try { navigator.vibrate([40,40,80]); } catch(e){} }
     logEl.innerHTML = "Battle log: " + FIGHTERS[caster].name + " plays " + casterPronoun + " Power Card — " + casterPronoun + " vote. POWER CARD PLAYED — CAST THE VOTE. The record is read aloud: The Fade takes 12 damage (" + before + " → " + Math.max(0, state.boss) + " HP). His current excuse — <s>" + excuse + "</s> — is struck through by the documented correction: " + CAROUSEL_NOTE.correction + " The carousel jams: his Sound Bite Spin Defense bonus is 0 for the next 2 battles. And he does not heal at the end of this battle. Playing the card is speaking up: the band's Voice rises +" + pcVoice + " (now " + state.voice + ").";
+    if (pcSurged && !pcFbLive) {
+      /* No live battle feedback panel in this window: the full Early
+         Call card is written into the session log as paragraphs, so
+         the surge never passes silently in any window. */
+      logEl.innerHTML += "<p><b>THE EARLY CALL</b></p><p>" + EARLY_CALL_BODY + "</p><p>" + EARLY_CALL_RULE + "</p>";
+    }
     logEl.scrollIntoView({ behavior:"smooth", block:"nearest" });
     /* Minion interventions: a 12-point direct hit is one of the two calls
        that can bring a defender out. This hit's own HP-threshold
@@ -7254,7 +7313,7 @@
       fb.querySelector(".verdict").textContent = "Glancing blow · −" + dmg + " boss HP";
       tauntEl.textContent = "“Taken out of context! Fake news!”";
     }
-    state.boss = Math.max(0, state.boss - dmg);
+    applyBossDamage(dmg, fb);
     noteBattleStrike(dmg, roll === 20);
     fb.innerHTML += '<p class="brief-note">' + FIGHTERS[f].name + " " + math + "</p>";
     /* Dawnblade (Priya's Gear Up weapon): a landed hit — direct or
@@ -7327,9 +7386,9 @@
           var reduced = Math.min(cut, dmg);
           dmg -= reduced;
           if (f === "maya") { guardTxt = " <b>Swift Brace readied</b> — she braces and the blow is blunted: damage cut by " + reduced + "."; guardLog = " Swift Brace readied — damage cut by " + reduced + "."; }
-          else if (f === "dre") { state.boss = Math.max(0, state.boss - 2); guardTxt = " <b>Iron Guard readied</b> — the guard holds: damage cut by " + reduced + ", and <b>2 damage reflects back onto The Fade</b>."; guardLog = " Iron Guard readied — damage cut by " + reduced + ", and 2 damage reflects back onto The Fade."; }
+          else if (f === "dre") { applyBossDamage(2, fb); guardTxt = " <b>Iron Guard readied</b> — the guard holds: damage cut by " + reduced + ", and <b>2 damage reflects back onto The Fade</b>."; guardLog = " Iron Guard readied — damage cut by " + reduced + ", and 2 damage reflects back onto The Fade."; }
           else if (f === "priya") { var wdVg = gainVoice(3); guardTxt = " <b>Ward of Dawn readied</b> — the ward holds: damage cut by " + reduced + ", and the band gains <b>+" + wdVg + " Voice</b>."; guardLog = " Ward of Dawn readied — the ward holds: damage cut by " + reduced + ", +" + wdVg + " Voice."; }
-          else if (f === "marc") { state.boss = Math.max(0, state.boss - 2); guardTxt = " <b>Brace & Beam readied</b> — the beams hold: damage cut by " + reduced + ", and <b>2 damage reflects back onto The Fade</b>."; guardLog = " Brace & Beam readied — damage cut by " + reduced + ", and 2 damage reflects back onto The Fade."; }
+          else if (f === "marc") { applyBossDamage(2, fb); guardTxt = " <b>Brace & Beam readied</b> — the beams hold: damage cut by " + reduced + ", and <b>2 damage reflects back onto The Fade</b>."; guardLog = " Brace & Beam readied — damage cut by " + reduced + ", and 2 damage reflects back onto The Fade."; }
           else if (f === "sana") { var sndVg = gainVoice(3); guardTxt = " <b>Soundproof readied</b> — the quiet room holds: damage cut by " + reduced + ", and the band gains <b>+" + sndVg + " Voice</b>."; guardLog = " Soundproof readied — damage cut by " + reduced + ", +" + sndVg + " Voice."; }
           else if (f === "eli") { guardTxt = " <b>Market Calm readied</b> — he re-weighs the blow true: damage cut by " + reduced + "."; guardLog = " Market Calm readied — damage cut by " + reduced + "."; }
           else if (FORGED[f]) { guardTxt = " <b>" + MOVES[f][2].name + " readied</b> — the guard holds: damage cut by " + reduced + "."; guardLog = " " + MOVES[f][2].name + " readied — damage cut by " + reduced + "."; }
@@ -7735,6 +7794,7 @@
     renderBandSelect();
     state.deathBlowSpent = { maya:false, dre:false, priya:false, marc:false, sana:false, eli:false };
     state.deathBlowWon = false; state.wonByDeathBlow = null;
+    state.fadeSurgeUsed = false; state.fadeFloorNoted = false; state.fadeSurgeJustFired = false;
     state.battleStarts = 0; state.renderedFor = -1;
     state.fade = { drum:6, spin:6, creep:6, blowback:6 };
     state.runStarted = false;
@@ -8775,6 +8835,21 @@
   function highlightFigure(h){
     var fig = document.createElement("figure");
     fig.setAttribute("data-run-highlight", "1");
+    if (h.type === "surge") {
+      /* The Early Call: The Fade's own scene — no hero struck this blow;
+         the town relaxed, and he rose. His portrait faces the band's. */
+      fig.className = "vignette fadehit";
+      fig.innerHTML = '<span class="v-head">The Early Call \u00b7 Battle ' + (h.battle + 1) + '</span>' +
+        '<div class="v-stage">' +
+        '<img class="v-hero" src="' + ART.heroes + '" alt="The band of heroes" />' +
+        '<img class="v-boss" src="' + ART.boss + '" alt="The Fade" />' +
+        '<span class="v-burst" aria-hidden="true"></span><span class="v-dmg" aria-hidden="true">+25 HP</span>' +
+        "</div>";
+      var surgeCap = document.createElement("figcaption");
+      surgeCap.textContent = "The Early Call — the town relaxed, and he rose.";
+      fig.appendChild(surgeCap);
+      return fig;
+    }
     var full = HERO_FULL[h.hero] || FIGHTERS[h.hero].name;
     var first = FIGHTERS[h.hero].name;
     var n = h.battle + 1;
