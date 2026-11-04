@@ -9018,8 +9018,8 @@
           figure at its battle, and the featured Power Card figure
           whenever the card was played, immediately before the victory
           figure.
-       3. FILL — the remaining battle and revive records, biggest
-          first, spread across heroes round-robin, until band figures
+       3. FILL — the remaining battle, revive and gambit records,
+          biggest first, spread across heroes round-robin, until band figures
           (hero cast figures + portraits + fill) total 15. Minion,
           parachute, surge, Power Card and victory figures never count
           toward the 15. If the records run out first, the reel is
@@ -9045,12 +9045,13 @@
     function markUsed(r){ if (r && usedRecs.indexOf(r) < 0) usedRecs.push(r); }
     function isUsed(r){ return usedRecs.indexOf(r) >= 0; }
 
-    var battleRecs = [], minionRecs = [], surgeRecs = [], reviveRecs = [];
+    var battleRecs = [], minionRecs = [], surgeRecs = [], reviveRecs = [], gambitRecs = [];
     hl.forEach(function(h){
       if (h.type === "battle") battleRecs.push(h);
       else if (h.type === "minion") minionRecs.push(h);
       else if (h.type === "surge") surgeRecs.push(h);
       else if (h.type === "revive") reviveRecs.push(h);
+      else if (h.type === "gambit") gambitRecs.push(h);
     });
     var band = (state.band && state.band.length) ? state.band.slice() : [];
     if (!band.length) {
@@ -9072,6 +9073,9 @@
       return typeof r.battle === "number" ? r.battle : sortBattles[hl.indexOf(r)];
     }
     function magnitudeOf(r){
+      /* A gambit record carries no dmg and is never ranked as a battle
+         highlight — it competes for fill on battle order alone. */
+      if (r.type === "gambit") return 0;
       return r.type === "revive" ? (r.amt || 0) : (r.dmg || 0);
     }
 
@@ -9156,15 +9160,17 @@
       entries.push({ fig: highlightFigure(r), battle: battleOf(r), idx: hl.indexOf(r) });
     });
 
-    /* ---- Fill: remaining battle records (crits included) and revive
-       records. Ranked biggest first (a revive's amt is its magnitude),
-       crits before non-crits on ties, then the earlier battle — and
-       spread across heroes round-robin (key: by || hero), so no hero
-       takes a second fill slot while another hero still has unused
-       records. ---- */
+    /* ---- Fill: remaining battle records (crits included), revive
+       records and Fake News Gambit records. Ranked biggest first (a
+       revive's amt is its magnitude; a gambit carries no magnitude and
+       ranks on battle order alone), crits before non-crits on ties,
+       then the earlier battle — and spread across heroes round-robin
+       (key: by || hero), so no hero takes a second fill slot while
+       another hero still has unused records. ---- */
     var fillPool = [];
     battleRecs.forEach(function(r){ if (!isUsed(r)) fillPool.push(r); });
     reviveRecs.forEach(function(r){ if (!isUsed(r)) fillPool.push(r); });
+    gambitRecs.forEach(function(r){ if (!isUsed(r)) fillPool.push(r); });
     fillPool.sort(function(a, b){
       if (magnitudeOf(b) !== magnitudeOf(a)) return magnitudeOf(b) - magnitudeOf(a);
       if (!!b.crit !== !!a.crit) return b.crit ? 1 : -1;
