@@ -8871,7 +8871,7 @@
      caption states the recorded moment with its facts; sentence 2
      gives its meaning in the game's own voice. No invented facts, no
      new claims about the world. */
-  function highlightFigure(h){
+  function highlightFigure(h, role){
     var fig = document.createElement("figure");
     fig.setAttribute("data-run-highlight", "1");
     if (h.type === "surge") {
@@ -8892,6 +8892,14 @@
     var full = HERO_FULL[h.hero] || FIGHTERS[h.hero].name;
     var first = FIGHTERS[h.hero].name;
     var n = h.battle + 1;
+    /* This battle's own lesson, quoted verbatim from the game's own
+       text: the quest's connection line where the quest carries one,
+       otherwise that battle's TAUNT_CHECKS takeaway — the same
+       fallback the Fall recap uses for a battle with no connection
+       line of its own. The battle-family captions (plain, crit,
+       missed) close with it, so no two battle scenes in the roll
+       read alike. */
+    var connect = (QUESTS[h.battle] && QUESTS[h.battle].connect) || (TAUNT_CHECKS[h.battle] && TAUNT_CHECKS[h.battle].proves) || "";
     /* Maya's figures show the look stamped on her record — the portrait
        her sheet displayed when that moment was committed — falling back
        to the sheet's current portrait for unstamped records. Every
@@ -8933,11 +8941,11 @@
     } else if (h.missed) {
       head = "Battle " + n + " · " + h.title;
       dmg = "0";
-      caption = full + " fought Battle " + n + ", but the answer missed and no strike landed while The Fade fed on the fog instead. A missed answer still teaches the fact for the next fight, and the band stays in the battle together.";
+      caption = full + " fought Battle " + n + ", but the answer missed and no strike landed while The Fade fed on the fog instead. A missed answer still teaches the fact for the next fight, and the band stays in the battle together." + (connect ? " " + connect : "");
     } else if (h.crit) {
       head = "Battle " + n + " · " + h.title;
       dmg = "CRIT " + h.dmg;
-      caption = full + " rolled a natural 20 in Battle " + n + " and landed a critical strike for " + h.dmg + " damage with the " + FIGHTERS[h.hero].wname + ", the blow that ended the battle. The roll was luck, but the strike only existed because the answer was informed before the die ever moved.";
+      caption = full + " rolled a natural 20 in Battle " + n + " and landed a critical strike for " + h.dmg + " damage with the " + FIGHTERS[h.hero].wname + ", the blow that ended the battle. The roll was luck, but the strike only existed because the answer was informed before the die ever moved." + (connect ? " " + connect : "");
     } else if (h.dbRoll) {
       head = "Battle " + n + " · " + h.title;
       dmg = "" + h.dmg;
@@ -8945,7 +8953,19 @@
     } else {
       head = "Battle " + n + " · " + h.title;
       dmg = "" + h.dmg;
-      caption = full + " landed the biggest strike of Battle " + n + " for " + h.dmg + " damage with the " + FIGHTERS[h.hero].wname + ", the blow that ended the battle. That is the game's whole lesson in one swing — a fact learned cold becomes a weapon that no slogan can parry.";
+      /* The strike sentence tells the truth about this figure's role:
+         "biggest strike" is claimed only for a hero's cast figure;
+         the victory figure closed the battle; a fill figure is one
+         strike among the run's many. The caption then closes with
+         this battle's own connection, above. */
+      if (role === "cast") {
+        caption = full + " landed the biggest strike of Battle " + n + " for " + h.dmg + " damage with the " + FIGHTERS[h.hero].wname + ", the blow that ended the battle.";
+      } else if (role === "victory") {
+        caption = full + " landed the strike that closed Battle " + n + " for " + h.dmg + " damage with the " + FIGHTERS[h.hero].wname + " — the blow that ended the battle.";
+      } else {
+        caption = full + " struck for " + h.dmg + " damage with the " + FIGHTERS[h.hero].wname + " in Battle " + n + ", the blow that ended the battle.";
+      }
+      if (connect) caption += " " + connect;
     }
     fig.className = fade ? ("vignette fadehit fade-" + h.hero) : ("vignette hit hit-" + h.hero);
     var heroImg = '<img class="v-hero" src="' + sketch + '" alt="Pencil sketch of ' + first + '" />';
@@ -9012,18 +9032,19 @@
           each band hero's biggest battle highlight, or — for a hero
           who never fought — their portrait vignette at the FRONT of
           the reel; each intervening minion's figure (the Golden
-          Parachute's included) at its battle position; and The Fade's
-          victory figure from the finishing battle's record.
+          Parachute's included) and every Fake News Gambit figure at
+          its battle position; and The Fade's victory figure from the
+          finishing battle's record.
        2. EVENTS — guaranteed when they occurred: the Early Call surge
           figure at its battle, and the featured Power Card figure
           whenever the card was played, immediately before the victory
           figure.
-       3. FILL — the remaining battle, revive and gambit records,
-          biggest first, spread across heroes round-robin, until band figures
+       3. FILL — the remaining battle and revive records, biggest
+          first, spread across heroes round-robin, until band figures
           (hero cast figures + portraits + fill) total 15. Minion,
-          parachute, surge, Power Card and victory figures never count
-          toward the 15. If the records run out first, the reel is
-          simply shorter.
+          parachute, surge, gambit, Power Card and victory figures
+          never count toward the 15. If the records run out first, the
+          reel is simply shorter.
      Any single record renders at most one figure. */
   function buildRunReel(){
     var slot0 = overlay.querySelector(".vignette-slot");
@@ -9139,7 +9160,7 @@
       if (!best) return; /* fought only the excluded Death Blow battle — the victory figure is their scene */
       if (best === victoryRec) { markUsed(best); return; } /* one figure: cast + victory, placed last */
       markUsed(best);
-      entries.push({ fig: highlightFigure(best), battle: battleOf(best), idx: hl.indexOf(best) });
+      entries.push({ fig: highlightFigure(best, "cast"), battle: battleOf(best), idx: hl.indexOf(best) });
       bandCount++;
     });
 
@@ -9149,8 +9170,10 @@
     markUsed(victoryRec);
 
     /* ---- Cast, continued: every minion who intervened, at their
-       battle position — and the surge, a guaranteed event at its
-       recorded battle. Neither counts toward the band cap. ---- */
+       battle position — the surge, a guaranteed event at its recorded
+       battle — and every Fake News Gambit, likewise guaranteed at its
+       battle: a gambit carries no damage to rank by, so it never
+       competes for a fill slot. None counts toward the band cap. ---- */
     minionRecs.forEach(function(r){
       markUsed(r);
       entries.push({ fig: highlightFigure(r), battle: battleOf(r), idx: hl.indexOf(r) });
@@ -9159,18 +9182,20 @@
       markUsed(r);
       entries.push({ fig: highlightFigure(r), battle: battleOf(r), idx: hl.indexOf(r) });
     });
+    gambitRecs.forEach(function(r){
+      markUsed(r);
+      entries.push({ fig: highlightFigure(r), battle: battleOf(r), idx: hl.indexOf(r) });
+    });
 
-    /* ---- Fill: remaining battle records (crits included), revive
-       records and Fake News Gambit records. Ranked biggest first (a
-       revive's amt is its magnitude; a gambit carries no magnitude and
-       ranks on battle order alone), crits before non-crits on ties,
-       then the earlier battle — and spread across heroes round-robin
-       (key: by || hero), so no hero takes a second fill slot while
-       another hero still has unused records. ---- */
+    /* ---- Fill: remaining battle records (crits included) and revive
+       records. Ranked biggest first (a revive's amt is its magnitude),
+       crits before non-crits on ties, then the earlier battle — and
+       spread across heroes round-robin (key: by || hero), so no hero
+       takes a second fill slot while another hero still has unused
+       records. ---- */
     var fillPool = [];
     battleRecs.forEach(function(r){ if (!isUsed(r)) fillPool.push(r); });
     reviveRecs.forEach(function(r){ if (!isUsed(r)) fillPool.push(r); });
-    gambitRecs.forEach(function(r){ if (!isUsed(r)) fillPool.push(r); });
     fillPool.sort(function(a, b){
       if (magnitudeOf(b) !== magnitudeOf(a)) return magnitudeOf(b) - magnitudeOf(a);
       if (!!b.crit !== !!a.crit) return b.crit ? 1 : -1;
@@ -9204,7 +9229,7 @@
        featured figure adopted above). */
     if (!dbWin && victoryRec) {
       markUsed(victoryRec);
-      victoryFig = highlightFigure(victoryRec);
+      victoryFig = highlightFigure(victoryRec, "victory");
     }
 
     entries.sort(function(a, b){
