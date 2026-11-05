@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>How the Forge Works — Power Card Character Forge</title>
+<style>
+:root{
+  --paper:#f6f1e6; --paper2:#efe7d6; --ink:#20261f; --ink-soft:#4a5147; --line:#d8cfb8;
+  --accent:#2456a6; --accent-soft:#e3eaf6; --card:#fffdf7; --rust:#b34a28; --gold:#8a6d1f;
+  --panel:#232a35; --panel-ink:#f0ead8; --panel-soft:#c9c2ae; --tile:#fffdf7;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --paper:#151a17; --paper2:#1b221e; --ink:#ece7d8; --ink-soft:#b9bcae; --line:#333d35; --accent:#8db1ec; --accent-soft:#22304a; --card:#1c231f; --rust:#e08a68; --gold:#d9bc6a; --panel:#10141b; --panel-ink:#f0ead8; --panel-soft:#b6b09c; --tile:#232a35; }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;-webkit-font-smoothing:antialiased}
+.topbar{border-bottom:2px solid var(--ink);background:var(--paper2)}
+.topbar-inner{max-width:820px;margin:0 auto;padding:14px 20px 12px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between}
+.doc-label{font-family: ui-monospace, SFMono-Regular, Menlo, monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.doc-label strong{color:var(--accent);font-weight:700}
+main{max-width:820px;margin:0 auto;padding:8px 20px 20px}
+article{padding:28px 0 8px}
+article h1{font-size:clamp(32px,6vw,46px);line-height:1.08;letter-spacing:-.01em;margin:6px 0 18px;font-weight:800}
+.lede{font-size:18px;line-height:1.6;color:var(--ink-soft);border-left:3px solid var(--accent);padding-left:16px;margin:0 0 10px}
+article h2{font-size:clamp(22px,4vw,28px);line-height:1.2;margin:44px 0 12px;padding-top:22px;border-top:1px solid var(--line);font-weight:800}
+article p{font-size:17.5px;line-height:1.75;margin:0 0 16px}
+article strong{font-weight:800}
+article em{font-style:italic}
+article a{color:var(--accent);text-underline-offset:3px}
+.kicker{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--rust);margin:0 0 8px;font-weight:700}
+
+/* Steps */
+.steps{list-style:none;margin:8px 0 0;padding:0;counter-reset:step}
+.step{display:flex;gap:18px;padding:22px 0;border-bottom:1px solid var(--line)}
+.step:last-child{border-bottom:none}
+.step-num{flex:0 0 auto;width:52px;height:52px;border:2px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:20px;font-weight:700;color:var(--accent);background:var(--card)}
+.step-body{flex:1;min-width:0}
+.step-body h3{font-size:21px;line-height:1.25;margin:2px 0 8px;font-weight:800}
+.step-body p{font-size:17px;margin:0 0 10px}
+.step-body p:last-child{margin-bottom:0}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.chip{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.02em;border:1px solid var(--line);background:var(--card);color:var(--ink-soft);padding:5px 10px;border-radius:999px}
+.chip b{color:var(--ink)}
+
+/* Stable */
+.stable{margin:44px 0 8px;border-top:1px solid var(--line);padding-top:6px}
+.stable h2{margin-top:28px}
+.prompt-tries{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0 18px}
+.try{border:1.5px solid var(--line);background:var(--card);padding:14px 14px 12px;border-radius:6px}
+.try .try-label{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);display:block;margin-bottom:6px;font-weight:700}
+.try .try-name{font-size:16.5px;font-weight:800;line-height:1.25;display:block;margin-bottom:6px}
+.try .try-desc{font-size:14px;line-height:1.5;color:var(--ink-soft);display:block}
+.try-final{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.alert-box{border:1px solid var(--line);background:var(--paper2);padding:16px 18px 4px;margin:18px 0}
+.alert-box .alert-label{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);font-weight:700;margin:0 0 8px}
+.alert-box p{font-size:16.5px}
+.popup-quote{border-left:3px solid var(--rust);background:var(--card);padding:14px 16px 12px;margin:16px 0}
+.popup-quote p{font-size:17px;margin:0}
+.popup-quote .pq-label{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:6px;font-weight:700}
+@media (max-width:620px){ .prompt-tries{grid-template-columns:1fr} }
+
+/* Spotlight */
+.spotlight{margin:44px 0 8px;border:2px solid var(--ink);background:var(--card);padding:26px 24px 24px}
+.spotlight h2{border-top:none;padding-top:0;margin:0 0 12px;font-size:clamp(24px,4.5vw,32px)}
+.spotlight p{font-size:17.5px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0 14px}
+.tile{appearance:none;text-align:left;cursor:pointer;border:1.5px solid var(--line);background:var(--tile);color:var(--ink);padding:14px 14px 12px;font-family:inherit;border-radius:6px;transition:border-color .15s ease}
+.tile:hover{border-color:var(--accent)}
+.tile:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tile[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.tile .t-label{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);display:block;margin-bottom:6px;font-weight:700}
+.tile .t-name{font-size:16.5px;font-weight:800;line-height:1.25;display:block;margin-bottom:6px}
+.tile .t-bonus{font-size:13.5px;line-height:1.45;color:var(--ink-soft);display:block;font-style:italic}
+
+/* Tale panel demo */
+.tale-panel{background:var(--panel);color:var(--panel-ink);border-radius:6px;padding:0;overflow:hidden;cursor:pointer;position:relative}
+.tale-panel:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.tale-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 18px 10px;border-bottom:1px solid rgba(240,234,216,.18)}
+.tale-head .th-title{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--panel-soft)}
+.tale-head .th-title strong{color:var(--panel-ink)}
+.tale-state{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#e9c46a;white-space:nowrap}
+.tale-viewport{height:230px;overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%)}
+.tale-scroll{padding:20px 22px 8px;will-change:transform}
+.tale-scroll p{font-size:16.5px;line-height:1.8;color:var(--panel-ink);margin:0 0 14px}
+.tale-scroll p.dim{color:var(--panel-soft)}
+.tale-foot{padding:10px 18px 14px;border-top:1px solid rgba(240,234,216,.18);font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--panel-soft);letter-spacing:.03em}
+.tale-foot b{color:var(--panel-ink)}
+
+/* Bonus pattern */
+.bonus-box{border:1px solid var(--line);background:var(--paper2);padding:18px 20px 8px;margin:20px 0}
+.bonus-box h3{font-size:18px;margin:0 0 10px;font-weight:800}
+.bonus-box ul{font-size:16.5px;line-height:1.65;margin:0 0 12px;padding-left:22px}
+.bonus-box li{margin-bottom:8px}
+.bonus-box li::marker{color:var(--accent);font-weight:700}
+
+/* Replays & credits tune */
+.replays{margin:44px 0 8px;border-top:1px solid var(--line);padding-top:6px}
+.replays h2{margin-top:28px}
+.replays h3{font-size:19px;line-height:1.3;margin:26px 0 8px;font-weight:800}
+.sheet-demo{border:1.5px solid var(--line);background:var(--card);border-radius:6px;overflow:hidden;margin:20px 0 8px}
+.sheet-demo-head{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:space-between;align-items:baseline;padding:12px 16px 10px;border-bottom:1px solid var(--line);background:var(--paper2)}
+.sheet-demo-head .sd-title{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700}
+.sheet-demo-head .sd-title strong{color:var(--ink)}
+.sheet-demo-head .sd-note{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--rust);letter-spacing:.04em}
+.sheet-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:0}
+.sheet-side{padding:16px 18px 14px}
+.sheet-side .ss-label{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);display:block;margin-bottom:6px;font-weight:700}
+.sheet-side p{font-size:15.5px;line-height:1.6;margin:0 0 8px}
+.viewer-side{background:var(--panel);color:var(--panel-ink);padding:16px 18px 14px;border-left:1px solid var(--line)}
+.viewer-side .ss-label{color:var(--panel-soft)}
+.viewer-screen{border:1px solid rgba(240,234,216,.35);border-radius:4px;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:12px;margin:0 0 12px;background:rgba(240,234,216,.06)}
+.viewer-screen .vs-play{font-size:22px;line-height:1;color:#e9c46a}
+.viewer-screen .vs-title{font-size:15px;font-weight:800;line-height:1.35}
+.viewer-screen .vs-sub{font-size:13px;line-height:1.45;color:var(--panel-soft)}
+.viewer-side label{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--panel-soft);display:block;margin:0 0 6px;font-weight:700}
+.run-select{width:100%;font:inherit;font-size:15px;padding:9px 10px;border-radius:4px;border:1px solid rgba(240,234,216,.35);background:var(--panel);color:var(--panel-ink)}
+.run-select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.viewer-caption{font-size:13.5px;line-height:1.5;color:var(--panel-soft);margin:10px 0 0}
+.viewer-caption b{color:var(--panel-ink)}
+.sheet-demo-foot{padding:10px 16px 12px;border-top:1px solid var(--line);font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--ink-soft);letter-spacing:.02em}
+.loop-track{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:18px 0 6px}
+.loop-step{border:1.5px solid var(--line);background:var(--card);padding:13px 14px 11px;border-radius:6px}
+.loop-step .ls-label{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--rust);display:block;margin-bottom:5px;font-weight:700}
+.loop-step .ls-name{font-size:15.5px;font-weight:800;line-height:1.3;display:block;margin-bottom:5px}
+.loop-step .ls-desc{font-size:13.5px;line-height:1.5;color:var(--ink-soft);display:block}
+.loop-arrow{align-self:center;font-size:18px;color:var(--accent);font-weight:700}
+.loop-stop{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+@media (max-width:620px){
+  .sheet-layout{grid-template-columns:1fr}
+  .viewer-side{border-left:none;border-top:1px solid var(--line)}
+  .loop-track{grid-template-columns:1fr}
+  .loop-arrow{transform:rotate(90deg);justify-self:center}
+}
+
+/* Status note */
+.status{margin:40px 0 4px;border-left:4px solid var(--gold);background:var(--card);padding:18px 20px 6px}
+.status h2{border:none;padding:0;margin:0 0 10px;font-size:21px}
+.status p{font-size:16.5px}
+
+footer{max-width:820px;margin:0 auto;padding:22px 20px 44px}
+.foot-inner{border-top:2px solid var(--ink);padding-top:14px;display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:baseline}
+.source{font-family: ui-monospace, Menlo, monospace;font-size:12.5px;letter-spacing:.04em;color:var(--ink-soft)}
+.backtop{font-family: ui-monospace, Menlo, monospace;font-size:12.5px;color:var(--accent);text-decoration:none;background:none;border:none;cursor:pointer;padding:0}
+@media (max-width:620px){
+  .tiles{grid-template-columns:1fr}
+  .step{gap:13px}
+  .step-num{width:44px;height:44px;font-size:17px}
+  .spotlight{padding:20px 16px}
+  .tale-viewport{height:250px}
+}
+@media (max-width:560px){ main{padding:4px 18px 12px} article p{font-size:16.5px} .lede{font-size:16.5px} }
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .tale-viewport{overflow-y:auto;-webkit-mask-image:none;mask-image:none}
+}
+</style>
+</head>
+<body id="top">
+<header class="topbar">
+  <div class="topbar-inner">
+    <p class="doc-label" style="margin:0"><strong>How the Forge Works</strong> &nbsp;·&nbsp; Explaining the Power Card Character Forge</p>
+  </div>
+</header>
+<main>
+<article>
+<h1>How the Forge Works</h1>
+<p class="lede"><em>From a blank sheet to a hero with portraits, a past, and a place in the band — the whole path a character travels through the Power Card Character Forge, into the game, and onto the table.</em></p>
+<p>The Forge is a character-sheet designer built for the D&amp;D group behind <strong>Power Card</strong> — up to thirty friends, from Oregon to the U.K. It runs on the same sheet engine as the game&rsquo;s six packaged heroes, so a character made here is not an imitation of a game hero. It is built the same way, on the same sheet, from the first slider to the last tale.</p>
+
+<h2>The flow — five steps</h2>
+
+<ol class="steps">
+  <li class="step">
+    <div class="step-num" aria-hidden="true">1</div>
+    <div class="step-body">
+      <h3>Build your hero</h3>
+      <p>A player builds a character on the <strong>same sheet engine as the game&rsquo;s six packaged heroes</strong>:</p>
+      <div class="chips">
+        <span class="chip"><b>Name</b></span>
+        <span class="chip"><b>Class</b></span>
+        <span class="chip"><b>Point-buy attribute sliders</b></span>
+        <span class="chip"><b>Gear picks</b> — weapon, spells, pack</span>
+        <span class="chip"><b>A Look</b> — skin tone and hair color</span>
+      </div>
+    </div>
+  </li>
+  <li class="step">
+    <div class="step-num" aria-hidden="true">2</div>
+    <div class="step-body">
+      <h3>Send it to Mike</h3>
+      <p>One tap: <strong>&ldquo;Send to Mike to create&rdquo;</strong> — in the app, submit to Kendo for sketch creation. There is no account wrangling for friends beyond a Google sign-in, and each player&rsquo;s characters are their own.</p>
+    </div>
+  </li>
+  <li class="step">
+    <div class="step-num" aria-hidden="true">3</div>
+    <div class="step-body">
+      <h3>The set comes back</h3>
+      <p>The finished character returns as a <strong>complete set</strong>: three finished portraits — three attires, in the game&rsquo;s pencil-sketch style — the Look variants that let the sheet re-dress the portrait, and <strong>three backstory tales</strong> written for that character (the spotlight below). The set attaches to the player&rsquo;s own sheet in the Forge.</p>
+      <p>Portraits arrive as a matched set, and a character is only marked complete when the <strong>full set</strong> — portraits, variants, and tales — is in.</p>
+    </div>
+  </li>
+  <li class="step">
+    <div class="step-num" aria-hidden="true">4</div>
+    <div class="step-body">
+      <h3>Import into the game</h3>
+      <p>Finished heroes import straight into <strong>Power Card</strong> itself. They join the import queue, take a roster spot beside the packaged six, and can be picked for the battle-ready band — of <strong>3, 4, or 6</strong> — exactly like a packaged hero.</p>
+    </div>
+  </li>
+  <li class="step">
+    <div class="step-num" aria-hidden="true">5</div>
+    <div class="step-body">
+      <h3>Play it at the table</h3>
+      <p>The same sheet exports to Roll20 — <strong>&ldquo;Copy for Roll20.&rdquo;</strong> On game night, the group&rsquo;s picks are recorded in a Campaigns entry, and Mike + Kendo pre-load the band into Roll20 before anyone joins on Discord audio.</p>
+    </div>
+  </li>
+</ol>
+
+<section class="stable" aria-labelledby="stable-title">
+  <h2 id="stable-title">Three tries, then the Stable</h2>
+  <p>Your character sheet includes a character portrait, and that portrait starts from <strong>your own submitted prompt description</strong> — Kendo creates the first portrait from that description.</p>
+  <p>Before you finalize the character, you get a <strong>total of 3 design prompt requests</strong> to have Kendo further customize the portrait: the initial prompt, plus 2 more.</p>
+  <p>Those rounds are not portrait-only: on <strong>every round</strong>, Kendo also revises the character&rsquo;s <strong>three backstory tales</strong>, rewritten from everything you have submitted so far — your original description plus each round&rsquo;s added detail — so the portrait and the scrolling backstories come back together and grow with the character. The third round&rsquo;s tales are final, and they lock when the sheet is Saved to the Stable.</p>
+
+  <div class="prompt-tries" role="group" aria-label="The three design prompt requests">
+    <div class="try">
+      <span class="try-label">Prompt · 1 of 3</span>
+      <span class="try-name">Your initial prompt</span>
+      <span class="try-desc">You describe the portrait, and Kendo creates the first portrait from your description.</span>
+    </div>
+    <div class="try">
+      <span class="try-label">Prompt · 2 of 3</span>
+      <span class="try-name">First customization</span>
+      <span class="try-desc">A second prompt to have Kendo further customize the portrait.</span>
+    </div>
+    <div class="try try-final">
+      <span class="try-label">Prompt · 3 of 3</span>
+      <span class="try-name">Final customization</span>
+      <span class="try-desc">A third prompt — the last design prompt request.</span>
+    </div>
+  </div>
+
+  <div class="alert-box">
+    <p class="alert-label">After the 3rd customization</p>
+    <p>When the 3rd customization comes back, an alert says that was the <strong>final design change</strong>. You then choose: <strong>delete the character, or move it to the Stable</strong>.</p>
+  </div>
+
+  <p><strong>&ldquo;Save to Stable&rdquo;</strong> means moving the finished design into a <strong>finalized character sheet</strong> in one of the Stable&rsquo;s open slots. The <strong>Stable</strong> is your own roster of finished characters, and it holds a <strong>maximum of 20 characters</strong>.</p>
+  <p>If the Stable is already full — all 20 slots taken — when you try to save, a popup appears:</p>
+
+  <div class="popup-quote">
+    <span class="pq-label">Popup · Stable full</span>
+    <p>&ldquo;Remove a character sheet from the Stable to free up a slot.&rdquo;</p>
+  </div>
+</section>
+
+<section class="spotlight" aria-labelledby="spotlight-title">
+  <p class="kicker">The spotlight</p>
+  <h2 id="spotlight-title">Your hero arrives with a past</h2>
+  <p>A forged character does not show up as a blank sheet. It comes back with <strong>three backstory tales of its own, instantly created for that character</strong> as part of its returned set — <strong>one tale per signature move</strong>, each ending with the same vote weave that closes the packaged heroes&rsquo; tales.</p>
+  <p>In the game, those tales live under <strong>&ldquo;Campaigns of Friends&rdquo;</strong> on the hero&rsquo;s sheet, on the <strong>same animated move tiles</strong> as the six packaged heroes. Tap a tile and your hero&rsquo;s tale opens in the shared tale panel and <strong>scrolls up slowly, on its own</strong> — exactly like Maya&rsquo;s, Dre&rsquo;s, and Priya&rsquo;s do. Tap the panel to pause or resume.</p>
+  <p><strong>A forged hero is not a guest in the story — it ships with legends of its own, in the same form, on the same shelf.</strong></p>
+
+  <div class="tiles" role="group" aria-label="A forged hero's three move tiles">
+    <button type="button" class="tile" data-move="0" aria-pressed="true">
+      <span class="t-label">Move tile · 1</span>
+      <span class="t-name">First signature move</span>
+      <span class="t-bonus">Readied: +2 to hit / +2 damage on the first attack</span>
+    </button>
+    <button type="button" class="tile" data-move="1" aria-pressed="false">
+      <span class="t-label">Move tile · 2</span>
+      <span class="t-name">Second signature move</span>
+      <span class="t-bonus">Readied: +1 to all attacks</span>
+    </button>
+    <button type="button" class="tile" data-move="2" aria-pressed="false">
+      <span class="t-label">Move tile · 3</span>
+      <span class="t-name">Third signature move</span>
+      <span class="t-bonus">Readied: the first counter against you is reduced by 4</span>
+    </button>
+  </div>
+
+  <div class="tale-panel" id="talePanel" tabindex="0" role="button" aria-label="Demo tale panel. Activate to pause or resume the slow scroll.">
+    <div class="tale-head">
+      <span class="th-title"><strong>Campaigns of Friends</strong> · <span id="taleMoveLabel">Tale of the first move</span></span>
+      <span class="tale-state" id="taleState">Scrolling…</span>
+    </div>
+    <div class="tale-viewport" id="taleViewport">
+      <div class="tale-scroll" id="taleScroll">
+        <p id="taleText">This is where your hero&rsquo;s tale plays. The moment the finished set comes back, the tale is already written — created for this character, for this move — and it waits on the hero&rsquo;s sheet under Campaigns of Friends, on the same animated tiles the packaged heroes use.</p>
+        <p>Tap the tile, and the tale opens here, in the shared panel. Then it begins to rise — slowly, on its own — line after line, the way Maya&rsquo;s, Dre&rsquo;s, and Priya&rsquo;s tales rise when their tiles are tapped. No blank page. No placeholder. A past, ready to be read.</p>
+        <p>And like every packaged hero&rsquo;s tale, it closes the same way: with the vote weave — the reminder woven into the end of the story that a voice only counts when it is cast, and that the hero&rsquo;s legend and the town&rsquo;s future are decided by the same act.</p>
+        <p class="dim">Tap this panel to pause the scroll. Tap again to resume — exactly as in the game.</p>
+      </div>
+    </div>
+    <div class="tale-foot">Same panel, same slow scroll as the packaged six · <b>Tap panel to pause / resume</b></div>
+  </div>
+
+  <div class="bonus-box">
+    <h3>The readied-move bonuses — one standard set</h3>
+    <p style="font-size:16.5px">Readying a move from its tile carries a bonus into the hero&rsquo;s next battle. For forged heroes, the pattern is one standard set:</p>
+    <ul>
+      <li><strong>First move</strong> — +2 to hit / +2 damage on the first attack</li>
+      <li><strong>Second move</strong> — +1 to all attacks</li>
+      <li><strong>Third move</strong> — the first counter against you is reduced by 4</li>
+    </ul>
+  </div>
+</section>
+
+<section class="replays" aria-labelledby="replays-title">
+  <h2 id="replays-title">Replays, credits &amp; your credits tune</h2>
+  <p>A hero&rsquo;s story does not end when a run ends. Every finished session run a character played in is <strong>saved to that character&rsquo;s history</strong>, and the character sheet carries a <strong>video viewer built into the side of the sheet</strong> — so the sheet holds not just who the hero is, but the endings they were part of, ready to watch again from the sheet itself.</p>
+
+  <div class="sheet-demo" aria-label="Illustration of a character sheet with the video viewer in its side panel and the session-run drop-down">
+    <div class="sheet-demo-head">
+      <span class="sd-title"><strong>Character sheet</strong> · with viewer</span>
+      <span class="sd-note">Illustration — not a live player</span>
+    </div>
+    <div class="sheet-layout">
+      <div class="sheet-side">
+        <span class="ss-label">The sheet</span>
+        <p><strong>Portraits, Look, moves, and tales</strong> stay where they have always been — the viewer does not replace the sheet. It sits alongside it, in the sheet&rsquo;s side panel, waiting for a run to be chosen.</p>
+        <p>Every run this character played in is listed in the viewer&rsquo;s <strong>drop-down history</strong> — the character&rsquo;s own session runs, and no one else&rsquo;s.</p>
+      </div>
+      <div class="viewer-side">
+        <span class="ss-label">Video viewer · in the sheet</span>
+        <div class="viewer-screen" aria-hidden="true">
+          <span class="vs-play">&#9654;</span>
+          <span class="vs-title" id="viewerTitle">Pick a run to watch its ending</span>
+          <span class="vs-sub">End-game replay &middot; highlight reel &middot; scrolling credits &middot; music</span>
+        </div>
+        <label for="runSelect">Session runs — this character&rsquo;s history</label>
+        <select class="run-select" id="runSelect">
+          <option value="">Choose a saved run&hellip;</option>
+          <option value="A saved session run">A saved session run</option>
+          <option value="An earlier saved session run">An earlier saved session run</option>
+          <option value="The character&rsquo;s first saved run">The character&rsquo;s first saved run</option>
+        </select>
+        <p class="viewer-caption" id="viewerCaption">Choosing a run loads <b>that run&rsquo;s ending</b> here — its replay highlights and scrolling credits, with music.</p>
+      </div>
+    </div>
+    <div class="sheet-demo-foot">One viewer, in every sheet &middot; the history in the drop-down belongs to that character alone</div>
+  </div>
+
+  <h3>Click a run — watch its ending</h3>
+  <p>Clicking <strong>any saved run</strong> in the drop-down plays that run in the viewer: the <strong>end game and replay highlight reel</strong>, rolling into the run&rsquo;s <strong>scrolling credits</strong>, with music underneath. Each entry is that run&rsquo;s own ending — pick a different run from the history and the viewer plays that one instead.</p>
+
+  <h3>The tune shelf lives in the Forge — not in the sheet</h3>
+  <p>The music comes from a shelf of <strong>10 YouTube song videos held in the Forge app itself</strong>. Those 10 links are <strong>not</strong> stored inside each character sheet — the sheets carry the viewer and the run history, while the Forge holds the shelf, once, for everyone.</p>
+  <p>From that shelf, you pick any one of the 10 and set it as your <strong>&ldquo;default credits tune.&rdquo;</strong> From then on, whenever you choose a session run replay from a sheet&rsquo;s drop-down, the viewer loads <strong>your default tune&rsquo;s YouTube video</strong> as the music for that replay — no re-picking, run after run. Change your mind in the Forge, and the next replay uses the new default.</p>
+
+  <h3>How the music plays — loop, then finish out</h3>
+  <p>A song is usually shorter than a credits roll, so the default tune does not simply play once and stop. It follows one fixed rule:</p>
+
+  <div class="loop-track" role="group" aria-label="How the credits tune plays during a replay">
+    <div class="loop-step">
+      <span class="ls-label">While credits roll</span>
+      <span class="ls-name">The tune loops</span>
+      <span class="ls-desc">The default YouTube video plays on loop, repeating as many times as the scrolling credits need.</span>
+    </div>
+    <span class="loop-arrow" aria-hidden="true">&rarr;</span>
+    <div class="loop-step">
+      <span class="ls-label">When credits stop</span>
+      <span class="ls-name">Looping switches off</span>
+      <span class="ls-desc">The moment the credits finish rolling, the viewer stops looping — it does not start the song over again.</span>
+    </div>
+    <span class="loop-arrow" aria-hidden="true">&rarr;</span>
+    <div class="loop-step loop-stop">
+      <span class="ls-label">To the end</span>
+      <span class="ls-name">Finish out, then stop</span>
+      <span class="ls-desc">The current play of the video/song plays through to its own end — and then playback stops. No more looping.</span>
+    </div>
+  </div>
+
+  <h3>From the DM screen — the campfire push</h3>
+  <p>The digital game is not the only door a run comes through. A tabletop session is run from the <strong>DM screen version — the DM Guide</strong> — and the campfire sessions played that way earn their credits the same way a digital run does. From that DM screen, the DM can <strong>push the session&rsquo;s credits — ending included — into each band member&rsquo;s own character sheet in their Forge</strong>, so a campfire night lands in the same sheet history, and the same viewer drop-down, as a run played in the game itself.</p>
+  <p>A campfire session runs <strong>offline</strong>, away from any connection — so the push does not have to happen at the table, or even that night. It can happen <strong>any time after the session, once the DM is back online</strong>: the credits wait with the DM until there is a connection, and then they go out to every band member&rsquo;s sheet.</p>
+  <p>That holds for <strong>any table sitting</strong>, not just the campfire. The DM runs the screen version on a laptop, and players who do not have the screen version can go <strong>fully old school — just printed character sheets and dice</strong>: the DM prints the character sheets for them to play from. After the session run, the DM can still push the credits to <strong>every character sheet where the character lives — in its user&rsquo;s Forge, in their Stable of 20</strong>. Paper was the instrument for the night; the Forge sheet is the character&rsquo;s permanent home, and that is where the record lands.</p>
+
+  <div class="loop-track" role="group" aria-label="How the DM pushes campfire session credits to band members' sheets">
+    <div class="loop-step">
+      <span class="ls-label">At the campfire · offline</span>
+      <span class="ls-name">The session is played</span>
+      <span class="ls-desc">The band plays from the DM screen version, with no connection needed — the session and its ending are recorded as they happen.</span>
+    </div>
+    <span class="loop-arrow" aria-hidden="true">&rarr;</span>
+    <div class="loop-step">
+      <span class="ls-label">Any time after · back online</span>
+      <span class="ls-name">The DM pushes the credits</span>
+      <span class="ls-desc">Once the DM is back online — that night or later — the DM pushes the session&rsquo;s credits from the DM screen. There is no deadline on the push.</span>
+    </div>
+    <span class="loop-arrow" aria-hidden="true">&rarr;</span>
+    <div class="loop-step loop-stop">
+      <span class="ls-label">In each member&rsquo;s Forge</span>
+      <span class="ls-name">The run joins the sheet</span>
+      <span class="ls-desc">The campfire run arrives in each band member&rsquo;s own character sheet history, ready to pick from the viewer drop-down and replay like any other saved run.</span>
+    </div>
+  </div>
+
+  <div class="alert-box">
+    <p class="alert-label">Where this stands</p>
+    <p>This replay system — the DM screen&rsquo;s campfire push included — is <strong>designed and documented</strong>, and it arrives with the Forge&rsquo;s opening and the game&rsquo;s next release — the same Firebase setup sitting described below. It is <strong>not live</strong> in the public doors today, and the 10 song links are <strong>not named on this page</strong> — they will be the Forge&rsquo;s shelf once they are supplied and set.</p>
+  </div>
+</section>
+
+<section class="status" aria-labelledby="status-title">
+  <h2 id="status-title">Where it stands — honestly</h2>
+  <p>The Forge itself is built. It opens to the group once its one-time Firebase setup sitting is done, and game import rides with the game&rsquo;s next release — the public doors still serve the previous edition of the game today. The replays, the credits tune, and the DM screen&rsquo;s campfire push above ride that same opening and release; they are designed, not yet live.</p>
+  <p>Nothing on this page is a promise of a date.</p>
+</section>
+
+</article>
+</main>
+<footer>
+  <div class="foot-inner">
+    <span class="source">Companion to the Power Card Ecosphere Blueprint</span>
+    <button type="button" class="backtop" id="backTop">Back to top &uarr;</button>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Back to top
+  document.getElementById('backTop').addEventListener('click', function(){
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  // ---- Slow-scrolling tale panel demo ----
+  var panel = document.getElementById('talePanel');
+  var viewport = document.getElementById('taleViewport');
+  var scroller = document.getElementById('taleScroll');
+  var stateEl = document.getElementById('taleState');
+  var moveLabel = document.getElementById('taleMoveLabel');
+  var taleText = document.getElementById('taleText');
+  var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile'));
+
+  var moveNames = ['Tale of the first move','Tale of the second move','Tale of the third move'];
+  var moveLeads = [
+    'This is where your hero\u2019s first tale plays. The moment the finished set comes back, the tale is already written \u2014 created for this character, for this move \u2014 and it waits on the hero\u2019s sheet under Campaigns of Friends, on the same animated tiles the packaged heroes use.',
+    'This is where your hero\u2019s second tale plays. The moment the finished set comes back, the tale is already written \u2014 created for this character, for this move \u2014 and it waits on the hero\u2019s sheet under Campaigns of Friends, on the same animated tiles the packaged heroes use.',
+    'This is where your hero\u2019s third tale plays. The moment the finished set comes back, the tale is already written \u2014 created for this character, for this move \u2014 and it waits on the hero\u2019s sheet under Campaigns of Friends, on the same animated tiles the packaged heroes use.'
+  ];
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var paused = false;
+  var offset = 0;
+  var lastTs = null;
+  var SPEED = 16; // px per second — a slow, readable rise
+
+  function maxOffset(){
+    return Math.max(0, scroller.scrollHeight - viewport.clientHeight + 24);
+  }
+  function apply(){
+    scroller.style.transform = 'translateY(' + (-offset) + 'px)';
+  }
+  function setState(){
+    stateEl.textContent = reduced ? 'Scroll inside' : (paused ? 'Paused' : 'Scrolling\u2026');
+  }
+  function frame(ts){
+    if(lastTs === null) lastTs = ts;
+    var dt = (ts - lastTs) / 1000;
+    lastTs = ts;
+    if(!paused && !reduced){
+      offset += SPEED * dt;
+      if(offset >= maxOffset()) offset = 0;
+      apply();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function toggle(){
+    if(reduced) return;
+    paused = !paused;
+    setState();
+  }
+  panel.addEventListener('click', function(e){
+    if(e.target.closest('.tile')) return;
+    toggle();
+  });
+  panel.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      toggle();
+    }
+  });
+
+  tiles.forEach(function(tile){
+    tile.addEventListener('click', function(){
+      tiles.forEach(function(t){ t.setAttribute('aria-pressed','false'); });
+      tile.setAttribute('aria-pressed','true');
+      var i = parseInt(tile.getAttribute('data-move'), 10) || 0;
+      moveLabel.textContent = moveNames[i];
+      taleText.textContent = moveLeads[i];
+      offset = 0;
+      apply();
+      paused = false;
+      setState();
+      panel.scrollIntoView({block:'nearest', behavior: reduced ? 'auto' : 'smooth'});
+    });
+  });
+
+  // ---- Replay viewer illustration: choosing a run updates the caption ----
+  var runSelect = document.getElementById('runSelect');
+  var viewerTitle = document.getElementById('viewerTitle');
+  var viewerCaption = document.getElementById('viewerCaption');
+  if(runSelect && viewerTitle && viewerCaption){
+    runSelect.addEventListener('change', function(){
+      if(runSelect.value){
+        viewerTitle.textContent = runSelect.value;
+        viewerCaption.innerHTML = 'In the Forge, this loads <b>' + runSelect.value + '</b> here &mdash; its end-game replay and scrolling credits, scored by your default credits tune.';
+      } else {
+        viewerTitle.textContent = 'Pick a run to watch its ending';
+        viewerCaption.innerHTML = 'Choosing a run loads <b>that run&rsquo;s ending</b> here &mdash; its replay highlights and scrolling credits, with music.';
+      }
+    });
+  }
+
+  setState();
+  if(!reduced){
+    requestAnimationFrame(frame);
+  } else {
+    viewport.style.overflowY = 'auto';
+  }
+})();
+</script>
+</body>
+</html>
