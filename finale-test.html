@@ -2,6 +2,34 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<script>
+  /* Swap #34: the replay-open hold. When this page is opened from a
+     replay link (#replay=…), hold it invisible from the very first
+     paint, so the viewer never watches the opening screen arrive and
+     then shift: bootReplay() (at the end of the game script) presents
+     the earned ending, lands on it instantly, and only then lifts the
+     hold — the first thing seen is the ending, already settled.
+     The light check here (the payload decodes, parses, and carries
+     version 1) only decides whether to hold; bootReplay() still runs
+     the full validator, and a payload that fails there lifts the hold
+     and starts the game normally. The timer is a failsafe: if the
+     game script never runs, the page is revealed, never left blank. */
+  (function(){
+    try {
+      var h = location.hash || "";
+      if (h.indexOf("#replay=") !== 0) return;
+      var b64 = h.slice(8).replace(/-/g, "+").replace(/_/g, "/");
+      while (b64.length % 4) b64 += "=";
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      var p = JSON.parse(new TextDecoder().decode(bytes));
+      if (!p || typeof p !== "object" || Array.isArray(p) || p.v !== 1) return;
+      document.documentElement.classList.add("replay-hold");
+      setTimeout(function(){ document.documentElement.classList.remove("replay-hold"); }, 6000);
+    } catch(e){}
+  })();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
 <meta name="theme-color" content="#0d1216" />
@@ -392,6 +420,10 @@
   .replay-banner{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;border:2px solid var(--amber);border-radius:10px;padding:10px 14px;margin:12px 0 4px;background:var(--panel);color:var(--ink);font-weight:700}
   .replay-banner[hidden]{display:none}
   .replay-banner .btn{margin:0}
+  /* Swap #34: while a replay open is being presented, the page is held
+     invisible (layout still computes, so the ending can be positioned
+     underneath the hold) and revealed only once it has landed. */
+  html.replay-hold body{visibility:hidden}
   .video-wrap{width:min(920px,100%);margin:0 auto;padding:0 12px}
   .video-box{position:relative;padding-top:56.25%;background:#000;border:1px solid #33413a;border-radius:10px;overflow:hidden}
   .video-box iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -7789,6 +7821,25 @@
     el.style.display = "";
   }
 
+  /* Swap #34: how finish() lands on the ending it shows. Live play
+     keeps the smooth glide — that glide is in-play theatre. The replay
+     boot path flips finishLanding to "instant" for the duration of its
+     own finish() call only (and restores it after), so a replay link
+     opens already settled on the ending. The root's CSS
+     scroll-behavior is smooth, so behavior:"auto" would still animate
+     the landing — "instant" is the non-animated one, with the same
+     try/catch fallback the prologue's scroll restore uses for engines
+     that don't know the keyword. */
+  var finishLanding = "smooth";
+  function landOnEnding(el){
+    if (finishLanding === "instant") {
+      try { el.scrollIntoView({ behavior:"instant", block:"start" }); }
+      catch(e){ el.scrollIntoView({ block:"start" }); }
+      return;
+    }
+    el.scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+
   function finish(completedAll){
     var win = state.boss <= 40 && !state.allDown;
     state.runOver = true;
@@ -7809,7 +7860,7 @@
       document.getElementById("walkCast").textContent = "Power Cards cast: " + bandKeys().map(function(k){ return FIGHTERS[k].name + " " + (state.powerCastBy[k] ? "✓" : "✗"); }).join(" · ");
       var wo = document.getElementById("walkOffEnding");
       wo.classList.add("show");
-      wo.scrollIntoView({ behavior:"smooth", block:"start" });
+      landOnEnding(wo);
       log("THE WALK OFF. Full strength. Full turnout. The future, claimed.");
     } else if (win) {
       document.getElementById("winScore").textContent = "Hits: " + state.hits + "/" + QUESTS.length + (state.dbBonus > 0 ? " · Death Blow overkill +" + state.dbBonus + " (d6)" : "");
@@ -7833,7 +7884,7 @@
       }
       var w = document.getElementById("winEnding");
       w.classList.add("show");
-      w.scrollIntoView({ behavior:"smooth", block:"start" });
+      landOnEnding(w);
       log("THE FADE IS BROKEN. History will remember this day.");
     } else if (completedAll && !state.allDown) {
       /* Went the distance: all 16 battles completed, heroes still standing,
@@ -7858,7 +7909,7 @@
       }
       var d = document.getElementById("distEnding");
       d.classList.add("show");
-      d.scrollIntoView({ behavior:"smooth", block:"start" });
+      landOnEnding(d);
       log("The Fade retreats at " + state.boss + " HP. The band went the distance.");
     } else {
       document.getElementById("loseScore").textContent = "Hits: " + state.hits + "/" + QUESTS.length;
@@ -7876,7 +7927,7 @@
       renderLoseRecap();
       var l = document.getElementById("loseEnding");
       l.classList.add("show");
-      l.scrollIntoView({ behavior:"smooth", block:"start" });
+      landOnEnding(l);
       log("The Fade survives at " + state.boss + " HP. Run it back — knowledge doesn't fade.");
     }
   }
@@ -10513,8 +10564,11 @@
     try { p = JSON.parse(replayB64Decode(hash.slice("#replay=".length))); } catch(e){ p = null; }
     if (!validReplayPayload(p)) {
       /* Malformed, wrong version, or missing a field: strip the hash
-         and start the game completely normally — no error shown. */
+         and start the game completely normally — no error shown.
+         Swap #34: lift the head script's hold too, so the normal
+         opening is what the viewer sees. */
       try { history.replaceState(null, "", location.href.split("#")[0]); } catch(e){}
+      document.documentElement.classList.remove("replay-hold");
       return;
     }
     state.band = p.band.slice();
@@ -10547,7 +10601,29 @@
     }
     var banner = document.getElementById("replayBanner");
     if (banner) banner.hidden = false;
-    finish(!!p.completedAll);
+    /* Swap #34: present the ending already settled. finish() lands
+       instantly while the head script's hold still covers the page;
+       the hold lifts only once the ending is in place, and the live
+       smooth glide is restored for any ending earned in play. */
+    finishLanding = "instant";
+    try { finish(!!p.completedAll); }
+    finally {
+      finishLanding = "smooth";
+      document.documentElement.classList.remove("replay-hold");
+    }
+    /* Webfonts settling after the reveal can nudge the ending's
+       position by a few pixels; re-pin once, instantly, if the viewer
+       hasn't scrolled away from where the landing put them. */
+    var shownEnding = document.querySelector(".ending.show");
+    if (shownEnding && document.fonts && document.fonts.ready) {
+      var pinnedY = window.scrollY;
+      document.fonts.ready.then(function(){
+        if (Math.abs(window.scrollY - pinnedY) <= 2) {
+          try { shownEnding.scrollIntoView({ behavior:"instant", block:"start" }); }
+          catch(e){ shownEnding.scrollIntoView({ block:"start" }); }
+        }
+      });
+    }
   }
   bootReplay();
 })();
